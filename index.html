@@ -28,7 +28,7 @@
     --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;
     --wordmark:"Hanken Grotesk","Inter Tight",system-ui,sans-serif;
     --banner-h:clamp(120px,16vh,184px);
-    --ad:156;
+    --cz:424;   /* big square carousel side (unitless px) */
   }
   *,*::before,*::after{box-sizing:border-box;}
   html,body{margin:0;}
@@ -72,18 +72,26 @@
   .lock .name{font-size:clamp(20px,2.4vw,23px);color:#fff;white-space:nowrap;}
   .head .tag{color:rgba(244,242,234,0.55);white-space:nowrap;}
 
-  /* ---- three-zone mid: ads left · hero centre · dial right ---- */
+  /* ---- three-zone mid: carousel left · hero centre · dial right ---- */
   .mid{flex:1;display:flex;align-items:center;gap:clamp(20px,3vw,52px);min-height:0;}
-  .adcol{flex:none;display:flex;flex-direction:column;gap:clamp(9px,1.5vh,15px);}
-  .spacer{flex:none;width:calc(var(--ad)*1px);}
-  .rail-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(244,242,234,0.52);margin:0 0 3px;}
+  .adside{flex:none;width:calc(var(--cz)*1px);display:flex;flex-direction:column;gap:clamp(11px,1.7vh,17px);}
+  .spacer{flex:none;width:calc(var(--cz)*1px);}
+  .rail-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(244,242,234,0.52);margin:0;}
   .rail-label::before{content:"// ";color:var(--red-lift);}
-  .adrow{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
 
-  /* full 1080² ad, scaled to a --ad px tile (height-responsive) */
-  .adtile{position:relative;width:calc(var(--ad)*1px);height:calc(var(--ad)*1px);flex:none;overflow:hidden;border-radius:8px;
-    border:1px solid rgba(244,242,234,0.16);box-shadow:3px 3px 0 rgba(0,0,0,0.22);}
-  .fa{position:absolute;top:0;left:0;width:1080px;height:1080px;transform:scale(calc(var(--ad)/1080));transform-origin:top left;
+  /* big square carousel of full 1080² ads */
+  .carousel{position:relative;width:calc(var(--cz)*1px);height:calc(var(--cz)*1px);overflow:hidden;border-radius:12px;
+    border:1px solid rgba(244,242,234,0.16);box-shadow:6px 6px 0 rgba(0,0,0,0.24);}
+  .cslide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 0.9s ease;}
+  .cslide.on{opacity:1;}
+  .cdots{display:flex;gap:8px;}
+  .cdot{width:9px;height:9px;padding:0;border-radius:50%;border:1px solid rgba(244,242,234,0.42);
+    background:transparent;cursor:pointer;transition:background 0.3s ease,border-color 0.3s ease;}
+  .cdot.on{background:var(--gold);border-color:var(--gold);}
+  .cdot:hover{border-color:var(--gold);}
+
+  /* full 1080² ad, scaled into the carousel square */
+  .fa{position:absolute;top:0;left:0;width:1080px;height:1080px;transform:scale(calc(var(--cz)/1080));transform-origin:top left;
     background:var(--aubergine);overflow:hidden;font-family:var(--sans);font-weight:300;}
   .fa-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
   .fa-scrim{position:absolute;inset:0;background:
@@ -144,15 +152,15 @@
   .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
     border:1px solid rgba(244,242,234,0.26);color:rgba(244,242,234,0.78);padding:7px 13px;border-radius:999px;}
 
-  @media (max-height:840px){ :root{ --ad:142; } }
-  @media (max-height:760px){ :root{ --ad:130; } }
-  @media (max-height:690px){ :root{ --ad:118; --banner-h:clamp(104px,15vh,150px); } }
+  @media (max-height:860px){ :root{ --cz:380; } }
+  @media (max-height:780px){ :root{ --cz:340; } }
+  @media (max-height:700px){ :root{ --cz:300; --banner-h:clamp(104px,15vh,150px); } }
+  @media (max-width:1180px){ :root{ --cz:336; } }
 
   @media (max-width:880px){
     .mid{flex-direction:column;align-items:center;gap:clamp(20px,4vh,34px);}
     main{order:-1;}
-    .adcol{flex-direction:row;flex-wrap:wrap;justify-content:center;}
-    .rail-label{display:none;}
+    .adside{align-items:center;width:calc(var(--cz)*1px);}
     .spacer{display:none;}
     .bigdial{top:auto;bottom:-90px;right:-90px;transform:none;opacity:0.34;}
   }
@@ -193,40 +201,59 @@
     </header>
 
     <div class="mid">
-      <aside class="adcol" aria-label="What's coming">
+      <aside class="adside" aria-label="What's coming">
         <p class="rail-label">What's coming</p>
-        <div class="adtile"><div class="fa">
-          <img class="fa-photo" src="assets/football.jpg" alt="Children playing sport" style="object-position:73% 56%;transform:scale(1.32);transform-origin:73% 56%">
-          <div class="fa-scrim"></div><div class="fa-frame"></div>
-          <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-          <div class="fa-top">
-            <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-            <span class="fa-url">elc-hub.com</span>
-          </div>
-          <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Sport</div><h3 class="fa-line">Sport made with them, <em>not for them.</em></h3></div>
-        </div></div>
+        <div class="carousel" id="carousel">
+          <div class="cslide on"><div class="fa">
+            <img class="fa-photo" src="assets/football.jpg" alt="Children playing sport" style="object-position:73% 56%;transform:scale(1.32);transform-origin:73% 56%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Sport</div><h3 class="fa-line">Sport made with them, <em>not for them.</em></h3></div>
+          </div></div>
 
-        <div class="adtile"><div class="fa">
-          <img class="fa-photo" src="assets/experiment.jpg" alt="A child's light experiment" style="object-position:52% 46%">
-          <div class="fa-scrim"></div><div class="fa-frame"></div>
-          <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-          <div class="fa-top">
-            <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-            <span class="fa-url">elc-hub.com</span>
-          </div>
-          <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Science</div><h3 class="fa-line">Experiments, <em>their way.</em></h3></div>
-        </div></div>
+          <div class="cslide"><div class="fa">
+            <img class="fa-photo" src="assets/experiment.jpg" alt="A child's light experiment" style="object-position:52% 46%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Science</div><h3 class="fa-line">Experiments, <em>their way.</em></h3></div>
+          </div></div>
 
-        <div class="adtile"><div class="fa">
-          <img class="fa-photo" src="assets/robot.jpg" alt="Children building a robot" style="object-position:44% 50%">
-          <div class="fa-scrim"></div><div class="fa-frame"></div>
-          <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-          <div class="fa-top">
-            <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-            <span class="fa-url">elc-hub.com</span>
-          </div>
-          <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Robotics &amp; design</div><h3 class="fa-line">Robotics and design. <em>By them.</em></h3></div>
-        </div></div>
+          <div class="cslide"><div class="fa">
+            <img class="fa-photo" src="assets/robot.jpg" alt="Children building a robot" style="object-position:44% 50%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Robotics &amp; design</div><h3 class="fa-line">Robotics and design. <em>By them.</em></h3></div>
+          </div></div>
+
+          <div class="cslide"><div class="fa">
+            <img class="fa-photo" src="assets/wings.jpg" alt="Children building big things" style="object-position:50% 42%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Making</div><h3 class="fa-line">Big things, <em>built by them.</em></h3></div>
+          </div></div>
+        </div>
+        <div class="cdots" id="cdots">
+          <button class="cdot on" type="button" aria-label="Sport"></button>
+          <button class="cdot" type="button" aria-label="Science"></button>
+          <button class="cdot" type="button" aria-label="Robotics &amp; design"></button>
+          <button class="cdot" type="button" aria-label="Making"></button>
+        </div>
       </aside>
 
       <main>
@@ -294,6 +321,27 @@
       if(!em.value || em.value.indexOf('@')<1){ em.focus(); return; }
       document.body.classList.add('sent');
     });
+
+    // ---- big square carousel: crossfade through the four ads ----
+    (function(){
+      var slides = [].slice.call(document.querySelectorAll('#carousel .cslide'));
+      var dots   = [].slice.call(document.querySelectorAll('#cdots .cdot'));
+      if(slides.length < 2) return;
+      var i = 0, timer = null;
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function show(n){
+        i = (n + slides.length) % slides.length;
+        slides.forEach(function(s,k){ s.classList.toggle('on', k===i); });
+        dots.forEach(function(d,k){ d.classList.toggle('on', k===i); });
+      }
+      function play(){ if(reduce) return; stop(); timer = setInterval(function(){ show(i+1); }, 4400); }
+      function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+      dots.forEach(function(d,k){ d.addEventListener('click', function(){ show(k); play(); }); });
+      var car = document.getElementById('carousel');
+      car.addEventListener('mouseenter', stop);
+      car.addEventListener('mouseleave', play);
+      play();
+    })();
 
     // ---- bottom-right dial motion graphic ----
     //  The red index orbits the ring a quarter-turn at a time. At each of the
