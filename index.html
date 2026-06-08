@@ -27,7 +27,8 @@
     --serif:"Newsreader","Times New Roman",Georgia,serif;
     --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;
     --wordmark:"Hanken Grotesk","Inter Tight",system-ui,sans-serif;
-    --banner-h:clamp(78px,11vh,138px);
+    --banner-h:clamp(120px,16vh,184px);
+    --ad:156;
   }
   *,*::before,*::after{box-sizing:border-box;}
   html,body{margin:0;}
@@ -43,16 +44,15 @@
   #topo{position:fixed;inset:0;z-index:0;pointer-events:none;}
   .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
     background:radial-gradient(120% 80% at 82% -12%,rgba(125,99,155,0.42),transparent 60%);}
-  .bigdial{position:fixed;right:-46px;bottom:-34px;z-index:1;opacity:0.5;pointer-events:none;
-    width:clamp(300px,40vw,470px);height:clamp(300px,40vw,470px);}
+  .bigdial{position:fixed;right:clamp(-180px,-7vw,-96px);top:45%;transform:translateY(-50%);z-index:1;opacity:0.5;pointer-events:none;
+    width:clamp(360px,40vw,560px);height:clamp(360px,40vw,560px);}
 
-  /* ---- flight-path banner: the city the children drew, as a horizon along the
-     bottom. It fades up into the aubergine night sky; the dial rises behind it. ---- */
+  /* ---- flight-path banner: the city the children drew. Shows the blue sky at
+     the top, fading up into the aubergine night; buildings sit along the base. ---- */
   .flightpath{position:relative;z-index:2;width:100%;height:var(--banner-h);flex:none;pointer-events:none;
-    background:url("assets/flightpath.jpg") center bottom / cover no-repeat;
-    opacity:0.94;
-    -webkit-mask-image:linear-gradient(to top,#000 0%,#000 46%,transparent 100%);
-            mask-image:linear-gradient(to top,#000 0%,#000 46%,transparent 100%);}
+    background:url("assets/flightpath.jpg") center top / cover no-repeat;
+    -webkit-mask-image:linear-gradient(to top,#000 0%,#000 38%,transparent 100%);
+            mask-image:linear-gradient(to top,#000 0%,#000 38%,transparent 100%);}
 
   /* ---- type recipes ---- */
   .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);}
@@ -72,15 +72,18 @@
   .lock .name{font-size:clamp(20px,2.4vw,23px);color:#fff;white-space:nowrap;}
   .head .tag{color:rgba(244,242,234,0.55);white-space:nowrap;}
 
-  /* ---- ad row: centred, below the hero ---- */
-  .rail-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(244,242,234,0.52);text-align:center;margin:clamp(12px,1.9vh,20px) 0 10px;}
+  /* ---- three-zone mid: ads left · hero centre · dial right ---- */
+  .mid{flex:1;display:flex;align-items:center;gap:clamp(20px,3vw,52px);min-height:0;}
+  .adcol{flex:none;display:flex;flex-direction:column;gap:clamp(9px,1.5vh,15px);}
+  .spacer{flex:none;width:calc(var(--ad)*1px);}
+  .rail-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(244,242,234,0.52);margin:0 0 3px;}
   .rail-label::before{content:"// ";color:var(--red-lift);}
   .adrow{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
 
-  /* full 1080² ad, scaled into a 128px tile (128/1080 = 0.11852) */
-  .adtile{position:relative;width:128px;height:128px;flex:none;overflow:hidden;border-radius:8px;
+  /* full 1080² ad, scaled to a --ad px tile (height-responsive) */
+  .adtile{position:relative;width:calc(var(--ad)*1px);height:calc(var(--ad)*1px);flex:none;overflow:hidden;border-radius:8px;
     border:1px solid rgba(244,242,234,0.16);box-shadow:3px 3px 0 rgba(0,0,0,0.22);}
-  .fa{position:absolute;top:0;left:0;width:1080px;height:1080px;transform:scale(0.11852);transform-origin:top left;
+  .fa{position:absolute;top:0;left:0;width:1080px;height:1080px;transform:scale(calc(var(--ad)/1080));transform-origin:top left;
     background:var(--aubergine);overflow:hidden;font-family:var(--sans);font-weight:300;}
   .fa-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
   .fa-scrim{position:absolute;inset:0;background:
@@ -141,9 +144,20 @@
   .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
     border:1px solid rgba(244,242,234,0.26);color:rgba(244,242,234,0.78);padding:7px 13px;border-radius:999px;}
 
+  @media (max-height:840px){ :root{ --ad:142; } }
+  @media (max-height:760px){ :root{ --ad:130; } }
+  @media (max-height:690px){ :root{ --ad:118; --banner-h:clamp(104px,15vh,150px); } }
+
+  @media (max-width:880px){
+    .mid{flex-direction:column;align-items:center;gap:clamp(20px,4vh,34px);}
+    main{order:-1;}
+    .adcol{flex-direction:row;flex-wrap:wrap;justify-content:center;}
+    .rail-label{display:none;}
+    .spacer{display:none;}
+    .bigdial{top:auto;bottom:-90px;right:-90px;transform:none;opacity:0.34;}
+  }
   @media (max-width:720px){
     .head{margin-top:clamp(14px,4vh,40px);}
-    .bigdial{opacity:0.32;right:-90px;bottom:-90px;}
     .coda{white-space:normal;}
   }
 </style>
@@ -178,19 +192,9 @@
       <span class="eyebrow tag">Coming soon</span>
     </header>
 
-    <main>
-      <p class="eyebrow kicker">A new place to learn</p>
-      <h1>Learning beyond the<br>confines of the <span class="turn">status quo.</span></h1>
-      <p class="lead">A place for young people to make, build and play, on the court and at the bench, in the hours the ordinary school day can't hold.</p>
-      <p class="coda">We're building it now.</p>
-      <form class="notify" id="notify" novalidate>
-        <input type="email" id="email" required placeholder="Email address" aria-label="Email address">
-        <button type="submit">Notify me</button>
-      </form>
-      <div class="thanks"><span class="mk">&#10003;</span><span>You're on the list. We'll write when the doors open.</span></div>
-
-      <p class="rail-label">What's coming</p>
-      <div class="adrow">
+    <div class="mid">
+      <aside class="adcol" aria-label="What's coming">
+        <p class="rail-label">What's coming</p>
         <div class="adtile"><div class="fa">
           <img class="fa-photo" src="assets/football.jpg" alt="Children playing sport" style="object-position:73% 56%;transform:scale(1.32);transform-origin:73% 56%">
           <div class="fa-scrim"></div><div class="fa-frame"></div>
@@ -223,16 +227,29 @@
           </div>
           <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Robotics &amp; design</div><h3 class="fa-line">Robotics and design. <em>By them.</em></h3></div>
         </div></div>
-      </div>
+      </aside>
 
-      <div class="chips">
-        <span class="chip">Make</span>
-        <span class="chip">Design</span>
-        <span class="chip">Build</span>
-        <span class="chip">Move</span>
-        <span class="chip">Create</span>
-      </div>
-    </main>
+      <main>
+        <p class="eyebrow kicker">A new place to learn</p>
+        <h1>Learning beyond the<br>confines of the <span class="turn">status quo.</span></h1>
+        <p class="lead">A place for young people to make, build and play, on the court and at the bench, in the hours the ordinary school day can't hold.</p>
+        <p class="coda">We're building it now.</p>
+        <form class="notify" id="notify" novalidate>
+          <input type="email" id="email" required placeholder="Email address" aria-label="Email address">
+          <button type="submit">Notify me</button>
+        </form>
+        <div class="thanks"><span class="mk">&#10003;</span><span>You're on the list. We'll write when the doors open.</span></div>
+        <div class="chips">
+          <span class="chip">Make</span>
+          <span class="chip">Design</span>
+          <span class="chip">Build</span>
+          <span class="chip">Move</span>
+          <span class="chip">Create</span>
+        </div>
+      </main>
+
+      <div class="spacer" aria-hidden="true"></div>
+    </div>
   </div>
 
   <div class="flightpath"></div>
