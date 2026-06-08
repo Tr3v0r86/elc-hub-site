@@ -1,55 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ELC Hub</title>
-  <meta name="description" content="ELC Hub — something new is coming.">
-  <meta name="robots" content="noindex">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600&family=Space+Mono&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --paper:#F4F2EA; --white:#FBFAF6;
-      --ink:#1F1F21; --charcoal:#39393B; --muted:#6F6D64;
-      --purple:#7D639B; --aubergine:#33254A; --gold:#AC9D71; --red:#A8443A;
-      --hanken:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      --mono:"Space Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-    }
-    *{box-sizing:border-box;margin:0;padding:0;}
-    html,body{height:100%;}
-    body{
-      font-family:var(--hanken);
-      background:var(--paper);
-      color:var(--ink);
-      display:flex;align-items:center;justify-content:center;
-      min-height:100vh;padding:32px;
-      -webkit-font-smoothing:antialiased;
-    }
-    .card{text-align:center;max-width:520px;}
-    .mark{width:40px;height:40px;display:block;margin:0 auto 28px;}
-    .wordmark{
-      font-family:var(--hanken);font-weight:600;
-      font-size:clamp(34px,7vw,52px);letter-spacing:-0.02em;
-      color:var(--aubergine);line-height:1;
-    }
-    .soon{
-      font-family:var(--mono);text-transform:uppercase;letter-spacing:0.18em;
-      font-size:11px;color:var(--muted);margin-top:22px;
-    }
-    .soon::before{content:"// ";color:var(--red);}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELC Hub — coming soon</title>
+<meta name="description" content="A place for young people to make, build and play, on the court and at the bench, in the hours the ordinary school day can't hold. Coming soon.">
+<meta name="theme-color" content="#33254A">
+<meta property="og:title" content="ELC Hub — coming soon">
+<meta property="og:description" content="Learning beyond the confines of the status quo. We're building it now.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://elc-hub.com">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Crect width='64' height='64' rx='14' fill='%2333254A'/%3E%3Ccircle cx='32' cy='33' r='18' stroke='%23F4F2EA' stroke-width='3'/%3E%3Cline x1='32' y1='12' x2='32' y2='20' stroke='%23C25A4E' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='3.6' fill='%23F4F2EA'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter+Tight:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F2EA; --white:#FBFAF6;
+    --ink:#1F1F21; --charcoal:#39393B; --muted:#6F6D64;
+    --rule:#D8D3C6;
+    --purple:#7D639B; --aubergine:#33254A;
+    --gold:#AC9D71; --red:#A8443A; --red-lift:#C25A4E;
+    --text-on-dark:#E4DDF0;
+    --sans:"Inter Tight",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --serif:"Newsreader","Times New Roman",Georgia,serif;
+    --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --wordmark:"Hanken Grotesk","Inter Tight",system-ui,sans-serif;
+    --banner-h:clamp(78px,11vh,138px);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    min-height:100vh;min-height:100svh;position:relative;overflow-x:hidden;
+    background:var(--aubergine);color:var(--text-on-dark);
+    font-family:var(--sans);font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+  }
+
+  /* ---- backgrounds ---- */
+  .topline{position:fixed;top:0;left:0;right:0;height:3px;background:var(--purple);z-index:6;}
+  #topo{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 80% at 82% -12%,rgba(125,99,155,0.42),transparent 60%);}
+  .bigdial{position:fixed;right:-46px;bottom:-34px;z-index:1;opacity:0.5;pointer-events:none;
+    width:clamp(300px,40vw,470px);height:clamp(300px,40vw,470px);}
+
+  /* ---- flight-path banner: the city the children drew, as a horizon along the
+     bottom. It fades up into the aubergine night sky; the dial rises behind it. ---- */
+  .flightpath{position:relative;z-index:2;width:100%;height:var(--banner-h);flex:none;pointer-events:none;
+    background:url("assets/flightpath.jpg") center bottom / cover no-repeat;
+    opacity:0.94;
+    -webkit-mask-image:linear-gradient(to top,#000 0%,#000 46%,transparent 100%);
+            mask-image:linear-gradient(to top,#000 0%,#000 46%,transparent 100%);}
+
+  /* ---- type recipes ---- */
+  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);}
+  .eyebrow::before{content:"// ";color:var(--red-lift);}
+  .wordmark{font-family:var(--wordmark);font-weight:600;letter-spacing:-0.012em;}
+  .display{font-family:var(--serif);font-weight:400;font-optical-sizing:auto;line-height:1.04;letter-spacing:-0.014em;}
+  .turn{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--gold);}
+
+  /* ---- stage ---- */
+  .stage{position:relative;z-index:3;flex:1;display:flex;flex-direction:column;
+    padding:clamp(18px,3vw,36px) clamp(24px,5vw,64px) clamp(14px,2vh,26px);}
+
+  .head{display:flex;justify-content:space-between;align-items:center;gap:16px;
+    margin-top:clamp(4px,1.5vh,22px);}
+  .lock{display:flex;align-items:center;gap:13px;}
+  .lock svg{width:34px;height:34px;display:block;flex:none;}
+  .lock .name{font-size:clamp(20px,2.4vw,23px);color:#fff;white-space:nowrap;}
+  .head .tag{color:rgba(244,242,234,0.55);white-space:nowrap;}
+
+  /* ---- ad row: centred, below the hero ---- */
+  .rail-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(244,242,234,0.52);text-align:center;margin:clamp(12px,1.9vh,20px) 0 10px;}
+  .rail-label::before{content:"// ";color:var(--red-lift);}
+  .adrow{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+
+  /* full 1080² ad, scaled into a 128px tile (128/1080 = 0.11852) */
+  .adtile{position:relative;width:128px;height:128px;flex:none;overflow:hidden;border-radius:8px;
+    border:1px solid rgba(244,242,234,0.16);box-shadow:3px 3px 0 rgba(0,0,0,0.22);}
+  .fa{position:absolute;top:0;left:0;width:1080px;height:1080px;transform:scale(0.11852);transform-origin:top left;
+    background:var(--aubergine);overflow:hidden;font-family:var(--sans);font-weight:300;}
+  .fa-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .fa-scrim{position:absolute;inset:0;background:
+    linear-gradient(to top, rgba(22,15,32,0.94) 0%, rgba(28,19,42,0.82) 26%, rgba(30,21,46,0.30) 52%, rgba(30,21,46,0) 70%),
+    linear-gradient(to bottom, rgba(22,15,32,0.55) 0%, rgba(22,15,32,0) 22%);}
+  .fa-frame{position:absolute;inset:30px;border:1px solid rgba(244,242,234,0.42);}
+  .fa-reg{position:absolute;width:22px;height:22px;opacity:0.7;}
+  .fa-reg::before,.fa-reg::after{content:"";position:absolute;background:rgba(244,242,234,0.8);}
+  .fa-reg::before{left:50%;top:0;width:1.5px;height:100%;transform:translateX(-50%);}
+  .fa-reg::after{top:50%;left:0;height:1.5px;width:100%;transform:translateY(-50%);}
+  .fa-reg.tl{top:48px;left:48px;} .fa-reg.br{bottom:48px;right:48px;}
+  .fa-top{position:absolute;top:58px;left:62px;right:62px;display:flex;justify-content:space-between;align-items:center;}
+  .fa-lock{display:flex;align-items:center;gap:14px;}
+  .fa-lock svg{width:40px;height:40px;display:block;}
+  .fa-nm{font-family:var(--wordmark);font-weight:600;font-size:30px;letter-spacing:-0.012em;color:#fff;white-space:nowrap;}
+  .fa-url{font-family:var(--mono);font-size:15px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(244,242,234,0.7);}
+  .fa-body{position:absolute;left:62px;right:62px;bottom:64px;}
+  .fa-ruler{width:74px;height:11px;border-bottom:2px solid var(--red-lift);margin-bottom:22px;
+    background-image:repeating-linear-gradient(90deg,var(--red-lift) 0 1.5px,transparent 1.5px 12px);}
+  .fa-ey{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;}
+  .fa-ey::before{content:"// ";color:var(--red-lift);}
+  .fa-line{margin:0;font-family:var(--serif);font-weight:400;font-size:62px;line-height:1.05;letter-spacing:-0.016em;color:#fff;max-width:18ch;}
+  .fa-line em{font-style:italic;color:var(--gold);}
+
+  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    padding:clamp(4px,1vh,14px) 0;}
+  .kicker{margin-bottom:clamp(12px,1.6vw,18px);}
+  h1{font-family:var(--serif);font-weight:400;font-optical-sizing:auto;line-height:1.04;letter-spacing:-0.014em;
+    font-size:clamp(30px,4.6vw,46px);color:#fff;margin:0 0 clamp(13px,1.6vw,18px);}
+  .lead{font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.5;max-width:54ch;color:var(--text-on-dark);margin:0 auto;}
+  .coda{font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.5;color:var(--text-on-dark);margin:8px auto 0;white-space:nowrap;}
+
+  /* ---- notify ---- */
+  form.notify{display:flex;align-items:stretch;gap:0;margin-top:clamp(14px,1.9vh,22px);}
+  form.notify input{font-family:var(--sans);font-weight:300;font-size:15px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--rule);border-right:none;
+    padding:0 16px;height:48px;width:min(260px,52vw);outline:none;border-radius:8px 0 0 8px;}
+  form.notify input::placeholder{color:var(--muted);}
+  form.notify input:focus{border-color:var(--purple);}
+  form.notify button{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
+    background:var(--gold);color:#2c2713;border:1px solid var(--gold);border-radius:0 8px 8px 0;
+    padding:0 22px;height:48px;cursor:pointer;transition:transform 0.08s ease,background 0.2s ease;white-space:nowrap;}
+  form.notify button:hover{background:#bcad81;}
+  form.notify button:active{transform:translateY(1px);}
+  .thanks{display:none;align-items:center;gap:10px;margin-top:clamp(28px,3.4vw,34px);font-size:14.5px;color:var(--text-on-dark);
+    border:1px solid rgba(244,242,234,0.22);border-radius:8px;padding:13px 18px;background:rgba(244,242,234,0.04);}
+  .thanks .mk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
+    background:var(--gold);color:#2c2713;font-size:12px;font-weight:700;flex:none;}
+  body.sent form.notify{display:none;}
+  body.sent .thanks{display:inline-flex;}
+
+  /* ---- footer: ad row, then ruler + chips ---- */
+  footer{display:flex;flex-direction:column;gap:clamp(14px,2vh,20px);}
+  .footmeta{display:flex;flex-direction:column;gap:12px;}
+  .ruler{width:64px;height:10px;border-bottom:2px solid var(--red-lift);
+    background-image:repeating-linear-gradient(90deg,var(--red-lift) 0 1px,transparent 1px 10px);}
+  .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:clamp(10px,1.4vh,14px);}
+  .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+    border:1px solid rgba(244,242,234,0.26);color:rgba(244,242,234,0.78);padding:7px 13px;border-radius:999px;}
+
+  @media (max-width:720px){
+    .head{margin-top:clamp(14px,4vh,40px);}
+    .bigdial{opacity:0.32;right:-90px;bottom:-90px;}
+    .coda{white-space:normal;}
+  }
+</style>
 </head>
 <body>
-  <main class="card">
-    <svg class="mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <circle cx="32" cy="32" r="24" stroke="#7D639B" stroke-width="4"/>
-      <line x1="32" y1="4" x2="32" y2="16" stroke="#A8443A" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="32" cy="32" r="5.5" fill="#7D639B"/>
-    </svg>
-    <h1 class="wordmark">ELC&nbsp;Hub</h1>
-    <p class="soon">Coming soon</p>
-  </main>
+  <div class="topline"></div>
+  <svg id="topo" aria-hidden="true"></svg>
+  <div class="glow"></div>
+
+  <svg class="bigdial" id="bigdial" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <defs><clipPath id="bd-cup"><circle cx="32" cy="32" r="4.5"></circle></clipPath></defs>
+    <circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle>
+    <g clip-path="url(#bd-cup)">
+      <circle cx="32" cy="32" r="4.6" fill="#F4F2EA"></circle>
+      <path id="bd-ink" d="M27 37.6 L37 37.6 Z" fill="#C25A4E"></path>
+      <path id="bd-fill" d="M27 37.6 L37 37.6 Z" fill="#F4F2EA"></path>
+    </g>
+    <line id="bd-index" x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line>
+  </svg>
+
+
+  <div class="stage">
+    <header class="head">
+      <div class="lock">
+        <svg id="logomark" viewBox="0 0 64 64" fill="none" aria-label="ELC Hub">
+          <circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle>
+          <line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line>
+          <circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle>
+        </svg>
+        <span class="wordmark name">ELC Hub</span>
+      </div>
+      <span class="eyebrow tag">Coming soon</span>
+    </header>
+
+    <main>
+      <p class="eyebrow kicker">A new place to learn</p>
+      <h1>Learning beyond the<br>confines of the <span class="turn">status quo.</span></h1>
+      <p class="lead">A place for young people to make, build and play, on the court and at the bench, in the hours the ordinary school day can't hold.</p>
+      <p class="coda">We're building it now.</p>
+      <form class="notify" id="notify" novalidate>
+        <input type="email" id="email" required placeholder="Email address" aria-label="Email address">
+        <button type="submit">Notify me</button>
+      </form>
+      <div class="thanks"><span class="mk">&#10003;</span><span>You're on the list. We'll write when the doors open.</span></div>
+
+      <p class="rail-label">What's coming</p>
+      <div class="adrow">
+        <div class="adtile"><div class="fa">
+          <img class="fa-photo" src="assets/football.jpg" alt="Children playing sport" style="object-position:73% 56%;transform:scale(1.32);transform-origin:73% 56%">
+          <div class="fa-scrim"></div><div class="fa-frame"></div>
+          <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+          <div class="fa-top">
+            <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+            <span class="fa-url">elc-hub.com</span>
+          </div>
+          <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Sport</div><h3 class="fa-line">Sport made with them, <em>not for them.</em></h3></div>
+        </div></div>
+
+        <div class="adtile"><div class="fa">
+          <img class="fa-photo" src="assets/experiment.jpg" alt="A child's light experiment" style="object-position:52% 46%">
+          <div class="fa-scrim"></div><div class="fa-frame"></div>
+          <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+          <div class="fa-top">
+            <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+            <span class="fa-url">elc-hub.com</span>
+          </div>
+          <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Science</div><h3 class="fa-line">Experiments, <em>their way.</em></h3></div>
+        </div></div>
+
+        <div class="adtile"><div class="fa">
+          <img class="fa-photo" src="assets/robot.jpg" alt="Children building a robot" style="object-position:44% 50%">
+          <div class="fa-scrim"></div><div class="fa-frame"></div>
+          <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+          <div class="fa-top">
+            <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+            <span class="fa-url">elc-hub.com</span>
+          </div>
+          <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Robotics &amp; design</div><h3 class="fa-line">Robotics and design. <em>By them.</em></h3></div>
+        </div></div>
+      </div>
+
+      <div class="chips">
+        <span class="chip">Make</span>
+        <span class="chip">Design</span>
+        <span class="chip">Build</span>
+        <span class="chip">Move</span>
+        <span class="chip">Create</span>
+      </div>
+    </main>
+  </div>
+
+  <div class="flightpath"></div>
+
+  <script>
+  (function(){
+    // ---- topographic contour field, origin = the logo dial centre ----
+    var svg = document.getElementById('topo');
+    var NS = 'http://www.w3.org/2000/svg';
+    function build(){
+      while(svg.firstChild) svg.removeChild(svg.firstChild);
+      var W = window.innerWidth, H = window.innerHeight;
+      svg.setAttribute('width', W); svg.setAttribute('height', H);
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      var mark = document.getElementById('logomark').getBoundingClientRect();
+      var cx = mark.left + mark.width/2, cy = mark.top + mark.height/2;
+      var seed = 1.7;
+      var harm = [{k:2,a:0.10,p:0.6+seed},{k:3,a:0.06,p:2.1+seed},{k:5,a:0.035,p:4.0+seed},{k:7,a:0.018,p:1.2+seed}];
+      var maxR = Math.hypot(Math.max(cx,W-cx), Math.max(cy,H-cy)) + 80;
+      var N = 184, step = 48;
+      for(var r=step; r<maxR; r+=step){
+        var d='';
+        for(var i=0;i<=N;i++){
+          var t=i/N*Math.PI*2, pert=0;
+          for(var h=0;h<harm.length;h++) pert+=harm[h].a*Math.sin(harm[h].k*t+harm[h].p);
+          var rr=r*(1+pert), x=cx+rr*Math.cos(t), y=cy+rr*Math.sin(t);
+          d+=(i===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1);
+        }
+        var p=document.createElementNS(NS,'path');
+        p.setAttribute('d', d+'Z'); p.setAttribute('fill','none');
+        p.setAttribute('stroke','rgba(244,242,234,0.11)'); p.setAttribute('stroke-width','1');
+        svg.appendChild(p);
+      }
+    }
+    build();
+    var t; window.addEventListener('resize', function(){ clearTimeout(t); t=setTimeout(build, 150); });
+
+    // ---- notify (visual only; no backend wired) ----
+    document.getElementById('notify').addEventListener('submit', function(e){
+      e.preventDefault();
+      var em = document.getElementById('email');
+      if(!em.value || em.value.indexOf('@')<1){ em.focus(); return; }
+      document.body.classList.add('sent');
+    });
+
+    // ---- bottom-right dial motion graphic ----
+    //  The red index orbits the ring a quarter-turn at a time. At each of the
+    //  four stations (12, 3, 6, 9 o'clock) it squeezes all the way into the
+    //  centre, the centre fills with white from the bottom like a cup of water,
+    //  and once full the index squeezes back out to the ring and spins on.
+    (function(){
+      var idx  = document.getElementById('bd-index');
+      var ink  = document.getElementById('bd-ink');   // red liquid, rises in phase A
+      var fill = document.getElementById('bd-fill');   // white liquid, rises in phase B
+      if(!idx || !ink || !fill) return;
+      if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var ROT_SEG = 2900, PULSE = 4000;        // quarter-turn, then the (slow) pulse
+      var R_OUT = 27, R_IN = 17;               // tick straddles the ring at rest
+      var TOP = 27.5, BOT = 36.5, SPAN = 9;    // centre-circle bounds (the cup)
+      var HALFPI = Math.PI / 2;
+      function easeInOut(t){ return t<0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+      function clamp01(v){ return v<0 ? 0 : v>1 ? 1 : v; }
+
+      // theta from 12 o'clock clockwise; p: 0 = on the ring, 1 = squeezed to centre
+      function placeIndex(theta, p){
+        var rO = R_OUT*(1-p), rI = R_IN*(1-p), s = Math.sin(theta), c = Math.cos(theta);
+        idx.setAttribute('x1', (32 + rO*s).toFixed(2));
+        idx.setAttribute('y1', (32 - rO*c).toFixed(2));
+        idx.setAttribute('x2', (32 + rI*s).toFixed(2));
+        idx.setAttribute('y2', (32 - rI*c).toFixed(2));
+        idx.setAttribute('stroke-opacity', (1 - clamp01((p-0.72)/0.28)).toFixed(3));
+      }
+      // f: 0 = empty, 1 = full. The liquid rises from the BOTTOM up, with a
+      // gently sloshing curved surface (wave tapers to flat at empty/full).
+      function setLevel(el, f, phase){
+        var lvl = BOT - clamp01(f)*SPAN;              // surface height (drops as f grows)
+        var amp = 0.6 * Math.sin(Math.PI * clamp01(f));
+        var x0 = 27, x1 = 37, steps = 12, d = 'M ' + x0 + ' 37.6';
+        for(var i=0;i<=steps;i++){
+          var x = x0 + (x1-x0)*i/steps;
+          var y = lvl + Math.sin((i/steps)*Math.PI*3 + phase) * amp
+                      + Math.sin((i/steps)*Math.PI + phase*0.6) * amp*0.4;
+          d += ' L ' + x.toFixed(2) + ' ' + y.toFixed(2);
+        }
+        d += ' L ' + x1 + ' 37.6 Z';
+        el.setAttribute('d', d);
+      }
+
+      var mode = 'rot', station = 0, start = null;
+      function frame(ts){
+        if(start === null) start = ts;
+        var el = ts - start;
+        var phase = ts * 0.006;
+        if(mode === 'rot'){
+          var t = el / ROT_SEG;
+          if(t >= 1){ mode = 'pulse'; start = ts; placeIndex((station+1)*HALFPI, 0); return requestAnimationFrame(frame); }
+          placeIndex((station + t) * HALFPI, 0);     // steady quarter-turn spin
+        } else {
+          var u = el / PULSE;
+          var pa = (station + 1) * HALFPI;            // the station we pulse at
+          if(u >= 1){ mode = 'rot'; station = (station + 1) % 4; start = ts; placeIndex(station*HALFPI, 0); setLevel(ink, 0, phase); setLevel(fill, 0, phase); return requestAnimationFrame(frame); }
+          var pIdx, fInk, fFill;
+          if(u < 0.18){ var a = easeInOut(u/0.18); pIdx = a; fInk = a; fFill = 0; }        // squeeze in; RED rises from the bottom
+          else if(u < 0.84){ pIdx = 1; fInk = 1; fFill = easeInOut((u-0.18)/0.66); }       // WHITE rises slowly from the bottom
+          else { var co = easeInOut((u-0.84)/0.16); pIdx = 1 - co; fInk = 1; fFill = 1; }   // full white; squeeze back out
+          placeIndex(pa, pIdx);
+          setLevel(ink, fInk, phase);
+          setLevel(fill, fFill, phase * 1.12 + 1.3);
+        }
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })();
+  })();
+  </script>
 </body>
 </html>
