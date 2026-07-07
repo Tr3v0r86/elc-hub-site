@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activities · ELC Portal</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4F2EA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter+Tight:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/app.css">
+</head>
+<body>
+  <div class="topline"></div>
+  <svg id="topo" aria-hidden="true"></svg>
+
+  <header>
+    <a class="brand" href="../">
+      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke="#7D639B" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke="#A8443A" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5" fill="#7D639B"/></svg>
+      <div>
+        <div class="wm">ELC</div>
+        <div class="desc">Portal</div>
+      </div>
+    </a>
+    <span class="tape">v0.2 mockup</span>
+    <nav>
+      <a class="navlink" href="../">This week</a>
+      <a class="navlink active" href="../activities/">Activities</a>
+      <a class="navlink" href="../calendar/">Calendar</a>
+      <a class="navlink" href="../policies/">Policies</a>
+    </nav>
+  </header>
+
+  <div class="crumb"><a href="../">This week</a> &nbsp;/&nbsp; Activities</div>
+
+  <div class="wrap sub">
+    <div class="page-head">
+      <span class="eyebrow">Register · Term 1</span>
+      <h1>Everything to sign up for.</h1>
+      <p class="lead">Browse what is on this term and start a booking. Registration is handled by the office; this is where it begins.</p>
+    </div>
+
+    <div class="filter">
+      <button class="f on">All</button>
+      <button class="f" data-cat="after-school">After school</button>
+      <button class="f" data-cat="sport">Sport</button>
+      <button class="f" data-cat="music">Music</button>
+      <button class="f" data-cat="events">Events</button>
+    </div>
+
+    <div class="act-grid">
+      <!-- ASA -->
+      <div class="tile act-card tile-top-purple" data-cat="after-school">
+        <span class="eyebrow">After school</span>
+        <h3>After-school activities</h3>
+        <p>The hours after three, well spent. Sport, arts, design and tech, chosen by term block. Pick what your child loves, or something new.</p>
+        <div class="act-meta"><span class="chip">Years 3 to 6</span><span class="chip">Mon to Thu</span><span class="chip">Term block</span></div>
+        <div class="act-foot"><span class="status open">Open now</span><a class="btn" href="../asa/">Register for ASA <span class="arw">&rarr;</span></a></div>
+      </div>
+
+      <!-- ARMONIA -->
+      <div class="tile act-card tile-top-purple" data-cat="music">
+        <span class="eyebrow">Programme</span>
+        <h3>Armonia</h3>
+        <p>Music, drama and dance performance, together. A programme of its own, taught in small groups and one to one. Tuesday and Thursday, 3 to 4pm.</p>
+        <div class="act-meta"><span class="chip">All years</span><span class="chip">Weekly</span><span class="chip">Small groups</span></div>
+        <div class="act-foot"><span class="status open">Open now</span><a class="btn" href="mailto:activities@elc.ac.th?subject=Armonia%3A%20register%20interest" data-rail="TODO" title="Armonia registration rail pending · issue 0009">Register interest <span class="arw">&rarr;</span></a></div>
+      </div>
+
+      <!-- SPORT: rows + note render from assets/data.js (single source, honest statuses) -->
+      <div class="tile act-card tile-top-purple" data-cat="sport">
+        <span class="eyebrow">Sport · Term 1</span>
+        <h3>Sport</h3>
+        <p>Pick a season. Try out, train, play. Coached at the Dove, on our own court and pitch.</p>
+        <div class="sports" id="sport-grid"></div>
+        <p class="sub" id="sport-note"></p>
+        <div class="act-foot"><span class="eyebrow" id="sport-open-count"></span><a class="btn purple" href="mailto:activities@elc.ac.th?subject=Sport%20registration" data-rail="TODO" title="Sport registration rail pending · issue 0009">Register for sport <span class="arw">&rarr;</span></a></div>
+      </div>
+
+      <!-- EVENTS -->
+      <div class="tile act-card tile-top-purple" data-cat="events">
+        <span class="eyebrow">Events</span>
+        <h3>Events and workshops</h3>
+        <p>Workshops, FotA sessions and community days. One-off and open to families. Reserve a place before it fills.</p>
+        <div class="act-meta"><span class="chip">Families welcome</span><span class="chip">One-off</span><span class="chip">FotA</span></div>
+        <div class="act-foot"><span class="status soon">Opens soon</span><a class="btn ghost" href="mailto:activities@elc.ac.th?subject=Events%20and%20workshops">Email the office <span class="arw">&rarr;</span></a></div>
+      </div>
+    </div>
+
+    <div class="tile how">
+      <div class="ruler"></div>
+      <div class="txt">
+        <div class="hd">How registration works</div>
+        <div class="sub">Choose an activity, tell us your child's details, and confirm. The office does the rest and writes to you with the place.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot-strip">
+    <span class="l">portal.elc.ac.th · The Dove, Sukhumvit 49</span>
+    <span class="r">No login needed. Your child's learning lives in the Parent App.</span>
+    <span class="fine">v0.2 mockup · for internal feedback, not a live school page</span>
+  </div>
+
+  <div class="tabbar">
+    <a class="tab" href="../"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>This week</a>
+    <a class="tab active" href="../activities/"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>Activities</a>
+    <a class="tab" href="../calendar/"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18"/></svg>Calendar</a>
+    <a class="tab" href="../policies/"><svg class="ic" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Policies</a>
+  </div>
+
+  <script src="../assets/data.js"></script>
+  <script src="../assets/render.js"></script>
+  <script src="../assets/contour.js"></script>
+  <script src="../assets/feedback.js"></script>
+  <script>
+  /* Page wiring only: filter chips + sport count computed from window.PORTAL. */
+  (function () {
+    var chips = document.querySelectorAll('.filter .f');
+    var cards = document.querySelectorAll('.act-card');
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        chips.forEach(function (c) { c.classList.remove('on'); });
+        chip.classList.add('on');
+        var cat = chip.getAttribute('data-cat');
+        cards.forEach(function (card) {
+          card.style.display = (!cat || card.getAttribute('data-cat') === cat) ? '' : 'none';
+        });
+      });
+    });
+    var count = document.getElementById('sport-open-count');
+    if (count && window.PORTAL && window.PORTAL.sports) {
+      var n = window.PORTAL.sports.filter(function (s) { return s.status === 'open'; }).length;
+      var words = ['None', 'One', 'Two', 'Three', 'Four', 'Five'];
+      count.textContent = (words[n] || n) + ' open now';
+    }
+  })();
+  </script>
+</body>
+</html>

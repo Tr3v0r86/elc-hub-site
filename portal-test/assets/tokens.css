@@ -1,0 +1,46 @@
+/* ============================================================
+   The tokens seam (ADR-0002). Fede's master system swaps values here.
+
+   Every visual value on the site lives here as a custom property.
+   Page CSS (app.css) consumes tokens only; a hex code in a page
+   file is a bug. Values ported 1:1 from the Claude Design package
+   design/mockups/2026-07-07-portal-app-v0.1/portal-app.css :root,
+   plus the three values that package hardcoded in component rules
+   (--purple-hover, --gold-hover, --gold-ink-deep).
+   ============================================================ */
+:root{
+  /* --- surfaces --- */
+  --paper:#F4F2EA; --paper-2:#ECE9DF; --white:#FBFAF6;
+  --white-pure:#FFFFFF;
+
+  /* --- ink --- */
+  --ink:#1F1F21; --charcoal:#39393B; --muted:#6F6D64; --faint:#9C9889;
+
+  /* --- hairlines --- */
+  --rule:#D8D3C6; --rule-2:#E6E2D7;
+
+  /* --- brand accents --- */
+  --purple:#7D639B; --purple-tint:#ECE5F2;
+  --purple-hover:#6C5488;              /* was hardcoded in .btn.purple:hover */
+  --aubergine:#33254A; --aubergine-2:#3F2F5A;
+  --gold:#AC9D71; --gold-deep:#8A7A3F; --gold-tint:#EFE9D6;
+  --gold-hover:#BCAD81;                /* was hardcoded in .btn.gold:hover */
+  --gold-ink-deep:#2C2713;             /* was hardcoded as gold-button ink */
+  --red:#A8443A; --red-lift:#C25A4E;
+  --sage:#5B7A4A;                      /* success (HANDOFF token list; feedback widget) */
+  --text-on-dark:#E4DDF0;
+
+  /* --- fonts --- */
+  --sans:"Inter Tight",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:"Newsreader","Times New Roman",Georgia,serif;
+  --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --wordmark:"Hanken Grotesk","Inter Tight",system-ui,sans-serif;
+  --stencil:"Saira Stencil One",var(--mono);   /* tape chips (live markers) */
+
+  /* --- shadows --- */
+  --shadow-quiet:0 1px 0 rgba(0,0,0,0.02);
+  --shadow-hard:3px 3px 0 rgba(31,31,33,0.10);
+
+  /* --- chrome --- */
+  --nav-h:70px;
+}
