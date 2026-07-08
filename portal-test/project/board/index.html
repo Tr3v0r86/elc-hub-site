@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The board · ELC Portal project window</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4F2EA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/app.css">
+<link rel="stylesheet" href="../hub.css">
+</head>
+<body>
+  <div class="topline"></div>
+  <svg id="topo" aria-hidden="true"></svg>
+
+  <header>
+    <a class="brand" href="../">
+      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke="#7D639B" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke="#A8443A" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5" fill="#7D639B"/></svg>
+      <div>
+        <div class="wm">ELC Portal</div>
+        <div class="desc">Project window</div>
+      </div>
+    </a>
+    <nav>
+      <a class="navlink" href="../../">&larr; The app</a>
+    </nav>
+  </header>
+  <div class="crumb"><a href="../">Project window</a> &nbsp;/&nbsp; The board</div>
+
+  <div class="wrap sub">
+    <div class="page-head">
+      <span class="eyebrow">The Portal · the board</span>
+      <h1>The board, <span class="turn">live.</span></h1>
+      <p class="lead">Every piece of work on the Portal, straight from the project tracker, grouped by where it stands.</p>
+      <p class="page-note">How to read the states: shipped means done and live on the test build. being built now means work is running. waiting on a person means a named person holds the next step. waiting on an answer means a question needs settling before work starts. parked means on hold on purpose.</p>
+    </div>
+
+    <div class="section">
+    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Shipped · 10</span><span class="ln"></span></div>
+    <div class="doc-list">
+    <div class="doc-row">
+      <span class="chip n">0001</span>
+      <div class="meta"><div class="nm">Build v0.1 landing page + ASA sub-page</div><div class="sub">shipped 2026-07-07</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0011</span>
+      <div class="meta"><div class="nm">Pages publish + phone/laptop QA</div><div class="sub">shipped 2026-07-07</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0012</span>
+      <div class="meta"><div class="nm">v0.2 design pass (Claude Design)</div><div class="sub">delivered 2026-07-07 as 4-page app package</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0013</span>
+      <div class="meta"><div class="nm">Build the four-page app shell from the design package</div><div class="sub">shipped 2026-07-07</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0014</span>
+      <div class="meta"><div class="nm">Single data layer (data.js)</div><div class="sub">shipped 2026-07-07</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0015</span>
+      <div class="meta"><div class="nm">PWA: installable + offline shell</div><div class="sub">shipped 2026-07-09</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0016</span>
+      <div class="meta"><div class="nm">Policies &amp; forms: real documents</div><div class="sub">resolved 2026-07-08 via registry redirect</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0018</span>
+      <div class="meta"><div class="nm">Ingest events/workshops sheet into calendar data</div><div class="sub">wired 2026-07-09: 85 entries, 2 rescues, Dec 5 Sat confirmed</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0020</span>
+      <div class="meta"><div class="nm">Feedback → GitHub Issues via relay</div><div class="sub">live 2026-07-09, widget wired, mailto fallback</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0023</span>
+      <div class="meta"><div class="nm">Idea board: internal voting page feeding triage</div><div class="sub">live 2026-07-09; Trevor distributes link</div></div>
+    </div>
+    </div>
+    </div>
+
+    <div class="section">
+    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Waiting on a person · 7</span><span class="ln"></span></div>
+    <div class="doc-list">
+    <div class="doc-row">
+      <span class="chip n">0004</span>
+      <div class="meta"><div class="nm">Live This-Week calendar feed</div><div class="sub">Master Cal: Marissa owns, Neung responsible; need done-by</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0007</span>
+      <div class="meta"><div class="nm">Real HoS message copy from Payal</div><div class="sub">after mockup feedback</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0008</span>
+      <div class="meta"><div class="nm">Real photography for zone photo slots</div><div class="sub">placeholders in v0.1</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0009</span>
+      <div class="meta"><div class="nm">Wire real rail URLs (WordPress ASA · Jotforms · AY cal)</div><div class="sub">Trevor supplies URLs</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0021</span>
+      <div class="meta"><div class="nm">Jotform account takeover (Trevor)</div><div class="sub">unblocks 0009/0010/0003</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0022</span>
+      <div class="meta"><div class="nm">Triage the possibility sweep (159 ideas)</div><div class="sub">whole sweep parked as one item; spec parked too</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0024</span>
+      <div class="meta"><div class="nm">WordPress portal audit into ELC official systems</div><div class="sub">Trevor has access; IT needs clean eyes + docs</div></div>
+    </div>
+    </div>
+    </div>
+
+    <div class="section">
+    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Waiting on an answer · 7</span><span class="ln"></span></div>
+    <div class="doc-list">
+    <div class="doc-row">
+      <span class="chip n">0002</span>
+      <div class="meta"><div class="nm">ASA sign-up off the WordPress rail</div><div class="sub">backlog: deliberate</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0003</span>
+      <div class="meta"><div class="nm">Native event + La Comunità registration</div><div class="sub">backlog: Jotform interim</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0005</span>
+      <div class="meta"><div class="nm">Internal planning item</div><div class="sub">internal planning detail</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0006</span>
+      <div class="meta"><div class="nm">Adopt Fede's master design system at the tokens seam</div><div class="sub">blocked: his system landing</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0010</span>
+      <div class="meta"><div class="nm">Feedback button → Jotform form</div><div class="sub">backlog: mailto interim</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0017</span>
+      <div class="meta"><div class="nm">portal.elc.ac.th cutover gate</div><div class="sub">end-state: app = landing, ASA reg = sub-page</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0019</span>
+      <div class="meta"><div class="nm">ASA WordPress rebrand without breaking August</div><div class="sub">restyle in place; migration stays 0002</div></div>
+    </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="foot-strip">
+    <span class="l">ELC Portal · project window</span>
+    <span class="r">This is the project's working window. The app itself is <a href="../../">here</a>.</span>
+  </div>
+
+  <script src="../../assets/contour.js"></script>
+</body>
+</html>

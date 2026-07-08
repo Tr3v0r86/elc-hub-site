@@ -1,0 +1,13 @@
+/* Project-window hub: only the bits app.css does not cover.
+   Consumes tokens.css custom properties exclusively (ADR-0002). */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:34px;}
+.stat{padding:18px 20px 16px;}
+.stat .num{font-size:36px;line-height:1.1;color:var(--ink);}
+.stat .lb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-top:7px;}
+.stat .sb{font-size:12.5px;font-weight:300;color:var(--muted);margin-top:4px;}
+.hub-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
+.hub-cards .reg-card{grid-column:auto;} /* neutralise app.css bento spans inside this grid */
+.doc-row .chip.n{flex:none;color:var(--charcoal);}
+.mile{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--gold-deep);background:var(--gold-tint);border:1px solid var(--gold);border-radius:999px;padding:3px 9px;white-space:nowrap;}
+.sec-eyebrow .chip{flex:none;}

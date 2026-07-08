@@ -40,6 +40,16 @@ input[type="search"]{min-width:220px}
 .wow{color:var(--gold-deep)}
 .chips{margin-bottom:6px}
 .chip{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--rule);border-radius:3px;padding:1px 7px;margin-right:6px}
+.chip.suggested{background:var(--gold-tint);border-color:var(--gold-deep);color:var(--gold-deep)}
+#add{font-family:var(--mono);font-size:12px;padding:6px 12px;border:1px solid var(--gold-deep);background:var(--gold-tint);color:var(--gold-deep);cursor:pointer;border-radius:3px}
+#suggest{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--rule);background:var(--paper-2)}
+#suggest input,#suggest textarea{font-family:var(--sans);font-size:14px;padding:6px 10px;border:1px solid var(--rule);background:var(--white);color:var(--ink);border-radius:3px}
+#suggest textarea{flex:1 1 100%;resize:vertical}
+#s-title{min-width:260px}
+#suggest button{font-family:var(--mono);font-size:12px;padding:6px 12px;border:1px solid var(--purple);background:var(--purple);color:var(--white);cursor:pointer;border-radius:3px}
+#s-msg{font-size:13px;color:var(--muted)}
+#s-msg.err{color:var(--red)}
+#suggest input[name="website"]{display:none}
 .body p{font-size:14px;color:var(--charcoal)}
 .body .value{color:var(--muted);margin-top:3px}
 @media (prefers-reduced-motion: no-preference){ .votes button{transition:background .15s} }
@@ -53,18 +63,28 @@ input[type="search"]{min-width:220px}
     <button data-bucket="aug" aria-pressed="false">August draft</button>
     <button data-bucket="backlog" aria-pressed="false">Backlog</button>
     <button data-bucket="never" aria-pressed="false">Never</button>
+    <button data-bucket="suggested" aria-pressed="false" id="tab-suggested" hidden>Suggested · 0</button>
   </div>
   <select id="lens" aria-label="lens"><option value="">all lenses</option></select>
   <input id="q" type="search" placeholder="search ideas" aria-label="search ideas">
+  <button id="add" type="button" aria-expanded="false">Add an idea</button>
   <span id="count" class="count"></span>
 </div>
+<form id="suggest" hidden>
+  <input id="s-title" placeholder="Idea title" required maxlength="90" aria-label="idea title">
+  <textarea id="s-what" rows="2" placeholder="What is it and who does it help?" required maxlength="280" aria-label="what it is"></textarea>
+  <input id="s-by" placeholder="Your name (optional)" maxlength="60" aria-label="your name">
+  <input name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <button type="submit">Submit idea</button>
+  <span id="s-msg" role="status"></span>
+</form>
 <div id="list"></div>
 <script>
 const K = new URL(location).searchParams.get('k') || '';
 const voter = localStorage['elc-board-voter'] ||= crypto.randomUUID();
 const mine = JSON.parse(localStorage['elc-board-votes'] || '{}');
 const BUCKETS = { aug: 'August draft', backlog: 'Backlog', never: 'Never' };
-let ideas = [], votes = {}, bucket = '', lens = '', q = '';
+let ideas = [], suggestions = [], votes = {}, bucket = '', lens = '', q = '';
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 // Same-origin when served by the Worker; absolute when hosted statically at elc-hub.com/ideas/.
@@ -77,21 +97,38 @@ async function load() {
     const r = await fetch(API + '/api/votes?k=' + encodeURIComponent(K));
     votes = r.ok ? await r.json() : {};
   } catch { votes = {}; }              // API down: counts default to 0, page still renders
+  try {
+    const r = await fetch(API + '/api/suggestions?k=' + encodeURIComponent(K));
+    if (r.ok) { suggestions = await r.json(); suggestedTab(); }
+  } catch {}                           // API down: Suggested tab stays hidden
   const sel = document.getElementById('lens');
   [...new Set(ideas.map(i => i.lens))].sort().forEach(l => sel.add(new Option(l, l)));
   render();
 }
 
+function suggestedTab() {
+  const t = document.getElementById('tab-suggested');
+  t.hidden = false;
+  t.textContent = 'Suggested · ' + suggestions.length;
+}
+
+// Suggestions render as idea rows: no lens or effort, so a lens filter hides them.
+const asRow = s => ({ id: s.id, name: s.name, what: s.what, value: s.by ? 'suggested by ' + s.by : '', lens: '', decision: 'suggested', wow: false });
+
 function render() {
   const ql = q.toLowerCase();
-  const rows = ideas
+  const all = ideas.concat(suggestions.map(asRow));
+  const rows = all
     .filter(i => (!bucket || i.decision === bucket) && (!lens || i.lens === lens) &&
                  (!ql || (i.name + ' ' + i.what + ' ' + i.value).toLowerCase().includes(ql)))
     .sort((a, b) => score(b) - score(a) || a.name.localeCompare(b.name));   // score desc, name tiebreak
-  document.getElementById('count').textContent = rows.length + ' of ' + ideas.length + ' ideas';
+  document.getElementById('count').textContent = rows.length + ' of ' + all.length + ' ideas';
   document.getElementById('list').innerHTML = rows.map(i => {
     const v = votes[i.id] || { up: 0, down: 0, score: 0 };
     const my = mine[i.id] || 0;
+    const chips = i.decision === 'suggested'
+      ? '<span class="chip suggested">suggested</span>'
+      : `<span class="chip">${BUCKETS[i.decision] || esc(i.decision)}</span><span class="chip">effort ${esc(i.effort)}</span><span class="chip">${esc(i.lens)}</span>`;
     return `<article class="row" data-id="${i.id}">
       <div class="votes">
         <button type="button" class="up" aria-pressed="${my === 1}" aria-label="upvote ${esc(i.name)}" onclick="vote('${i.id}',1)">▲ +${v.up}</button>
@@ -100,7 +137,7 @@ function render() {
       </div>
       <div class="body">
         <h2>${esc(i.name)}${i.wow ? ' <span class="wow" title="wow idea">★</span>' : ''}</h2>
-        <p class="chips"><span class="chip">${BUCKETS[i.decision] || esc(i.decision)}</span><span class="chip">effort ${esc(i.effort)}</span><span class="chip">${esc(i.lens)}</span></p>
+        <p class="chips">${chips}</p>
         <p>${esc(i.what)}</p>
         <p class="value">${esc(i.value)}</p>
       </div>
@@ -133,6 +170,37 @@ document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click
 }));
 document.getElementById('lens').addEventListener('change', e => { lens = e.target.value; render(); });
 document.getElementById('q').addEventListener('input', e => { q = e.target.value; render(); });
+
+document.getElementById('add').addEventListener('click', e => {
+  const f = document.getElementById('suggest');
+  f.hidden = !f.hidden;
+  e.target.setAttribute('aria-expanded', String(!f.hidden));
+  if (!f.hidden) document.getElementById('s-title').focus();
+});
+
+document.getElementById('suggest').addEventListener('submit', async e => {
+  e.preventDefault();                                  // required fields already checked natively
+  const msg = document.getElementById('s-msg');
+  const body = {
+    name: document.getElementById('s-title').value.trim(),
+    what: document.getElementById('s-what').value.trim(),
+    by: document.getElementById('s-by').value.trim(),
+    website: e.target.elements.website.value
+  };
+  msg.className = ''; msg.textContent = '';
+  try {
+    const r = await fetch(API + '/api/suggest?k=' + encodeURIComponent(K), { method: 'POST', body: JSON.stringify(body) });
+    const out = r.ok ? await r.json() : {};
+    if (!out.ok) throw 0;
+    if (out.id) { suggestions.push({ id: out.id, name: body.name, what: body.what, by: body.by }); suggestedTab(); }
+    e.target.reset();
+    msg.textContent = 'Thanks. Your idea is on the board.';
+    render();
+  } catch {
+    msg.className = 'err';
+    msg.textContent = 'Could not save your idea. Try again, or email trevorc@elc.ac.th.';
+  }
+});
 load();
 </script>
 </body>
