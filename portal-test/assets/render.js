@@ -31,14 +31,25 @@
     }
   }
 
-  // This-week agenda rows (home feature tile).
+  // This-week agenda rows (home feature tile), derived from calendarEvents:
+  // this week's events (Mon to Sun, Bangkok), else the next 3 upcoming.
   var agenda = document.getElementById('agenda');
-  if (agenda && P.week) {
-    agenda.innerHTML = P.week.map(function (e) {
+  if (agenda && P.calendarEvents) {
+    var iso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
+    var t = new Date(iso + 'T00:00:00Z');
+    var mon = new Date(t); mon.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7));
+    var sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
+    var monISO = mon.toISOString().slice(0, 10), sunISO = sun.toISOString().slice(0, 10);
+    var rows = P.calendarEvents.filter(function (e) { return e.date >= monISO && e.date <= sunISO; });
+    if (!rows.length) rows = P.calendarEvents.filter(function (e) { return e.date > iso; }).slice(0, 3);
+    var DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    agenda.innerHTML = rows.slice(0, 5).map(function (e) {
+      var d = new Date(e.date + 'T00:00:00Z');
+      var isToday = e.date === iso;
       return '<div class="agenda-row">' +
-        '<span class="d num' + (e.today ? ' today' : '') + '">' + e.dow + ' ' + pad(e.date) + '</span>' +
-        '<span class="t">' + e.title + '</span>' +
-        (e.today ? '<span class="live"><span class="dot"></span>Today</span>' : '') +
+        '<span class="d num' + (isToday ? ' today' : '') + '">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
+        '<span class="t">' + e.title + (e.sub ? ', ' + e.sub : '') + '</span>' +
+        (isToday ? '<span class="live"><span class="dot"></span>Today</span>' : '') +
         '</div>';
     }).join('');
   }

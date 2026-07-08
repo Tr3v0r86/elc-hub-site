@@ -151,6 +151,12 @@
         '<div><div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div></div></div>'
       );
     });
+    /* Keep the agenda column readable: cap Later this term at 12 rows; the grid holds the year. */
+    var laterTotal = groups[2].rows.length;
+    if (laterTotal > 12) {
+      groups[2].rows = groups[2].rows.slice(0, 12);
+      groups[2].rows.push('<div class="cal-note mono">And ' + (laterTotal - 12) + ' more across the year: use the month grid above.</div>');
+    }
     document.getElementById('cal-agenda').innerHTML = groups.filter(function (g) { return g.rows.length; })
       .map(function (g) { return '<div class="' + g.cls + '">' + g.h + '</div>' + g.rows.join(''); }).join('');
   })();
