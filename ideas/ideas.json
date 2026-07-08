@@ -1,0 +1,1077 @@
+[
+  {
+    "id": "weekly-lunch-menu-page",
+    "name": "Weekly lunch menu page",
+    "what": "A per-campus 'What's for lunch' page updated weekly alongside the This Week agenda, published as a static page rather than a buried PDF, with an allergen/pork/vegetarian key and a 'pack a lunch on these days' note.",
+    "value": "Kills the single most common 7am question and the daily 'do I need to pack food' guesswork for parents and nannies.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "lunch-menu-page"
+    ]
+  },
+  {
+    "id": "kit-pack-strip",
+    "name": "Kit & Pack strip",
+    "what": "A class-level (never child-level) 'what to bring' row on This Week: swim kit Tuesday, library books Thursday, PE kit days, show-and-tell, wear-house-colours days, per campus.",
+    "value": "Sunday-night bag packing becomes one glance instead of scrolling three old emails; class-level data keeps it PDPA-clean with no login.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "absence-and-late-reporting-one-tap-page",
+    "name": "Absence and late reporting one-tap page",
+    "what": "A one-tap 'My child is unwell / we'll be late' card on Home linking to a per-campus Gravity Form or prefilled mailto on the existing rails, with the cut-off time and what counts as reportable, so the report takes 30 seconds from a phone in a traffic jam and routes to the right front-desk inbox.",
+    "value": "Turns the most frequent parent-to-office transaction into a predictable rail and reduces morning phone calls to reception.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "report-an-absence-entry-point"
+    ]
+  },
+  {
+    "id": "who-do-i-ask-contact-router",
+    "name": "Who do I ask / what do I do router",
+    "what": "One question-first page organised by parent situation rather than org chart or policy title: absence, billing, bus, uniform, ASA, lost property, safeguarding, 'I'm late for pickup'. Each row gives a two-line plain-words answer plus the right role inbox or phone per campus and expected response time, seeded from an actual one-week front-desk call and email tally.",
+    "value": "Kills the #1 front-office time sink (misdirected emails) and doubles as the portal's promise that every question has one right door.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "aug",
+    "wow": true,
+    "merged": 7,
+    "sources": [
+      "what-do-i-do-if-task-router",
+      "quick-answers-top-20-call-deflector",
+      "who-do-i-ask-contact-router-2",
+      "who-do-i-contact-routing-page",
+      "plain-words-faq-page",
+      "i-need-to-contact-router"
+    ]
+  },
+  {
+    "id": "nanny-driver-gate-card-thai-english",
+    "name": "Nanny and driver gate card (Thai + English)",
+    "what": "A LINE-shareable, printable page per campus written Thai-first with English second: pickup and drop-off windows, which gate, gate maps, parking, uniform and swim days, what to bring, early-pickup procedure and the gate phone number, plus a wallet-card print version with a QR back to the page, designed to be forwarded once to the person who actually does pickup.",
+    "value": "The person physically at the gate at 3pm is often not the parent and often not an English reader; serving them directly kills a whole class of 'wrong gate, wrong kit, wrong time' failures the front office currently absorbs.",
+    "effort": "M",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 2,
+    "sources": [
+      "nanny-driver-page-thai-first-pickup-logistics"
+    ]
+  },
+  {
+    "id": "per-campus-arrival-pages",
+    "name": "Per-campus arrival pages",
+    "what": "One page per campus/site (City, PE x3, Dove): illustrated map with drop-off, parking, reception and hall, the drop-off flow and which gate at which time, taxi drop point, visitor sign-in rules, a Google Maps deep link, and a show-your-driver card with the address block in Thai sized for a phone screen.",
+    "value": "New and visiting families (grandparents, taxi drivers, birthday-party guests) arrive without a single phone call to the office.",
+    "effort": "M",
+    "lens": "parent-daily-life",
+    "decision": "aug",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "campus-arrival-pages-campus-city-pe-dove"
+    ]
+  },
+  {
+    "id": "uniform-hub-with-secondhand-rail",
+    "name": "Uniform hub with secondhand exchange",
+    "what": "A photo guide of correct uniform per campus and season (what to wear on which day, shop location, hours and prices, sizing tips) plus a moderated secondhand exchange: parents list outgrown kit via a form, a weekly-updated anonymous stock table shows item, size and campus, with drop-off points and termly swap days; no names published.",
+    "value": "Answers a perennial new-parent question and adds a community/sustainability service the school gets credit for at near-zero cost.",
+    "effort": "M",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 3,
+    "sources": [
+      "pass-it-on-second-hand-uniform-gear-exchange",
+      "uniform-what-to-bring-visual-guide"
+    ]
+  },
+  {
+    "id": "lost-property-friday-gallery",
+    "name": "Lost property Friday gallery",
+    "what": "A weekly per-campus photo grid of unclaimed items: front desk phones one photo of the lost-property table into a shared folder and the page rebuilds each Friday with claim instructions. Items only, never children, so PDPA-clean by construction; cleared each half-term with proceeds-to-charity framing.",
+    "value": "The single most-asked reception question becomes self-serve; parents get a small weekly reason to open the portal and reception gets hours back.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 7,
+    "sources": [
+      "friday-lost-property-gallery",
+      "lost-found-photo-gallery",
+      "lost-property-gallery",
+      "lost-property-photo-board",
+      "lost-property-friday-gallery-2",
+      "lost-property-photo-log-lost-property"
+    ]
+  },
+  {
+    "id": "holiday-care-hub",
+    "name": "Holiday-care hub",
+    "what": "A 'School holidays' page mapping every term break against what ELC offers in it (summer school, holiday camps, ASA off-weeks) with registration links, published a term ahead.",
+    "value": "Term breaks are the top two-working-parent panic; this converts that panic directly into ELC summer-school and camp revenue.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "line-oa-weekly-pointer",
+    "name": "LINE OA weekly pointer",
+    "what": "An official ELC LINE account that sends exactly one broadcast per week — 'This week is live' plus the portal link — and auto-replies to keywords (status, lunch, absence) with the matching portal URL.",
+    "value": "Meets Thai and expat parents inside the app they actually live in while keeping the portal as the single pull destination, not a second content channel.",
+    "effort": "M",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "live-bus-gps-tracking",
+    "name": "Live bus / pickup GPS tracking (ruled out)",
+    "what": "Real-time bus, pickup-queue or child location visible to parents. Never on a public no-login portal: it broadcasts child-location patterns to anyone with the URL, the most PDPA-sensitive data class imaginable, and an ops burden the team cannot underwrite. If ELC ever does it, it belongs in a vetted, authenticated transport app with per-family scoping; the safe substitute is a static bus-route, timing and contact page.",
+    "value": "One stated exclusion in the portal's charter saves months of future scope-creep argument and keeps the calm brand credible.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "never",
+    "wow": false,
+    "merged": 3,
+    "sources": [
+      "live-pickup-queue-or-bus-tracking-widget",
+      "keep-out-live-bus-child-gps-tracking"
+    ]
+  },
+  {
+    "id": "emergency-status-banner-driven-by-one-status-json",
+    "name": "Emergency status banner driven by one status.json",
+    "what": "One known URL (portal.elc.ac.th/status) plus a site-wide dismissable banner rendered from a single status.json the office edits directly or via the GitHub-relay rail, with an auto-expire date so stale alerts kill themselves. Covers closure, flood, haze day and early pickup, and can grow into a per-campus today strip (open/closed plus swim-day and early-pickup flags); empty 95% of the year.",
+    "value": "During floods, haze spikes, or political disruption every parent knows the one place to check, and the school gets a calm single source of truth instead of rumour in LINE groups.",
+    "effort": "S",
+    "lens": "communications-tier3",
+    "decision": "aug",
+    "wow": true,
+    "merged": 6,
+    "sources": [
+      "portal-elc-ac-th-status-closure-banner",
+      "alert-slot-emergency-banner",
+      "alert-banner-driven-by-a-github-issue",
+      "sitewide-status-banner-closure-red-aqi-flooding",
+      "today-strip-school-status-light"
+    ]
+  },
+  {
+    "id": "announcement-archive-with-t1-permalinks",
+    "name": "Announcement archive with T1 permalinks",
+    "what": "A /announcements page where every HoS-approved school-wide message is posted first with a dated permalink; the email version links back to it. Nothing ever lives only in an inbox.",
+    "value": "New and Thai-speaking parents can catch up on anything they missed, and 'check the portal' becomes literally true for every message.",
+    "effort": "S",
+    "lens": "communications-tier3",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "weekly-digest-generated-from-the-portal-data",
+    "name": "Weekly digest generated FROM the portal data",
+    "what": "A small script that renders the Friday parent email from the same JSON/HTML that powers This Week, so the email is a view of the portal rather than a second hand-written artefact.",
+    "value": "Email and portal can never disagree, the office writes the week once, and every digest line naturally deep-links back to Tier 3.",
+    "effort": "M",
+    "lens": "communications-tier3",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "new-family-start-page",
+    "name": "New-family start page (/new-families)",
+    "what": "A sequenced onboarding path for joining families, one thesis: your first weeks. Before-day-one checklist with every form linked, gate and pickup procedure per campus with photos, what to label and pack, who's who with consented faces, apps to install (Parent App, portal PWA), week-one FAQ and a linked jargon glossary, in EN and TH. Admissions and front desk send one link instead of a 12-attachment welcome email.",
+    "value": "Every new family arrives pre-answered; admissions and front desk stop re-sending the same PDF bundle, and August intake is exactly when it launches.",
+    "effort": "M",
+    "lens": "communications-tier3",
+    "decision": "aug",
+    "wow": false,
+    "merged": 6,
+    "sources": [
+      "new-family-first-90-days-path",
+      "your-first-30-days-guide",
+      "start-here-new-family-onboarding-path",
+      "starting-at-elc-new-family-guide",
+      "new-families-first-week-guide-new-families"
+    ]
+  },
+  {
+    "id": "freshness-stamps-on-every-policy",
+    "name": "Freshness stamps on every policy",
+    "what": "Every policy and page shows 'Last reviewed: date · Owner: role' from front-matter, plus a tiny changes log page listing dated schedule/policy changes with permalinks.",
+    "value": "Parents trust a dated page far more than an undated PDF, and the visible stamp shames stale content into getting reviewed — governance for free.",
+    "effort": "S",
+    "lens": "communications-tier3",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "you-said-we-did-feedback-ledger",
+    "name": "'You said, we did' feedback ledger",
+    "what": "A public page fed by the planned feedback-to-GitHub-Issues relay: each acted-on parent suggestion becomes one line — what was raised, what changed, when. Anonymised, curated, short.",
+    "value": "Closes the loop on the feedback widget (widgets without visible outcomes die) and gives leadership a standing evidence page that the school listens.",
+    "effort": "S",
+    "lens": "communications-tier3",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "class-contact-directory",
+    "name": "Class contact directory (ruled out)",
+    "what": "Per-class lists of parent names, contacts or group-chat links for playdates and coordination. Never on this portal: a no-login public static site cannot gate personal data, so it violates the no-personal-data rule and Thailand PDPA outright; the real demand routes through the class-rep relay now and an opt-in directory behind Parent App auth at convergence.",
+    "value": "Parents ask for it constantly, which is exactly why it needs an explicit 'not here' decision before someone ships it as a PDF.",
+    "effort": "S",
+    "lens": "communications-tier3",
+    "decision": "never",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "published-class-contact-whatsapp-group-lists"
+    ]
+  },
+  {
+    "id": "waitlist-as-a-first-class-state",
+    "name": "Waitlist as a first-class state",
+    "what": "When an activity is full, the register button becomes 'Join the standby list': a form on the existing rails or a 'tell me if a spot opens' email relay into the sheet the ASA office works from, plus a published promotion rule (first-come order, you hear within 48h of a place opening).",
+    "value": "Turns the current opaque 'email Neung and hope' into a fair, stated queue — and captures demand data for next term's capacity planning.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "asa-spot-alert-waitlist"
+    ]
+  },
+  {
+    "id": "confirmation-contract-page-what-happens-next",
+    "name": "Confirmation contract page (/what-happens-next)",
+    "what": "One canonical page every registration form links to or redirects to: which email address the confirmation comes from, within how many hours, what a waitlist reply looks like, and exactly what to do if nothing arrives.",
+    "value": "Answers the single biggest post-submit anxiety ('did it go through?') without touching the rails or any personal data.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "aug",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "refund-withdrawal-ladder",
+    "name": "Refund & withdrawal ladder",
+    "what": "One plain-words Policies-hub page: cancel before term = full refund; weeks 1-2 = pro-rata; later = credit note; plus the make-up/credit rule when the SCHOOL cancels a session (rain, sick coach).",
+    "value": "Refund ambiguity is the top source of registration disputes; publishing the ladder converts arguments into lookups.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "registration-windows-strip-with-countdowns",
+    "name": "Registration windows strip with countdowns",
+    "what": "A dated strip on Home and Activities ('ASA Term 1 opens 1 Aug 08:00, closes 15 Aug') with live countdown chips computed from data.js and rendered at every registration entry point, plus per-window and single-deadline .ics downloads ('Add deadline to my calendar').",
+    "value": "Ends 'when do sign-ups open?' mail and spreads the open-morning F5 rush because everyone knows the exact minute.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "aug",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "deadline-chips-one-tap-deadline-ics"
+    ]
+  },
+  {
+    "id": "sport-try-out-flow-page-elc-fc",
+    "name": "Sport try-out flow page (ELC FC)",
+    "what": "Competitive sport is selection, not first-come: a page making the two-step state machine explicit — register interest (existing rail) → trial date, what to bring, selection criteria in plain words → squad invitation. Serves the Aug 20 parent gate.",
+    "value": "Parents understand why registering isn't a place, which protects Mark's squads from entitlement disputes at launch.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "provider-directory-with-safeguarding-badges",
+    "name": "Provider directory with safeguarding badges",
+    "what": "A profile page per external ASA vendor (Armonia, football academy, chess...): coach photos, qualifications, insurance/safeguarding statement, and the correct parent-contact protocol. Seed of a future marketplace shelf.",
+    "value": "Parents are buying a stranger's afternoon with their child — visible vetting is the trust layer that grows ASA revenue.",
+    "effort": "M",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "registration-status-lookup-by-reference-code",
+    "name": "Registration status lookup by reference code",
+    "what": "No-login status check: parent enters the reference code from their confirmation email; a small serverless relay (same pattern as the planned feedback relay) reads the registration sheet and returns 'confirmed / waitlist position 3 / payment pending'. No names displayed, code-holder only.",
+    "value": "Self-serve answers to the number-one office phone call, with PDPA kept clean because only an opaque status travels.",
+    "effort": "M",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "summer-school-season-storefront",
+    "name": "Summer School season storefront",
+    "what": "A /summer seasonal skin that wakes each March: week-by-week grid with per-week places-left, early-bird deadline countdown, and bundle pricing (e.g. book 4 weeks, 5th free), all checkout on existing rails.",
+    "value": "Summer is ELC's biggest discretionary-revenue season; a storefront that treats it as a season, not a form, lifts early commitment and smooths staffing.",
+    "effort": "M",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "term-block-bundle-builder",
+    "name": "Term-block bundle builder",
+    "what": "Client-side 'build your term' picker: choose child age band + free afternoons → compatible ASA combos with a running total price → hands off to the existing form pre-filled via URL params.",
+    "value": "Parents currently cross-reference PDFs to avoid clashes; the builder converts browsing into multi-activity registrations.",
+    "effort": "M",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "sibling-multi-activity-discount-calculator",
+    "name": "Sibling & multi-activity discount calculator",
+    "what": "Publish the deterministic discount rules (2nd child, 3rd activity, staff rate) as a table plus a tiny client-side calculator so families price a full term before registering. Needs finance to commit the rules publicly first.",
+    "value": "Transparent family pricing nudges the second and third registration that discounts exist to win.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "drop-in-vs-term-pricing-ladder",
+    "name": "Drop-in vs term pricing ladder",
+    "what": "For suitable activities, publish both prices side by side with the honest break-even ('drop-in wins under 6 sessions') and a drop-in booking form on existing rails; needs Neung to sign off the ops overhead per activity.",
+    "value": "Captures the commitment-shy and mid-term-arrival families that a term-only model currently turns away.",
+    "effort": "M",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "taster-session-bookings",
+    "name": "Taster-session bookings",
+    "what": "One free/cheap taster slot per activity in week 1, bookable as its own small form, before committing a term block — distinct from sport try-outs (which are selection, not sampling).",
+    "value": "Reduces mid-term withdrawals and refund friction because the child chose the activity after actually trying it.",
+    "effort": "S",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "welcome-buddies-buddy-family-programme-page",
+    "name": "Welcome Buddies (buddy-family programme page)",
+    "what": "A 'New to ELC?' page explaining the buddy scheme with two Jotforms: 'volunteer as a buddy family' and 'I'd like a buddy'. Front office matches by campus/year group offline; the portal never lists any family.",
+    "value": "New families arrive in August already knowing one family at their campus — the single strongest retention-adjacent belonging move, and zero personal data touches the portal.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "lend-a-hand-volunteer-slot-board",
+    "name": "Lend a Hand (volunteer slot board)",
+    "what": "Each upcoming event on the portal lists named, finite volunteer slots ('Sports Day: 4 water-station helpers, 2 finish-line marshals') each linking to an existing Gravity Form/Jotform. Filled slots get struck through on the weekly content update.",
+    "value": "Turns vague 'volunteers welcome' emails into concrete asks parents can grab in ten seconds, on rails that already exist.",
+    "effort": "S",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "class-rep-relay-directory",
+    "name": "Class-rep relay directory",
+    "what": "A page listing which classes have a parent rep (role only, no names/emails) with a 'message your rep' form that forwards via the same serverless relay pattern planned for the feedback widget.",
+    "value": "Gives every parent a route to their rep without publishing anyone's contact details on a public page.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "community-noticeboard-moderated-submit-by-form",
+    "name": "Community noticeboard (moderated, submit-by-form)",
+    "what": "Parents submit notices (carpool offer, outgrown bike, lost water bottle spotted) via a form → relay → office approves → item appears at the next static publish, auto-expiring after 2 weeks. No open posting, no comments.",
+    "value": "A pull-not-push village square that fits the static model because the office is the publish gate, not a server.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "community-groups-hub-fota-la-comunit-pages",
+    "name": "Community Groups hub (FotA + La Comunità pages)",
+    "what": "One page per existing group: what FotA is planning this term and how to join (single Jotform), La Comunità fixtures and open 'bring a friend' sessions. Content owned by the groups, published by the office.",
+    "value": "The two real community institutions get a permanent front door instead of living only in word-of-mouth, at almost zero build cost.",
+    "effort": "S",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "school-run-matching-carpool-by-area",
+    "name": "School-run matching (carpool by area)",
+    "what": "Opt-in Jotform where families name their neighbourhood (Sathorn, Thonglor, Ari...) and campus; office introduces matched families by email. Portal shows only aggregate demand ('6 families near Sathorn looking'), never who.",
+    "value": "Eases the Bangkok-traffic pain point that dominates parent life while keeping every personal detail off the public site.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "kob-khun-wall-gratitude-board",
+    "name": "Kob Khun wall (gratitude board)",
+    "what": "A form where parents submit short thank-yous to staff, volunteers, or other families; office moderates and publishes first-name-only quotes monthly (consent checkbox on the form).",
+    "value": "Cheap, calm, on-brand belonging signal — and leadership gets a standing stream of authentic positive evidence about the school.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "festival-bridge-culture-corner-tied-to-the-calendar",
+    "name": "Festival Bridge (culture corner tied to the calendar)",
+    "what": "For each calendar festival, a plain-words explainer both ways: Loy Krathong / Songkran / Wai Kru explained for international parents (what it is, what your child needs, what to wear), and international school traditions explained for Thai parents — plus ten Thai phrases for school life.",
+    "value": "Directly serves the dual international/Thai community and turns calendar entries parents don't understand into moments they can join.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "parents-as-experts-one-off-session-registry",
+    "name": "Parents as Experts (one-off session registry)",
+    "what": "A standing form inviting parents to offer a single session — career talk, cooking demo, language taster — which the school curates into ASA/event programming each term.",
+    "value": "Converts the parent body's professional depth into programme content and gives contributing parents a visible stake in the school.",
+    "effort": "S",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "office-status-strip-hours-closures-per-campus",
+    "name": "Office Status strip (hours + closures, per campus)",
+    "what": "A data.js-driven strip on Home: today's office hours per campus (City / PE sites / Dove), next holiday closure, and today's pickup-change cutoff time ('changes after 14:00 → call, don't email'). One object in data.js, rendered everywhere.",
+    "value": "Kills the single most common call class ('are you open / what time') and gives parents a hard rule for late pickup-change requests instead of a negotiation.",
+    "effort": "S",
+    "lens": "ops-staff-leverage",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "all-forms-hub-with-routing-rules",
+    "name": "All Forms hub with routing rules",
+    "what": "One page listing every parent form (absence report, medicine consent, pickup-person change, bus change, event RSVP) as links to the existing Gravity Forms/Jotform rails, each with 'goes to X, answered within Y'. Absence/late forms route by campus to the right front-desk inbox using the forms tools' existing notification routing — no new backend.",
+    "value": "Front desk stops transcribing phoned-in absences; every form has one findable home instead of living in old email attachments.",
+    "effort": "S",
+    "lens": "ops-staff-leverage",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "print-pack-signage-generated-from-portal-data",
+    "name": "Print pack: signage generated from portal data",
+    "what": "A hidden /print route that renders the same data.js into print-CSS layouts: this-week gate poster, ASA pickup grid by day and venue, event-day signage, office-hours door card, and an A3 brand-styled season poster per campus. Front desk opens the page Monday morning and hits Cmd+P; signage is never out of sync because it IS the portal data.",
+    "value": "Neung and the front desks stop hand-making weekly Canva posters that drift from reality; one edit updates the web, the gate, and the door simultaneously.",
+    "effort": "M",
+    "lens": "ops-staff-leverage",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 2,
+    "sources": [
+      "season-poster-generator-portal-data-a3-print"
+    ]
+  },
+  {
+    "id": "qr-per-zone-poster-set",
+    "name": "QR poster and plaque pack per campus zone",
+    "what": "A generated pack of laminated and weatherproof QR posters, plaques and door labels, each deep-linking a physical zone to its portal anchor: gate to this-week, sports hall and ASA room doors to that activity's entry, office window to forms, noticeboard to calendar. URLs stay stable so the QRs never change; artwork refreshed each term so they don't go invisible.",
+    "value": "Converts the daily physical touchpoint every family already has — the gate at pickup — into portal adoption, which is the whole Tier-3 bet.",
+    "effort": "S",
+    "lens": "physical-world-bridge",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 4,
+    "sources": [
+      "qr-poster-pack-at-every-gate",
+      "gate-qr-plaques-per-campus",
+      "asa-room-door-qr-labels"
+    ]
+  },
+  {
+    "id": "content-update-runbook-single-owner-data-js",
+    "name": "Content-update runbook + single-owner data.js",
+    "what": "Consolidate all weekly-changing content into one commented data.js, plus a one-page runbook (edit these 6 fields, save, deploy command/button) checked into the repo and printed at each desk. Neung/Sarah/front desk own the Monday update; Trevor touches nothing.",
+    "value": "The portal survives Trevor being AFK and matches the delegation-first mandate — currency of the site stops depending on one person.",
+    "effort": "S",
+    "lens": "ops-staff-leverage",
+    "decision": "aug",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "outdoor-play-today-aqi-decision-banner",
+    "name": "Outdoor play today (AQI decision tile)",
+    "what": "A Home tile publishing the school's own call, not raw data: 'Outdoor play today: ON / modified / indoor' per campus, set by the office at 7am in data.js against the published PM2.5, heat and rainy-day policy bands, with a small client-side fetch of public Bangkok AQI (Air4Thai/IQAir) for context and a link to the playbook page stating exactly what the school does at each band.",
+    "value": "On every burning-season morning this kills the 7am call wave to all three campuses and shows parents the policy is being applied, not improvised.",
+    "effort": "S",
+    "lens": "parent-daily-life",
+    "decision": "aug",
+    "wow": true,
+    "merged": 5,
+    "sources": [
+      "air-quality-and-rainy-day-playbook",
+      "pm2-5-tile-with-the-school-s-own-thresholds",
+      "outdoor-play-air-quality-status-per-campus",
+      "air-quality-heat-today-strip"
+    ]
+  },
+  {
+    "id": "how-to-pay-page",
+    "name": "How to pay page (+ per-activity payment leaf)",
+    "what": "A static How to Pay page with bank details, PromptPay QR, invoice cycle dates, the required transfer reference format and where to send payment confirmations, plus a payment leaf per paid activity with the exact amount and reference (child nickname + activity code). Formalises what currently lives in LINE chats, per campus where details differ.",
+    "value": "Thai-payment reality made official — fewer mis-referenced transfers for finance to reconcile, and parents pay in one screen.",
+    "effort": "S",
+    "lens": "ops-staff-leverage",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "promptpay-payment-leaf-per-paid-activity"
+    ]
+  },
+  {
+    "id": "asa-capacity-badges-places-left-full-waitlist",
+    "name": "ASA capacity badges (places left / full / waitlist)",
+    "what": "Coarse status chips on each activity card, 'places available / nearly full / full, waitlist open', driven at launch by a manually updated field in data.js with a last-updated stamp and later by a tiny serverless relay reading registration-sheet or Gravity Forms counts. Never live seat counts, so a stale hour doesn't mislead; full flips the register button state.",
+    "value": "Kills the daily 'is football full yet?' email/LINE flood and builds trust that the portal is the real source, not the office.",
+    "effort": "M",
+    "lens": "registration-commerce",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 3,
+    "sources": [
+      "places-left-honesty-bar",
+      "live-places-left-on-activities"
+    ]
+  },
+  {
+    "id": "lobby-screen-mode-screen",
+    "name": "Lobby screen mode (/screen)",
+    "what": "A full-screen auto-rotating route per campus showing this-week, today's ASA pickup grid and events, and the status strip, run in a browser on the existing lobby TVs. Same data.js and status JSON as the site: zero extra content maintenance, just another renderer.",
+    "value": "One edit updates the website, the PWA, and three campus lobbies simultaneously — one truth everywhere, no new infrastructure, no CMS.",
+    "effort": "M",
+    "lens": "ops-staff-leverage",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 2,
+    "sources": [
+      "lobby-screen-mode-screen-campus-one-status-json"
+    ]
+  },
+  {
+    "id": "google-sheet-data-js-publish-pipeline",
+    "name": "Google Sheet → data.js publish pipeline",
+    "what": "Office staff edit one shared Google Sheet (tabs: This Week, Events, Activities, Alerts); a scheduled GitHub Action pulls it nightly (plus on-demand), regenerates data.js, commits, deploys. Content ops without touching code.",
+    "value": "Removes Trevor as the publishing bottleneck — admin staff keep the portal current, which is the whole Tier-3 promise ('predictable pull place' dies if it goes stale).",
+    "effort": "M",
+    "lens": "data-automation-ai",
+    "decision": "aug",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "my-elc-personalization-without-login",
+    "name": "My ELC personalization without login",
+    "what": "A one-time 'which campuses, year groups or classes are yours?' picker stored in localStorage only; Home/This Week, calendar, lunch menus and activities then filter and merge to that family's slice, including a day-aware pack checklist, with a reset link. No accounts, no server, no personal data leaves the device.",
+    "value": "A 3-campus school's biggest portal complaint is 'most of this isn't about my child' — this fixes it while staying PDPA-clean and login-free.",
+    "effort": "M",
+    "lens": "parent-daily-life",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 3,
+    "sources": [
+      "my-campuses-filter-localstorage",
+      "my-mornings-localstorage-class-picker"
+    ]
+  },
+  {
+    "id": "portal-wide-instant-search",
+    "name": "Portal-wide instant search",
+    "what": "A search box (and Cmd+K) over a small prebuilt JSON index generated from data.js, policy pages and ASA listings: tiny client-side fuzzy search with no server, results deep-linking to the exact policy section or event, index regenerated when content changes.",
+    "value": "Parents do not browse information architecture at 10pm, they type 'swimming' — search is how a policies hub actually gets used.",
+    "effort": "M",
+    "lens": "data-automation-ai",
+    "decision": "aug",
+    "wow": false,
+    "merged": 3,
+    "sources": [
+      "client-side-site-search",
+      "portal-wide-search-box"
+    ]
+  },
+  {
+    "id": "ics-feeds-per-campus-and-per-programme",
+    "name": "ICS feeds per campus and per programme",
+    "what": "Beyond the single planned .ics: static feed files per campus (City School / Purple Elephant / Dove) and per programme (term dates, ASA session dates, events), regenerated by the same Sheets pipeline. One 'subscribe' picker page.",
+    "value": "A Dove parent subscribes once and only ever sees Dove dates in their phone calendar — subscription that's actually usable beats a firehose feed.",
+    "effort": "S",
+    "lens": "data-automation-ai",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "thai-language-layer-en-toggle",
+    "name": "Thai language layer (EN/TH toggle + mirrored pages)",
+    "what": "Static Thai twins of the highest-traffic pages under /th/ with a persistent EN/ไทย toggle (localStorage, lang and hreflang tags, proper nouns marked translate='no'), starting with the logistics and trust pages and growing toward full coverage. AI-translated at build time and reviewed by a Thai staff member; never runtime machine translation.",
+    "value": "Thai parents are half the named audience and currently get English-first everything — this is the single biggest reach unlock the portal can make.",
+    "effort": "M",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 8,
+    "sources": [
+      "thai-mirror-of-top-10-logistics-pages",
+      "thai-english-toggle-on-the-four-core-pages",
+      "thai-language-toggle-for-the-top-pages",
+      "thai-mirror-pages-th-path-persistent-toggle",
+      "thai-language-versions-of-the-five-key-pages",
+      "thai-language-parity-on-the-trust-pages",
+      "en-th-language-toggle"
+    ]
+  },
+  {
+    "id": "ask-the-portal-answer-box",
+    "name": "Ask-the-portal answer box",
+    "what": "A question box backed by a small serverless RAG endpoint over the policies, calendar, and FAQ corpus; answers cite and link the source page, refuse anything about individual children, and log nothing personal.",
+    "value": "Converts the portal from 'a place to look' into 'a place that answers' — the front-desk question load ('what time is pickup on sports day?') moves to self-serve.",
+    "effort": "L",
+    "lens": "data-automation-ai",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "machine-readable-data-spine-json-ld-api-v1-json",
+    "name": "Machine-readable data spine (JSON-LD + /api/v1/*.json)",
+    "what": "Emit schema.org Event/School JSON-LD on pages, and publish the same data.js content as versioned static JSON (events.json, activities.json, policies.json). Cheap now; becomes the contract the Parent App and 'temu' SIS consume later.",
+    "value": "Google surfaces term dates properly today, and at convergence the portal is already the canonical data source other surfaces read — front door becomes data spine.",
+    "effort": "S",
+    "lens": "data-automation-ai",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "nightly-link-rot-policy-freshness-checker",
+    "name": "Nightly link-rot + policy-freshness checker",
+    "what": "A scheduled GitHub Action crawls every href (Jotform links, WordPress ASA URLs, policy PDFs) and every policy's review-by date; failures and stale docs open GitHub Issues automatically.",
+    "value": "The portal's credibility is 'nothing here is dead or stale' — this enforces it mechanically instead of by someone remembering to click around.",
+    "effort": "S",
+    "lens": "data-automation-ai",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "cookieless-analytics-beacon",
+    "name": "Cookieless analytics beacon",
+    "what": "A tiny serverless count beacon (or self-hosted GoatCounter/Plausible): page + referrer + day, no cookies, no fingerprinting, no consent banner needed under PDPA. Weekly digest posts to a GitHub Issue.",
+    "value": "The school finally learns which policies parents actually read and whether the weekly agenda gets opened — evidence for the HoS note and for what to cut.",
+    "effort": "S",
+    "lens": "data-automation-ai",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "registration-rails-status-pinger",
+    "name": "Registration-rails status pinger",
+    "what": "A scheduled probe hits the WordPress ASA form and Jotform endpoints every few minutes during signup windows, writes status.json, and the portal shows a quiet 'registration systems: all good' line — flipping to a banner + GitHub Issue if a rail is down.",
+    "value": "During the August ASA rush, the school knows the form is broken before 40 parents do — and parents see honesty instead of a mystery error.",
+    "effort": "S",
+    "lens": "data-automation-ai",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "line-share-buttons-line-tuned-link-previews",
+    "name": "LINE share buttons + LINE-tuned link previews",
+    "what": "A 'Share to LINE' link on every event and week block using the plain line.me/R/share URL (no SDK, no JS library), and Open Graph tags on every page tuned so a pasted portal link unfurls in LINE group chats with title, date and image.",
+    "value": "Thai parent comms actually happens in LINE class groups; making portal links paste beautifully there turns class reps into the distribution network for free.",
+    "effort": "S",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "in-short-boxes-on-every-policy",
+    "name": "In-short boxes on every policy",
+    "what": "Each policy page opens with a fixed-format bilingual 'In short / สรุปสั้น ๆ' box: 3 bullets max at roughly grade-6 reading level (what it means for you, what to do, who to ask), AI-drafted offline, human-reviewed once, shipped as static text above the full document link.",
+    "value": "Second-language-English parents (and every skimming parent) get the operative rule in 10 seconds instead of abandoning a 4-page PDF; the school stops answering questions the policy already answers.",
+    "effort": "S",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "ai-plain-words-summary-on-every-policy"
+    ]
+  },
+  {
+    "id": "accessibility-baseline-aa-contrast-tokens-text-size-toggle-s",
+    "name": "Accessibility baseline: AA contrast tokens + text-size toggle + skip links",
+    "what": "Audit the design tokens to WCAG AA contrast, add a visible A/A+ text-size control (rem scaling stored in localStorage), skip-to-content links, and visible focus states — done once in the shared CSS, inherited by every page.",
+    "value": "Older caregivers and low-vision users can actually read the portal on a phone in sunlight, and the token-level fix flows into Fede's master design system rather than fighting it.",
+    "effort": "S",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "calendar-list-view-with-screen-reader-semantics",
+    "name": "Calendar list view with screen-reader semantics",
+    "what": "Alongside the month grid, a chronological list view of the same events (semantic headings per week, proper date markup, ARIA labels), with the list as the default on narrow screens.",
+    "value": "Month grids are near-unusable for screen readers and cramped phones; a list view makes the calendar genuinely readable for both at almost no extra content cost.",
+    "effort": "S",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "sen-inclusion-front-door-page",
+    "name": "SEN & Inclusion front door page",
+    "what": "A calm single page: who to contact for learning support, how to flag allergy/sensory/mobility needs when registering for ASAs and sport (pointing at the existing form fields or the front office), and per-campus physical access notes (step-free routes, lifts, quiet spaces at events).",
+    "value": "Inclusion families currently have no obvious entry point; one page signals the school's values and routes needs to the right human before an event goes wrong.",
+    "effort": "M",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "thai-text-performance-budget-system-fonts-100kb-pages",
+    "name": "Thai-text performance budget (system fonts, <100KB pages)",
+    "what": "Skip webfonts for Thai text (Thai font files are heavy — use the system Thai stack), lazy-load images with explicit dimensions, and hold every page under ~100KB so it loads on one bar of mobile data in a pickup queue.",
+    "value": "The portal's heaviest real-world use is a phone on cellular at the school gate; a hard page budget is the accessibility feature nobody sees but everybody feels.",
+    "effort": "S",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "school-jargon-bilingual-glossary",
+    "name": "School jargon bilingual glossary (EN + TH)",
+    "what": "A bilingual A-Z decoding school-speak in calm plain words: ASA, ECA, EYFS phrases, mufti day, house points, settling-in, term vs semester, Songkran break, linked wherever the jargon first appears. Public and bilingual, which none of the peer schools do.",
+    "value": "Half the parent base reads English as a second language; this quietly makes every other page and email from school comprehensible.",
+    "effort": "S",
+    "lens": "inclusion-accessibility",
+    "decision": "aug",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "jargon-buster-school-words-glossary-en-th"
+    ]
+  },
+  {
+    "id": "audio-versions-of-the-hos-note-and-key-announcements",
+    "name": "Audio versions of the HoS note and key announcements",
+    "what": "A recorded or TTS-generated MP3 (English + Thai) embedded as a native <audio> element at the top of the HoS monthly note and any major announcement — static files, no player library.",
+    "value": "Low-literacy caregivers, commuting parents and anyone who prefers listening get the message verbatim; audio also travels well when forwarded into LINE.",
+    "effort": "M",
+    "lens": "inclusion-accessibility",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "transport-hub-page",
+    "name": "Transport hub page",
+    "what": "Static page with bus routes/zones, pickup and drop-off windows, pricing, rainy-day protocol, and the escalation contact for 'the bus is late'. Modeled on St Andrews' school-bus service pages and ISB's transportation section.",
+    "value": "Transport is a top-3 anxiety topic for Bangkok parents; a canonical page beats forwarded PDFs and stops repeat calls to the office.",
+    "effort": "S",
+    "lens": "peer-benchmark",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "bookable-moments-on-existing-rails-tours-parent-teacher-slot",
+    "name": "Bookable moments on existing rails (tours, parent-teacher slots, uniform fittings)",
+    "what": "Extend the registration entry-point pattern beyond ASAs: Jotform/Gravity Forms booking pages for parent-teacher conference slots, campus tours, and new-parent coffee mornings, each linked from the calendar. NIST offers parent-teacher sign-up in its portal; Brighton College Bangkok uses SchoolsBuddy for sign-ups.",
+    "value": "Reuses rails that already exist for August, and turns the portal into where parents transact with the school, not just read about it.",
+    "effort": "M",
+    "lens": "peer-benchmark",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "parent-community-bangkok-resources-page",
+    "name": "Parent community and Bangkok resources pages",
+    "what": "Office-curated, parent-sourced local knowledge per campus: where to park, rainy-season pickup tips, coffee within walking distance, parent-rated birthday venues, plus a curated 'Bangkok with kids' list and a front door for the parent-association and class-rep structure. Deliberately excludes medical and professional recommendations to avoid endorsement liability.",
+    "value": "Practical local knowledge that currently lives in scattered WhatsApp chats becomes a shared asset new families can find.",
+    "effort": "M",
+    "lens": "community-belonging",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 2,
+    "sources": [
+      "around-city-school-purple-elephant-dove-campus-logistics-gui"
+    ]
+  },
+  {
+    "id": "what-this-site-knows-about-you-nothing-privacy-page",
+    "name": "'What this site knows about you: nothing' privacy page",
+    "what": "One plain-words /privacy page: no login, no accounts, no cookies, no child data ever; a verifiable zero-tracker promise (no analytics, no ad scripts, everything served from our own domain, backed by actually self-hosting assets); and a vendor boundary table naming each external rail (Gravity Forms, Jotform, the .ics feed, the feedback relay) with what it collects, where it's hosted and how long it's kept, plus the DPO contact and PDPA rights route.",
+    "value": "A verifiable claim (anyone can open devtools and confirm) that almost no school makes — cheap to keep true on a static site, expensive in trust to break later.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "aug",
+    "wow": false,
+    "merged": 3,
+    "sources": [
+      "zero-tracker-promise-stated-and-enforced",
+      "where-your-form-data-goes-vendor-boundary-table"
+    ]
+  },
+  {
+    "id": "photo-consent-transparency-48-hour-takedown-promise",
+    "name": "Photo-consent transparency + 48-hour takedown promise",
+    "what": "A /photos-and-consent page explaining exactly how photos of children are chosen, where they appear, how consent tiers work, and a one-click 'ask us to remove a photo' route (mailto/Jotform) with a stated removal SLA of 48 hours.",
+    "value": "Turns the school's most anxiety-loaded topic into a stated, auditable promise — parents stop wondering and start trusting, and staff get a clear takedown workflow.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "aug",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "report-a-concern-safeguarding-page",
+    "name": "Report-a-concern safeguarding page",
+    "what": "One static page naming the Designated Safeguarding Lead per campus (name, photo, direct email/phone), what happens after you report, and Thai national hotlines (e.g. 1300). No form, no child data collected — just a clear human route.",
+    "value": "Accreditation bodies expect it, parents rarely find it, and having it one tap from Home signals the school takes safeguarding seriously before anyone ever needs it.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "aug",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "how-to-know-it-s-really-us-anti-scam-page",
+    "name": "\"How to know it's really us\" anti-scam page",
+    "what": "A /verify page listing the only official channels (portal.elc.ac.th, the Parent App, @elc.ac.th email) and hard rules parents can check: 'We never ask for payment over LINE or to a personal bank account; invoices only come from X.' Linked from Home footer and every payment-adjacent page.",
+    "value": "Payment-fraud and LINE impersonation scams actively target international-school parents in Bangkok; this is a one-page shield that protects family money and makes the portal itself the trust anchor.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "aug",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "class-photo-galleries-behind-a-shared-password",
+    "name": "Class photo galleries behind a shared password",
+    "what": "The obvious 'parents love photos' ask: term photo galleries on the portal 'protected' by a per-class shared password. NEVER: a shared password is not access control — it leaks in one LINE forward, putting identifiable child images on an effectively public site; safeguarding and PDPA disaster. Child imagery stays in the Parent App behind real auth.",
+    "value": "Saying no here, in writing, protects the launch from the single most-requested feature that would sink the no-child-data promise.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "never",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "my-child-s-week-via-url-token-or-saved-profile",
+    "name": "\"My child's week\" via URL token or saved profile",
+    "what": "Login-free personalisation: a tokenized link or localStorage profile that shows one child's ASA/sport schedule. NEVER: a guessable or shareable link exposing a named child's weekly locations and times is a stalking/abduction vector — the worst possible safeguarding optics for a no-login site. Personalised schedules belong behind Parent App auth.",
+    "value": "Pre-empts the cleverest-looking convergence shortcut before someone prototypes it; the no-login rule exists precisely for this case.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "never",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "birthday-star-of-the-week-child-shout-outs-on-this-week",
+    "name": "Birthday / star-of-the-week child shout-outs on This Week",
+    "what": "Warm community touch: 'Happy birthday Mila (K2, Dove Centre)!' on the weekly agenda. NEVER: publishing a child's name + campus + a date pattern on a public page is child data by definition and a PDPA breach regardless of parental enthusiasm. Celebrations live in the classroom and the Parent App.",
+    "value": "Gives the team a ready-made, kind 'no' for the request that will absolutely come from a well-meaning teacher in week two.",
+    "effort": "S",
+    "lens": "risk-safeguarding-privacy",
+    "decision": "never",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "keep-out-balances-and-payments",
+    "name": "KEEP OUT: balances and payments",
+    "what": "Recommend the portal never shows fee balances, invoices, or payment buttons, even post-convergence — money brings login-wall anxiety, PCI/PDPA weight, and dispute traffic into a surface whose entire brand is calm. Link out to finance's own rail instead.",
+    "value": "Protects the pull-not-push calm posture; a parent checking swim day should never be ambushed by an outstanding-balance banner.",
+    "effort": "S",
+    "lens": "convergence-era",
+    "decision": "never",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "keep-out-teacher-messaging",
+    "name": "KEEP OUT: teacher messaging",
+    "what": "Recommend two-way parent-teacher chat stays in the Parent App permanently — messaging makes the portal push-not-pull, creates reply-time expectations the school can't staff, and touches child-specific data the portal is defined to exclude.",
+    "value": "Keeps the portal's contract simple (it never demands anything of you) and keeps teacher workload negotiations inside the app that already owns them.",
+    "effort": "S",
+    "lens": "convergence-era",
+    "decision": "never",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "event-day-live-page-e-sports-day-2026",
+    "name": "Event-day live page (/e/sports-day-2026)",
+    "what": "One short URL per big event: running order, campus map pin, parking/drop-off, what-to-bring, and a hand-editable status line (ON / rain plan B in the hall). QR printed on the gate banner and the paper flyer.",
+    "value": "Kills the day-of WhatsApp storm — every 'where do I park, is it still on' question has one calm answer parents can open at the gate.",
+    "effort": "S",
+    "lens": "physical-world-bridge",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "fridge-sheets-print-term-and-print-week",
+    "name": "Fridge sheets (print week and term)",
+    "what": "A print stylesheet plus a 'Print this week' button that collapses This Week into one clean A4 per campus (dates, times, what to bring, no nav chrome), in EN or TH with large type, and an A4 term sheet with term dates, holidays, the ASA weekday grid and key contacts. Front office can print a stack for the pickup line.",
+    "value": "Bangkok reality: nannies, drivers and grandparents run many pickups; a fridge-ready Thai A4 serves the actual household, not just the account-holding parent.",
+    "effort": "S",
+    "lens": "physical-world-bridge",
+    "decision": "aug",
+    "wow": false,
+    "merged": 4,
+    "sources": [
+      "fridge-sheet-print-styled-this-week",
+      "fridge-sheet-print-stylesheet-for-this-week",
+      "fridge-week-print-caregiver-view"
+    ]
+  },
+  {
+    "id": "performance-programme-keepsakes-programmes",
+    "name": "Performance programme keepsakes (/programmes/...)",
+    "what": "A digital programme page for each Armonia / drama / music performance: running order, teacher's note, first-names cast list (consented), printable keepsake version — QR on the door poster and seats; the photo-gallery link is added after the event.",
+    "value": "Replaces photocopied programmes with something grandparents overseas can open, and gives each performance a permanent brand-warm artefact for near-zero marginal cost once templated.",
+    "effort": "S",
+    "lens": "physical-world-bridge",
+    "decision": "backlog",
+    "wow": true,
+    "merged": 1,
+    "sources": []
+  },
+  {
+    "id": "what-we-made-this-term-showcase-showcase-2026-t1",
+    "name": "What-we-made-this-term showcase (/showcase/2026-t1)",
+    "what": "A termly consent-gated editorial gallery of project work — photos of the work itself (documentation, Reggio-style), short captions in brand voice, no child data beyond consented images. Doubles as an admissions asset.",
+    "value": "Makes the maker/Reggio identity visible to parents and prospective families in a way the weekly agenda never can — the school's pedagogy finally has a public shelf.",
+    "effort": "M",
+    "lens": "physical-world-bridge",
+    "decision": "backlog",
+    "wow": false,
+    "merged": 1,
+    "sources": []
+  }
+]
