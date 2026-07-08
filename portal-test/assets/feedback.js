@@ -1,12 +1,13 @@
 /* ELC Portal feedback widget.
-   Floating bottom-right pill + modal. On submit it opens a pre-filled
-   mailto to Trevor and shows the thanks panel. Channel decision (mailto,
-   not GitHub Issues: a GitHub login is a bad ask for parents) is
-   docs/issues/0010. Styles consume tokens.css custom properties only.
+   Floating bottom-right pill + modal. On submit it POSTs to the feedback
+   relay (a Cloudflare Worker that files a GitHub issue, docs/issues/0020);
+   if the relay fails, it falls back to a pre-filled mailto to Trevor.
+   Styles consume tokens.css custom properties only.
    Self-contained; include with <script src> after tokens.css. */
 (function () {
   const VERSION = 'v0.2';
   const TO = 'trevorc@elc.ac.th';
+  const RELAY = 'https://elc-feedback-relay.elcportal.workers.dev/feedback';
 
   const css = `
     #fb-pill{position:fixed;bottom:26px;right:26px;z-index:9998;display:inline-flex;align-items:center;gap:10px;
@@ -66,6 +67,7 @@
         <div id="fb-live">
           <p id="fb-intro"><b>This is an early version, and your feedback shapes it.</b> Tell us what works, what is missing, or what is confusing. Every note is logged for the team. Leave your name if you would like a reply, or stay anonymous.</p>
           <div id="fb-form">
+              <input id="fb-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;opacity:0;">
             <div class="row">
               <label for="fb-name">Your name (optional)</label>
               <input id="fb-name" type="text" placeholder="e.g. a Year 4 parent, or your name" maxlength="80">
@@ -121,15 +123,31 @@
     const name = nameI.value.trim();
     // Directory URLs: /policies/ -> "policies", / -> "home".
     const page = location.pathname.replace(/index\.html$/,'').replace(/\/$/,'').split('/').pop() || 'home';
-    const subject = encodeURIComponent('[Portal feedback] ' + page);
-    const body = encodeURIComponent(
-      'From: ' + (name || 'Anonymous') + '\n' +
-      'Page: ' + page + '\n' +
-      'Version: ' + VERSION + '\n\n' +
-      text + '\n'
-    );
+
+    function mailtoFallback(){
+      const subject = encodeURIComponent('[Portal feedback] ' + page);
+      const body = encodeURIComponent(
+        'From: ' + (name || 'Anonymous') + '\n' +
+        'Page: ' + page + '\n' +
+        'Version: ' + VERSION + '\n\n' +
+        text + '\n'
+      );
+      window.location.href = 'mailto:' + TO + '?subject=' + subject + '&body=' + body;
+    }
+
+    fetch(RELAY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name, body: text, page: page, version: VERSION,
+        website: document.getElementById('fb-hp').value
+      })
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(res){ if(!res.ok) mailtoFallback(); })
+      .catch(mailtoFallback);
+
     live.style.display = 'none';
     thanks.classList.add('show');
-    window.location.href = 'mailto:' + TO + '?subject=' + subject + '&body=' + body;
   });
 })();

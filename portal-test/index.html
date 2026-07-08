@@ -8,10 +8,9 @@
 <meta name="theme-color" content="#F4F2EA">
 <meta name="description" content="Everything on this term, in one place. The calendar, registration and policies for ELC families.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter+Tight:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/app.css">
 </head>
@@ -63,15 +62,17 @@
       <div class="tile note tile-top-purple fade">
         <div class="who">
           <img class="headshot" src="assets/img/hos.png" alt="Payal" width="56" height="56">
+          <!-- Trevor headshot appears when assets/img/trevor.png lands (issue 0007 F-item) -->
+          <img class="headshot" src="assets/img/trevor.png" alt="Trevor" width="56" height="56" onerror="this.style.display='none'">
           <div>
-            <span class="eyebrow">A note from Payal</span>
-            <div class="when">This month · July</div>
+            <span class="eyebrow" id="note-eyebrow">A note from Payal and Trevor</span>
+            <div class="when" id="note-when">This month · August</div>
           </div>
         </div>
-        <h2>Welcome to a new year.</h2>
-        <p>We are excited for new journeys, new stories and new learning as the year begins. This portal is your one stop for everything logistical: from coffee mornings to workshops to our new sport offerings, it is all here. Questions about anything on this page? Contact Trevor, our Head of Operations and Educational Experience.</p>
-        <div class="sig">Payal, Head of School</div>
-        <span class="chip">Sample copy · HoS voice TBD</span>
+        <h2 id="note-title">Welcome to a new year.</h2>
+        <p id="note-body">This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and it will grow. Tell us what is missing with the feedback button, and we will build it.</p>
+        <div class="sig" id="note-sig">Payal, Head of School &middot; Trevor, Head of Operations and Educational Experience</div>
+        <span class="chip">Sample copy &middot; awaiting Payal's read</span>
       </div>
 
       <!-- ASA -->
@@ -137,5 +138,10 @@
   <script src="assets/render.js"></script>
   <script src="assets/contour.js"></script>
   <script src="assets/feedback.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(new URL('sw.js', document.querySelector('link[rel="manifest"]').href).href);
+  }
+  </script>
 </body>
 </html>

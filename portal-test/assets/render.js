@@ -16,6 +16,21 @@
     greet.textContent = p.weekday + ' ' + p.day + ' ' + p.month + ' ' + p.year + ' · ' + P.term;
   }
 
+  // Leadership note rotation: latest note whose `from` <= today, Bangkok civil date.
+  var noteTitle = document.getElementById('note-title');
+  if (noteTitle && P.notes && P.notes.length) {
+    var todayISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
+    var current = null;
+    P.notes.forEach(function (n) { if (n.from <= todayISO) current = n; });
+    if (current) {
+      document.getElementById('note-eyebrow').textContent = current.eyebrow;
+      document.getElementById('note-when').textContent = current.when;
+      noteTitle.textContent = current.title;
+      document.getElementById('note-body').textContent = current.body;
+      document.getElementById('note-sig').textContent = current.sig;
+    }
+  }
+
   // This-week agenda rows (home feature tile).
   var agenda = document.getElementById('agenda');
   if (agenda && P.week) {

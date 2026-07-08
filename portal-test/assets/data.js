@@ -12,6 +12,28 @@ window.PORTAL = {
     { dow: 'FRI', date: 10, title: 'Armonia open studio, 17:00' }
   ],
 
+  // Joint leadership note rotation (issue 0007; drafts docs/content/hos-notes-2026-08.md).
+  // render.js shows the latest note whose `from` <= today (Bangkok). Payal's read pending;
+  // the sample chip in index.html stays until she blesses the copy.
+  notes: [
+    { from: '2026-07-01', eyebrow: 'A note from Payal and Trevor', when: 'This month · August',
+      title: 'Welcome to a new year.',
+      body: 'This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and it will grow. Tell us what is missing with the feedback button, and we will build it.',
+      sig: 'Payal, Head of School · Trevor, Head of Operations and Educational Experience' },
+    { from: '2026-08-10', eyebrow: 'A note from Payal and Trevor', when: 'This week',
+      title: 'We start with your hopes.',
+      body: 'This week your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is our favourite way to begin. Everything else on this page can wait until you have booked your time.',
+      sig: 'Payal and Trevor' },
+    { from: '2026-08-17', eyebrow: 'A note from Payal and Trevor', when: 'This week',
+      title: 'Come for coffee.',
+      body: 'Coffee mornings run this week, campus by campus. No agenda beyond meeting the people who will spend the year with your child, and the other families walking the same route. Times are on the calendar; just come.',
+      sig: 'Payal and Trevor' },
+    { from: '2026-08-24', eyebrow: 'A note from Payal and Trevor', when: 'This week',
+      title: 'Everyone is in.',
+      body: 'From this week every child, every year group, every campus is in school. The rhythm of the year starts now: the week ahead lives on this page, and anything you need to sign up for is under Activities. We are glad you are here.',
+      sig: 'Payal and Trevor' }
+  ],
+
   // Honest sport statuses (PRD 0002 F2 confirmed truth as of 2026-07-07)
   sports: [
     { name: 'Football',   status: 'open', label: 'Open now' },
