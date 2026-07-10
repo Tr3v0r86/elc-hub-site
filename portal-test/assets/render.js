@@ -7,6 +7,47 @@
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
+  // Per-event add-to-calendar (.ics), issue 0027. All-day VEVENT: events are
+  // date-only, so no time and no Bangkok-offset bug. RFC 5545 escaping on
+  // SUMMARY is mandatory (titles contain commas).
+  function icsEsc(s) {
+    return String(s).replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\r?\n/g, '\\n');
+  }
+  function toICS(ev) {
+    var dt = ev.date.replace(/-/g, '');                              // YYYYMMDD
+    var end = new Date(ev.date + 'T00:00:00Z'); end.setUTCDate(end.getUTCDate() + 1);
+    var dtEnd = end.toISOString().slice(0, 10).replace(/-/g, '');    // all-day DTEND is exclusive (next day)
+    var summary = icsEsc(ev.title + (ev.sub ? ', ' + ev.sub : ''));
+    var slug = ev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    // ponytail: no RFC-5545 75-octet line folding; every current SUMMARY is under
+    // the limit. Add a fold here if a longer event title ever lands.
+    return [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ELC Portal//Calendar//EN', 'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT', 'UID:' + dt + '-' + slug + '@portal.elc.ac.th',
+      'DTSTAMP:' + dt + 'T000000Z', 'DTSTART;VALUE=DATE:' + dt, 'DTEND;VALUE=DATE:' + dtEnd,
+      'SUMMARY:' + summary, 'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+  }
+  // Self-check (silent on pass): comma escaping + all-day start/end.
+  console.assert(toICS({ date: '2026-08-03', title: 'Fest, Session 2', sub: 'to 7 Aug' }).indexOf('SUMMARY:Fest\\, Session 2\\, to 7 Aug') > -1, 'toICS: comma escape');
+  console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTSTART;VALUE=DATE:20260803') > -1, 'toICS: all-day start');
+  console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTEND;VALUE=DATE:20260804') > -1, 'toICS: all-day end');
+
+  // Delegated: any .ics-btn downloads its event from data-date/title/sub.
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.ics-btn') : null;
+    if (!btn) return;
+    e.preventDefault();
+    var date = btn.getAttribute('data-date'), title = btn.getAttribute('data-title');
+    if (!date || !title) return;
+    var blob = new Blob([toICS({ date: date, title: title, sub: btn.getAttribute('data-sub') || '' })], { type: 'text/calendar;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'elc-' + date + '.ics';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+  });
+
   // Greet eyebrow: live date, Asia/Bangkok, "Tuesday 7 July 2026 · Term 1".
   var greet = document.getElementById('greet-date');
   if (greet) {
