@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Policies &amp; forms · ELC Portal</title>
+<title>After you register · ELC Portal</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F4F2EA">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
@@ -30,29 +30,37 @@
       <a class="navlink" href="../">This week</a>
       <a class="navlink" href="../activities/">Activities</a>
       <a class="navlink" href="../calendar/">Calendar</a>
-      <a class="navlink active" href="../policies/">Policies</a>
+      <a class="navlink" href="../policies/">Policies</a>
     </nav>
   </header>
 
-  <div class="crumb"><a href="../">This week</a> &nbsp;/&nbsp; Policies &amp; forms</div>
+  <div class="crumb"><a href="../">This week</a> &nbsp;/&nbsp; After you register</div>
 
   <div class="wrap sub">
     <div class="page-head">
-      <span class="eyebrow">Documents · always here</span>
-      <h1>Policies and forms.</h1>
-      <p class="lead">Everything a family needs, kept here instead of scattered across the main site. Read it once. Find it whenever you need it.</p>
+      <span class="eyebrow">The confirmation contract</span>
+      <h1>You pressed submit. Here is what happens.</h1>
+      <p class="lead">Every registration follows the same three steps, whichever activity it is for. This page is the contract: what arrives, when, and exactly what to do if it does not.</p>
     </div>
 
-    <div class="search">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="doc-search" placeholder="Search policies and forms" aria-label="Search policies and forms">
+    <div class="prose">
+      <h2>1. A confirmation email arrives</h2>
+      <p>Your registration lands the moment you submit it, and a confirmation email follows to the address you gave, usually within minutes. It comes from the system you registered on, so check the inbox of the email address you typed into the form.</p>
+
+      <h2>2. If a place is limited, the email says so</h2>
+      <p>Some activities cap their numbers. If a group is full, your confirmation says so plainly, and you keep your place in line. If a spot opens, we email you. You never need to re-register.</p>
+
+      <h2>3. If nothing arrives within one school day</h2>
+      <ul>
+        <li>First, check your spam or junk folder. Confirmation emails sometimes land there.</li>
+        <li>Search your inbox for your child's name. Some systems put it in the subject line.</li>
+        <li>Still nothing? Email <span data-contact="activities"></span> with your child's name and the activity. We will confirm your registration by hand.</li>
+      </ul>
+      <p>An unanswered registration is our problem to fix, never a reason to submit the form again. One registration per child per activity keeps every list clean.</p>
+
+      <h2>Worried a payment message is not from us?</h2>
+      <p>Registration and payment messages only come from official ELC channels. If anything feels off, read <a href="../verify/">how to know it is really us</a> before you pay anything.</p>
     </div>
-
-    <!-- Doc groups render from ../assets/data.js docs[] via render.js -->
-    <div id="doc-groups"></div>
-
-    <!-- Office address TBD (docs/issues/0009); routing to Trevor until it lands. -->
-    <p class="page-note">Something missing, or a document out of date? <a href="mailto:trevorc@elc.ac.th">Email the office</a> and we will fix it here.</p>
   </div>
 
   <div class="foot-strip">
@@ -66,31 +74,11 @@
     <a class="tab" href="../"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>This week</a>
     <a class="tab" href="../activities/"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>Activities</a>
     <a class="tab" href="../calendar/"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18"/></svg>Calendar</a>
-    <a class="tab active" href="../policies/"><svg class="ic" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Policies</a>
+    <a class="tab" href="../policies/"><svg class="ic" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Policies</a>
   </div>
 
   <script src="../assets/data.js"></script>
   <script src="../assets/render.js"></script>
-  <script>
-  // Search: filter doc rows by name + supporting line; hide emptied groups.
-  (function () {
-    var input = document.getElementById('doc-search');
-    input.addEventListener('input', function () {
-      var q = input.value.trim().toLowerCase();
-      document.querySelectorAll('#doc-groups .section').forEach(function (sec) {
-        var any = false;
-        sec.querySelectorAll('.doc-row').forEach(function (row) {
-          var hit = !q ||
-            row.querySelector('.nm').textContent.toLowerCase().indexOf(q) > -1 ||
-            row.querySelector('.sub').textContent.toLowerCase().indexOf(q) > -1;
-          row.style.display = hit ? '' : 'none';
-          if (hit) any = true;
-        });
-        sec.style.display = any ? '' : 'none';
-      });
-    });
-  })();
-  </script>
   <script src="../assets/contour.js"></script>
   <script src="../assets/feedback.js"></script>
   <script>

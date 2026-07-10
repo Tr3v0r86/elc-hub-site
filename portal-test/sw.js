@@ -1,6 +1,6 @@
 /* ELC Portal service worker: offline shell, cache-first.
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v5";
+const CACHE = "elc-portal-shell-v6";
 
 const SHELL = [
   "./",
@@ -8,6 +8,13 @@ const SHELL = [
   "calendar/",
   "policies/",
   "asa/",
+  "help/",
+  "new-families/",
+  "what-happens-next/",
+  "status/",
+  "privacy/",
+  "safeguarding/",
+  "verify/",
   "manifest.json",
   "assets/tokens.css",
   "assets/app.css",
@@ -20,6 +27,7 @@ const SHELL = [
   "assets/icon-180.png",
   "assets/icon-512.png",
   "assets/img/hos.png",
+  "assets/img/trevor.png",
   "assets/img/photo-propeller-girl.jpg",
   "assets/fonts/hanken-grotesk-normal-7579623a.woff2",
   "assets/fonts/hanken-grotesk-normal-c95efb87.woff2",

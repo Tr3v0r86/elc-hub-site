@@ -48,6 +48,85 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 0);
   });
 
+  var bkkToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
+
+  // School status banner (issue 0031): injected under the header on every page
+  // when PORTAL.status is set and not expired. Dismiss lasts the browser session.
+  if (P.status && P.status.expires >= bkkToday && !sessionStorage.getItem('elc-status-seen-' + P.status.expires)) {
+    var banner = document.createElement('div');
+    banner.className = 'status-banner ' + (P.status.level === 'alert' ? 'alert' : 'notice');
+    banner.innerHTML = '<div class="sb-inner"><strong>' + P.status.title + '</strong><span>' + P.status.body + '</span>' +
+      '<button type="button" class="sb-x" aria-label="Dismiss">&times;</button></div>';
+    var hdr = document.querySelector('header');
+    if (hdr) hdr.parentNode.insertBefore(banner, hdr.nextSibling);
+    banner.querySelector('.sb-x').onclick = function () {
+      sessionStorage.setItem('elc-status-seen-' + P.status.expires, '1');
+      banner.remove();
+    };
+  }
+
+  // Status page body (#status-now): current state in full, or the calm default.
+  var statusNow = document.getElementById('status-now');
+  if (statusNow) {
+    if (P.status && P.status.expires >= bkkToday) {
+      statusNow.innerHTML = '<div class="doc-row"><span class="ic">' + (P.status.level === 'alert' ? 'ALERT' : 'NOTE') + '</span>' +
+        '<div class="meta"><div class="nm">' + P.status.title + '</div><div class="sub">' + P.status.body + '</div></div></div>';
+    } else {
+      statusNow.innerHTML = '<div class="doc-row"><span class="ic">OK</span>' +
+        '<div class="meta"><div class="nm">Everything is running as normal.</div>' +
+        '<div class="sub">All campuses are open on their usual hours today.</div></div></div>';
+    }
+  }
+
+  // Registration windows strip (issue 0031): rows with live day countdowns,
+  // rendered wherever #reg-windows exists. Past rows drop off.
+  var winMount = document.getElementById('reg-windows');
+  if (winMount && P.regWindows) {
+    var upcoming = P.regWindows.filter(function (w) { return w.date >= bkkToday; });
+    if (!upcoming.length) { winMount.remove(); }
+    else {
+      var MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      winMount.innerHTML = upcoming.map(function (w) {
+        var d = new Date(w.date + 'T00:00:00Z');
+        var days = Math.round((d - new Date(bkkToday + 'T00:00:00Z')) / 86400000);
+        var when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
+        return '<div class="win-row"><span class="win-date num">' + d.getUTCDate() + ' ' + MONS[d.getUTCMonth()] + '</span>' +
+          '<div class="win-main"><div class="wt">' + w.label + '</div><div class="ws">' + w.sub + '</div></div>' +
+          '<span class="win-count">' + when + '</span>' +
+          '<button type="button" class="ics-btn" data-date="' + w.date + '" data-title="' + w.label + '" data-sub="' + w.sub + '" title="Add to your calendar" aria-label="Add ' + w.label + ' to your calendar">Add</button></div>';
+      }).join('');
+    }
+  }
+
+  // Contact chips: any [data-contact="office|activities"] gets the live email
+  // (and phone when it exists) from PORTAL.contacts, one edit point site-wide.
+  var chips = document.querySelectorAll('[data-contact]');
+  if (chips.length && P.contacts) {
+    chips.forEach(function (el) {
+      var c = P.contacts[el.getAttribute('data-contact')];
+      if (!c) return;
+      var phone = c.phone
+        ? ' &middot; <a href="tel:' + c.phone.replace(/[^+0-9]/g, '') + '">' + c.phone + '</a>'
+        : ' &middot; <span class="status soon">Phone coming</span>';
+      el.innerHTML = '<a href="mailto:' + c.email + '">' + c.email + '</a>' + phone;
+    });
+  }
+
+  // Safeguarding lead cards (#dsl-cards): one per PORTAL.safeguarding entry;
+  // stays empty (generic route only) until real names are confirmed.
+  var dsl = document.getElementById('dsl-cards');
+  if (dsl && !(P.safeguarding && P.safeguarding.length)) dsl.remove();
+  else if (dsl) {
+    dsl.innerHTML = P.safeguarding.map(function (s) {
+      return '<div class="doc-row"><span class="ic">DSL</span>' +
+        '<div class="meta"><div class="nm">' + s.name + ' &middot; ' + s.campus + '</div>' +
+        '<div class="sub">' + s.role + '</div></div>' +
+        '<div class="rt"><a class="tag" href="mailto:' + s.email + '">Email</a></div></div>';
+    }).join('');
+    var intro = document.getElementById('dsl-pending');
+    if (intro) intro.remove();
+  }
+
   // Greet eyebrow: live date, Asia/Bangkok, "Tuesday 7 July 2026 · Term 1".
   var greet = document.getElementById('greet-date');
   if (greet) {

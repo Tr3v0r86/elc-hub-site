@@ -27,6 +27,7 @@
   --gold-hover:#BCAD81;                /* was hardcoded in .btn.gold:hover */
   --gold-ink-deep:#2C2713;             /* was hardcoded as gold-button ink */
   --red:#A8443A; --red-lift:#C25A4E;
+  --red-tint:#F2E2DF;                  /* status-banner alert wash (issue 0031); Claude Design may retune */
   --sage:#5B7A4A;                      /* success (HANDOFF token list; feedback widget) */
   --text-on-dark:#E4DDF0;
 

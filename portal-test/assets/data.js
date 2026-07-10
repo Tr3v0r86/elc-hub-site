@@ -5,6 +5,34 @@ window.PORTAL = {
   version: 'v0.2',
   term: 'Term 1',
 
+  // School status (issue 0031 item 1). null = normal day, no banner anywhere.
+  // To raise a notice, replace null with an object and deploy (see docs/runbook.md):
+  //   status: { level: 'notice',                 // 'notice' (gold) or 'alert' (red)
+  //             title: 'Early pickup today',
+  //             body: 'All campuses close at 1pm. Buses leave at 1:15.',
+  //             expires: '2026-08-20' }          // last day the banner shows; it kills itself after
+  status: null,
+
+  // Contacts: the single edit point every contact chip on the site reads from.
+  // phone: null renders as "Coming" until the real number is supplied (rule 6).
+  // ⚠️ office@ per people directory (Praveen); Trevor to verify parent-facing (issue 0031).
+  contacts: {
+    office:     { label: 'School office',   email: 'office@elc.ac.th',     phone: null },
+    activities: { label: 'Activities team', email: 'activities@elc.ac.th', phone: null }
+  },
+
+  // Registration windows (issue 0031 item 4): dated strip with countdowns on
+  // home + activities. Rows disappear the day after `date`. Honest dates only.
+  regWindows: [
+    { date: '2026-08-20', label: 'Sport parent info evening', sub: 'Basketball, cricket and swimming explained' },
+    { date: '2026-09-07', label: 'Sport sign-up opens', sub: 'Basketball, cricket and swimming' }
+  ],
+
+  // Safeguarding leads (issue 0031 item 6): /safeguarding/ renders a card per
+  // entry; empty = the page shows the generic route only. Fill when confirmed:
+  //   { campus: 'The City School', name: '...', role: 'Designated Safeguarding Lead', email: '...' }
+  safeguarding: [],
+
   // This-week strip derives from calendarEvents in render.js (current week, else next up).
   // No separate week[]: one source of truth (issue 0018).
 
