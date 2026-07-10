@@ -20,7 +20,7 @@
 
   <header>
     <a class="brand" href="./">
-      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke="#7D639B" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke="#A8443A" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5" fill="#7D639B"/></svg>
+      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5"/></svg>
       <div>
         <div class="wm">ELC</div>
         <div class="desc">Portal</div>
@@ -36,17 +36,17 @@
   </header>
 
   <div class="wrap">
-    <div class="greet fade">
+    <div class="greet">
       <span class="eyebrow" id="greet-date">Term 1</span>
       <h1>Everything on this term, <span class="turn">in one place.</span></h1>
     </div>
 
     <!-- registration windows countdown (issue 0031); render.js removes it when nothing is upcoming -->
-    <div class="windows fade" id="reg-windows"></div>
+    <div class="windows" id="reg-windows"></div>
 
     <div class="bento">
       <!-- THIS WEEK -->
-      <div class="tile feature fade">
+      <div class="tile feature">
         <div class="photo">
           <img src="assets/img/photo-propeller-girl.jpg" alt="A child absorbed in making">
           <div class="scrim"></div>
@@ -62,7 +62,7 @@
       </div>
 
       <!-- NOTE FROM LEADERSHIP -->
-      <div class="tile note tile-top-purple fade">
+      <div class="tile note tile-top-purple">
         <div class="who">
           <img class="headshot" src="assets/img/hos.png" alt="Payal" width="56" height="56">
           <!-- Trevor headshot appears when assets/img/trevor.png lands (issue 0007 F-item) -->
@@ -79,7 +79,7 @@
       </div>
 
       <!-- ASA -->
-      <a class="tile reg-card tile-top-purple link fade" href="activities/">
+      <a class="tile reg-card tile-top-purple link" href="activities/">
         <span class="eyebrow">After school</span>
         <h3>ASA</h3>
         <p>The hours after three, well spent. Sport, arts, design and tech, in short term blocks.</p>
@@ -87,7 +87,7 @@
       </a>
 
       <!-- ARMONIA -->
-      <a class="tile reg-card tile-top-purple link fade" href="activities/">
+      <a class="tile reg-card tile-top-purple link" href="activities/">
         <span class="eyebrow">Programme</span>
         <h3>Armonia</h3>
         <p>Music, drama and dance performance, together.</p>
@@ -95,7 +95,7 @@
       </a>
 
       <!-- EVENTS -->
-      <a class="tile reg-card tile-top-purple link fade" href="activities/">
+      <a class="tile reg-card tile-top-purple link" href="activities/">
         <span class="eyebrow">Events</span>
         <h3>Events</h3>
         <p>Workshops, FotA and community days. Reserve a place before it fills.</p>
@@ -103,7 +103,7 @@
       </a>
 
       <!-- SPORT -->
-      <div class="tile sport fade">
+      <div class="tile sport">
         <div class="head">
           <div><span class="eyebrow">Sport · Term 1</span><h3>Pick a season. Try out, train, play.</h3></div>
           <a class="btn purple" href="activities/">Register for sport <span class="arw">&rarr;</span></a>
@@ -113,7 +113,7 @@
       </div>
 
       <!-- POLICIES -->
-      <a class="policies fade" href="policies/">
+      <a class="policies" href="policies/">
         <div class="rings"></div>
         <span class="eyebrow on-dark">Documents</span>
         <h3>Policies &amp; forms</h3>

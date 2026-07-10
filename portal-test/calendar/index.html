@@ -19,7 +19,7 @@
 
   <header>
     <a class="brand" href="../">
-      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke="#7D639B" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke="#A8443A" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5" fill="#7D639B"/></svg>
+      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5"/></svg>
       <div>
         <div class="wm">ELC</div>
         <div class="desc">Portal</div>
@@ -88,27 +88,25 @@
   <script src="../assets/contour.js"></script>
   <script src="../assets/feedback.js"></script>
   <script>
-  /* Calendar page: month grid + agenda, computed from PORTAL.calendarEvents
-     against the real current date in Asia/Bangkok. Page-local by design:
-     no other surface renders a month grid. */
+  /* Calendar page: the month grid, computed from PORTAL.calendarEvents against
+     the real current date in Asia/Bangkok. Page-local by design: no other
+     surface renders a month grid. The agenda list beside it renders from
+     assets/render.js (#cal-agenda mount). */
   (function () {
     var P = window.PORTAL;
     if (!P || !P.calendarEvents) return;
 
     var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     var DOWS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    var WD = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
-    var events = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
     var byDate = {};
-    events.forEach(function (e) { (byDate[e.date] = byDate[e.date] || []).push(e); });
+    P.calendarEvents.forEach(function (e) { (byDate[e.date] = byDate[e.date] || []).push(e); });
 
     /* Today in Asia/Bangkok, anchored to UTC midnight so all math is DST/zone-safe. */
     var todayIso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
     var today = new Date(todayIso + 'T00:00:00Z');
     function iso(d) { return d.toISOString().slice(0, 10); }
     function utc(y, m, day) { return new Date(Date.UTC(y, m, day)); }
-    function pad(n) { return (n < 10 ? '0' : '') + n; }
 
     /* MONTH GRID: renders any month, Mon-first, .mut fill, dots from events. */
     var view = { y: today.getUTCFullYear(), m: today.getUTCMonth() };
@@ -133,35 +131,6 @@
     document.getElementById('cal-prev').onclick = function () { view.m--; if (view.m < 0) { view.m = 11; view.y--; } renderMonth(); };
     document.getElementById('cal-next').onclick = function () { view.m++; if (view.m > 11) { view.m = 0; view.y++; } renderMonth(); };
     renderMonth();
-
-    /* AGENDA: This week / Next week / Later this term, from today onward. */
-    var monday = new Date(today); monday.setUTCDate(today.getUTCDate() - ((today.getUTCDay() + 6) % 7));
-    var endThis = new Date(monday); endThis.setUTCDate(monday.getUTCDate() + 6);
-    var endNext = new Date(monday); endNext.setUTCDate(monday.getUTCDate() + 13);
-    var groups = [
-      { h: 'This week', cls: 'wk', rows: [] },
-      { h: 'Next week', cls: 'wk next', rows: [] },
-      { h: 'Later this term', cls: 'wk next', rows: [] }
-    ];
-    events.forEach(function (e) {
-      var d = new Date(e.date + 'T00:00:00Z');
-      if (d < today) return; /* past events drop off the agenda */
-      var g = d <= endThis ? 0 : d <= endNext ? 1 : 2;
-      groups[g].rows.push(
-        '<div class="ev-row"><span class="dte' + (e.date === todayIso ? ' today' : '') + '">' +
-        WD[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
-        '<div class="ev-main"><div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div></div>' +
-        window.elcAddBtns(e.date, e.title, e.sub) + '</div>'
-      );
-    });
-    /* Keep the agenda column readable: cap Later this term at 12 rows; the grid holds the year. */
-    var laterTotal = groups[2].rows.length;
-    if (laterTotal > 12) {
-      groups[2].rows = groups[2].rows.slice(0, 12);
-      groups[2].rows.push('<div class="cal-note mono">And ' + (laterTotal - 12) + ' more across the year: use the month grid above.</div>');
-    }
-    document.getElementById('cal-agenda').innerHTML = groups.filter(function (g) { return g.rows.length; })
-      .map(function (g) { return '<div class="' + g.cls + '">' + g.h + '</div>' + g.rows.join(''); }).join('');
   })();
   </script>
   <script>

@@ -7,7 +7,6 @@
    ============================================================ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 img,svg{display:block;max-width:100%;}
-html{scroll-behavior:smooth;}
 body{font-family:var(--sans);font-weight:300;background:var(--paper);color:var(--ink);line-height:1.6;
   -webkit-font-smoothing:antialiased;position:relative;min-height:100vh;overflow-x:hidden;}
 a{color:var(--purple);text-decoration:none;}
@@ -22,7 +21,6 @@ a:hover{color:var(--aubergine);}
 .eyebrow::before{content:"// ";color:var(--red);}
 .eyebrow.on-dark{color:rgba(244,242,234,0.6);}
 .eyebrow.on-dark::before{color:var(--red-lift);}
-.display{font-family:var(--serif);font-weight:400;font-optical-sizing:auto;line-height:1.04;letter-spacing:-0.014em;}
 .turn{font-family:var(--serif);font-style:italic;color:var(--gold-deep);}
 .num{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;}
 
@@ -36,6 +34,9 @@ header{position:sticky;top:0;z-index:50;height:var(--nav-h);display:flex;align-i
   padding:0 clamp(20px,4vw,44px);background:rgba(244,242,234,0.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
 .brand .dial{width:32px;height:32px;flex:none;}
+.dial circle:first-of-type{stroke:var(--purple);}
+.dial line{stroke:var(--red);}
+.dial circle:last-of-type{fill:var(--purple);}
 .brand .wm{font-family:var(--wordmark);font-weight:600;font-size:22px;letter-spacing:-0.01em;line-height:1;color:var(--ink);}
 .brand .desc{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 nav{display:flex;align-items:center;gap:28px;}
@@ -121,7 +122,6 @@ nav{display:flex;align-items:center;gap:28px;}
 .status{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap;}
 .status.open{color:var(--red);border:1px solid rgba(168,68,58,0.4);background:rgba(168,68,58,0.06);}
 .status.soon{color:var(--muted);border:1px solid var(--rule);}
-.status.waitlist{color:var(--gold-deep);border:1px solid rgba(172,157,113,0.5);background:var(--gold-tint);}
 
 /* ---- policies (aubergine small inversion) ---- */
 .policies{grid-column:span 4;padding:22px;background:var(--aubergine);border:1px solid var(--aubergine);border-radius:10px;
@@ -325,13 +325,10 @@ nav{display:flex;align-items:center;gap:28px;}
 }
 
 /* ---- content visible by default (no blank-on-load); motion kept out for calm ---- */
-.fade{opacity:1;transform:none;}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
 
 /* ---- print / PDF: clean flow, drop the fixed contour field, keep colours ---- */
 @media print{
   *,*::before,*::after{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  html{scroll-behavior:auto;}
   #topo{display:none;}
   .topline{position:static;}
   header{position:static;background:var(--paper);}

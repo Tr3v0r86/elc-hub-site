@@ -19,7 +19,7 @@
 
   <header>
     <a class="brand" href="../">
-      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke="#7D639B" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke="#A8443A" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5" fill="#7D639B"/></svg>
+      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5"/></svg>
       <div>
         <div class="wm">ELC</div>
         <div class="desc">Portal</div>
@@ -121,7 +121,8 @@
   <script src="../assets/contour.js"></script>
   <script src="../assets/feedback.js"></script>
   <script>
-  /* Page wiring only: filter chips + sport count computed from window.PORTAL. */
+  /* Page wiring only: the category filter chips (pure DOM). Sport rows, note
+     and open count render from assets/render.js. */
   (function () {
     var chips = document.querySelectorAll('.filter .f');
     var cards = document.querySelectorAll('.act-card');
@@ -135,12 +136,6 @@
         });
       });
     });
-    var count = document.getElementById('sport-open-count');
-    if (count && window.PORTAL && window.PORTAL.sports) {
-      var n = window.PORTAL.sports.filter(function (s) { return s.status === 'open'; }).length;
-      var words = ['None', 'One', 'Two', 'Three', 'Four', 'Five'];
-      count.textContent = (words[n] || n) + ' open now';
-    }
   })();
   </script>
   <script>

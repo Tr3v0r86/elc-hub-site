@@ -10,7 +10,7 @@
    ============================================================ */
 :root{
   /* --- surfaces --- */
-  --paper:#F4F2EA; --paper-2:#ECE9DF; --white:#FBFAF6;
+  --paper:#F4F2EA; --white:#FBFAF6;
   --white-pure:#FFFFFF;
 
   /* --- ink --- */
@@ -20,7 +20,7 @@
   --rule:#D8D3C6; --rule-2:#E6E2D7;
 
   /* --- brand accents --- */
-  --purple:#7D639B; --purple-tint:#ECE5F2;
+  --purple:#7D639B;
   --purple-hover:#6C5488;              /* was hardcoded in .btn.purple:hover */
   --aubergine:#33254A; --aubergine-2:#3F2F5A;
   --gold:#AC9D71; --gold-deep:#8A7A3F; --gold-tint:#EFE9D6;

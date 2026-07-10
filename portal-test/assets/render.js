@@ -5,7 +5,27 @@
   var P = window.PORTAL;
   if (!P) return;
 
+  // Shared clock + name tables (sprint-2 H5): one Bangkok-today computation,
+  // one week-start helper, one set of day/month names. Every renderer below
+  // reuses these; nothing recomputes its own.
+  var bkkToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date()); // YYYY-MM-DD
+  var FN_MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   function pad(n) { return (n < 10 ? '0' : '') + n; }
+  // Monday (UTC midnight) of the week containing the given ISO date.
+  function weekStart(iso) {
+    var d = new Date(iso + 'T00:00:00Z');
+    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+    return d;
+  }
+  // Agenda bucket for an event date against today: 0 this week, 1 next week, 2 later.
+  function agendaBucket(dateISO, todayISO) {
+    var mon = weekStart(todayISO);
+    var endThis = new Date(mon); endThis.setUTCDate(mon.getUTCDate() + 6);
+    var endNext = new Date(mon); endNext.setUTCDate(mon.getUTCDate() + 13);
+    var d = new Date(dateISO + 'T00:00:00Z');
+    return d <= endThis ? 0 : d <= endNext ? 1 : 2;
+  }
 
   // Per-event add-to-calendar (.ics), issue 0027. All-day VEVENT: events are
   // date-only, so no time and no Bangkok-offset bug. RFC 5545 escaping on
@@ -38,7 +58,6 @@
   function toICSAll(evs) {
     return icsWrap(evs.reduce(function (acc, ev) { return acc.concat(icsVevent(ev)); }, []));
   }
-  var FN_MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function icsFilename(ev) {
     var d = new Date(ev.date + 'T00:00:00Z');
     var clean = ev.title.replace(/[\/\\:*?"<>|]/g, '').replace(/\s+/g, ' ').trim();
@@ -72,17 +91,18 @@
       '<button type="button" class="add-btn ics-btn" data-date="' + date + '" data-title="' + esc(title) + '" data-sub="' + esc(sub || '') + '"' +
       ' title="Add to Apple Calendar (.ics file)" aria-label="Add ' + esc(title) + ' to Apple Calendar">' + A_MARK + '</button></span>';
   }
-  window.elcAddBtns = addBtns; // consumed by the calendar page's agenda renderer
   // Self-check (silent on pass): comma escaping, all-day start/end, multi-event, filename.
   console.assert(toICS({ date: '2026-08-03', title: 'Fest, Session 2', sub: 'to 7 Aug' }).indexOf('SUMMARY:Fest\\, Session 2\\, to 7 Aug') > -1, 'toICS: comma escape');
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTSTART;VALUE=DATE:20260803') > -1, 'toICS: all-day start');
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTEND;VALUE=DATE:20260804') > -1, 'toICS: all-day end');
   console.assert(toICSAll([{ date: '2026-08-03', title: 'a', sub: '' }, { date: '2026-08-04', title: 'b', sub: '' }]).split('BEGIN:VEVENT').length === 3, 'toICSAll: two events, one calendar');
   console.assert(icsFilename({ date: '2026-08-14', title: 'New Family Orientation' }) === 'ELC - New Family Orientation - 14 Aug 2026.ics', 'icsFilename: readable name');
+  console.assert(weekStart('2026-10-08').toISOString().slice(0, 10) === '2026-10-05' && weekStart('2026-10-11').toISOString().slice(0, 10) === '2026-10-05', 'weekStart: Monday for a Thursday + the Sunday edge');
+  console.assert(agendaBucket('2026-10-02', '2026-10-02') === 0 && agendaBucket('2026-10-05', '2026-10-02') === 1 && agendaBucket('2026-10-12', '2026-10-02') === 2, 'agendaBucket: This/Next/Later around 2026-10-02');
 
   // Delegated: any .ics-btn downloads its event, named after it (issue 0032).
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest ? e.target.closest('.ics-btn') : null;
+    var btn = e.target.closest('.ics-btn');
     if (!btn) return;
     e.preventDefault();
     var date = btn.getAttribute('data-date'), title = btn.getAttribute('data-title');
@@ -98,8 +118,6 @@
       icsDownload(toICSAll(P.calendarEvents), 'ELC calendar 2026-27.ics');
     });
   }
-
-  var bkkToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
 
   // School status banner (issue 0031): injected under the header on every page
   // when PORTAL.status is set and not expired. Dismiss lasts the browser session.
@@ -136,12 +154,11 @@
     var upcoming = P.regWindows.filter(function (w) { return w.date >= bkkToday; });
     if (!upcoming.length) { winMount.remove(); }
     else {
-      var MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       winMount.innerHTML = upcoming.map(function (w) {
         var d = new Date(w.date + 'T00:00:00Z');
         var days = Math.round((d - new Date(bkkToday + 'T00:00:00Z')) / 86400000);
         var when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
-        return '<div class="win-row"><span class="win-date num">' + d.getUTCDate() + ' ' + MONS[d.getUTCMonth()] + '</span>' +
+        return '<div class="win-row"><span class="win-date num">' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
           '<div class="win-main"><div class="wt">' + w.label + '</div><div class="ws">' + w.sub + '</div></div>' +
           '<span class="win-count">' + when + '</span>' + addBtns(w.date, w.label, w.sub) + '</div>';
       }).join('');
@@ -180,18 +197,16 @@
   // Greet eyebrow: live date, Asia/Bangkok, "Tuesday 7 July 2026 · Term 1".
   var greet = document.getElementById('greet-date');
   if (greet) {
-    var p = new Intl.DateTimeFormat('en-GB', {
+    greet.textContent = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Asia/Bangkok', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    }).formatToParts(new Date()).reduce(function (o, x) { o[x.type] = x.value; return o; }, {});
-    greet.textContent = p.weekday + ' ' + p.day + ' ' + p.month + ' ' + p.year + ' · ' + P.term;
+    }).format(new Date()).replace(',', '') + ' · ' + P.term;
   }
 
   // Leadership note rotation: latest note whose `from` <= today, Bangkok civil date.
   var noteTitle = document.getElementById('note-title');
   if (noteTitle && P.notes && P.notes.length) {
-    var todayISO = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
     var current = null;
-    P.notes.forEach(function (n) { if (n.from <= todayISO) current = n; });
+    P.notes.forEach(function (n) { if (n.from <= bkkToday) current = n; });
     if (current) {
       document.getElementById('note-eyebrow').textContent = current.eyebrow;
       document.getElementById('note-when').textContent = current.when;
@@ -205,23 +220,52 @@
   // this week's events (Mon to Sun, Bangkok), else the next 3 upcoming.
   var agenda = document.getElementById('agenda');
   if (agenda && P.calendarEvents) {
-    var iso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
-    var t = new Date(iso + 'T00:00:00Z');
-    var mon = new Date(t); mon.setUTCDate(t.getUTCDate() - ((t.getUTCDay() + 6) % 7));
+    var mon = weekStart(bkkToday);
     var sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
     var monISO = mon.toISOString().slice(0, 10), sunISO = sun.toISOString().slice(0, 10);
     var rows = P.calendarEvents.filter(function (e) { return e.date >= monISO && e.date <= sunISO; });
-    if (!rows.length) rows = P.calendarEvents.filter(function (e) { return e.date > iso; }).slice(0, 3);
-    var DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    if (!rows.length) rows = P.calendarEvents.filter(function (e) { return e.date > bkkToday; }).slice(0, 3);
     agenda.innerHTML = rows.slice(0, 5).map(function (e) {
       var d = new Date(e.date + 'T00:00:00Z');
-      var isToday = e.date === iso;
+      var isToday = e.date === bkkToday;
       return '<div class="agenda-row">' +
         '<span class="d num' + (isToday ? ' today' : '') + '">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
         '<span class="t">' + e.title + (e.sub ? ', ' + e.sub : '') + '</span>' +
         (isToday ? '<span class="live"><span class="dot"></span>Today</span>' : '') +
         '</div>';
     }).join('');
+  }
+
+  // Calendar page agenda (#cal-agenda): This week / Next week / Later this term,
+  // today onward, add-to-calendar buttons per row (folded from calendar/index.html,
+  // sprint-2 H5). The month grid stays page-local on that page by design.
+  var calAgenda = document.getElementById('cal-agenda');
+  if (calAgenda && P.calendarEvents) {
+    var evs = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    var today0 = new Date(bkkToday + 'T00:00:00Z');
+    var buckets = [
+      { h: 'This week', cls: 'wk', rows: [] },
+      { h: 'Next week', cls: 'wk next', rows: [] },
+      { h: 'Later this term', cls: 'wk next', rows: [] }
+    ];
+    evs.forEach(function (e) {
+      var d = new Date(e.date + 'T00:00:00Z');
+      if (d < today0) return; /* past events drop off the agenda */
+      buckets[agendaBucket(e.date, bkkToday)].rows.push(
+        '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
+        DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
+        '<div class="ev-main"><div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div></div>' +
+        addBtns(e.date, e.title, e.sub) + '</div>'
+      );
+    });
+    /* Keep the agenda column readable: cap Later this term at 12 rows; the grid holds the year. */
+    var laterTotal = buckets[2].rows.length;
+    if (laterTotal > 12) {
+      buckets[2].rows = buckets[2].rows.slice(0, 12);
+      buckets[2].rows.push('<div class="cal-note mono">And ' + (laterTotal - 12) + ' more across the year: use the month grid above.</div>');
+    }
+    calAgenda.innerHTML = buckets.filter(function (g) { return g.rows.length; })
+      .map(function (g) { return '<div class="' + g.cls + '">' + g.h + '</div>' + g.rows.join(''); }).join('');
   }
 
   // Sport rows + status pills (home sport tile).
@@ -234,6 +278,15 @@
   }
   var note = document.getElementById('sport-note');
   if (note && P.sportNote) note.textContent = P.sportNote;
+
+  // Sport open count (activities page foot): folded from activities/index.html
+  // under the mount-gate contract (sprint-2 H5).
+  var openCount = document.getElementById('sport-open-count');
+  if (openCount && P.sports) {
+    var openN = P.sports.filter(function (s) { return s.status === 'open'; }).length;
+    var NUM_WORDS = ['None', 'One', 'Two', 'Three', 'Four', 'Five'];
+    openCount.textContent = (NUM_WORDS[openN] || openN) + ' open now';
+  }
 
   // Policy doc groups (policies page). href:null = no real document yet
   // (issue 0016): unlinked row, "Coming" status, no download arrow. A due

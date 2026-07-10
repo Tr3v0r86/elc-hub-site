@@ -1,8 +1,9 @@
 /* ELC Portal: topographic contour field.
    Warped concentric rings radiating from the logo mark (#mark), drawn into
    #topo. Ink on cream, very low opacity. Robust to iframe/embedded loads:
-   a self-clearing poll rebuilds until the viewport reports a real size and a
-   ring is actually drawn. Static (no animation); drops out cleanly at print. */
+   a ResizeObserver on the document root fires on observe and on any size
+   change, rebuilding once the viewport reports a real size. Static (no
+   animation); drops out cleanly at print. */
 (function(){
   var svg = document.getElementById('topo');
   var mark = document.getElementById('mark');
@@ -11,7 +12,7 @@
   function build(){
     var W = window.innerWidth || document.documentElement.clientWidth,
         H = window.innerHeight || document.documentElement.clientHeight;
-    if(!W || !H) return;                       // container not sized yet; a caller below will retry
+    if(!W || !H) return;                       // container not sized yet; the ResizeObserver retries
     var m = mark.getBoundingClientRect();
     while(svg.firstChild) svg.removeChild(svg.firstChild);
     svg.setAttribute('width', W); svg.setAttribute('height', H);
@@ -36,10 +37,5 @@
     }
   }
   build();
-  window.addEventListener('load', build);
-  var t; window.addEventListener('resize', function(){ clearTimeout(t); t=setTimeout(build, 150); });
-  if(window.ResizeObserver){ new ResizeObserver(build).observe(document.documentElement); }
-  // decisive backstop: poll until the viewport reports a real size and a ring is drawn, then stop
-  var iv = setInterval(function(){ build(); if(svg.querySelector('path')){ clearInterval(iv); } }, 100);
-  setTimeout(function(){ clearInterval(iv); }, 6000);
+  new ResizeObserver(build).observe(document.documentElement);
 })();

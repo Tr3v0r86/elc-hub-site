@@ -1,6 +1,13 @@
-/* ELC Portal service worker: offline shell, cache-first.
+/* ELC Portal service worker: offline shell, three-tier fetch policy.
+   1) assets/fonts/  : cache-first, no revalidation (content-hashed URLs, immutable).
+   2) assets/data.js : network-first, cache fallback (the freshness point).
+   3) other same-origin GET : stale-while-revalidate (cached copy answers now, a
+      background cache:'reload' fetch updates the cache for the next load).
+   CACHE bump rule: routine asset edits need NO bump (SWR picks them up); HTML-to-JS
+   contract changes DO need one (stale HTML + fresh JS is a real mixed-version risk
+   under SWR).
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v7";
+const CACHE = "elc-portal-shell-v8";
 
 const SHELL = [
   "./",
@@ -60,10 +67,19 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   const req = e.request;
-  if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (req.method !== "GET" || url.origin !== self.location.origin) return;
 
-  /* data.js is the freshness point: network first, cached copy when offline. */
-  if (new URL(req.url).pathname.endsWith("/assets/data.js")) {
+  /* Tier 1: content-hashed fonts never change: cache first, no revalidation. */
+  if (url.pathname.indexOf("/assets/fonts/") !== -1) {
+    e.respondWith(
+      caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req))
+    );
+    return;
+  }
+
+  /* Tier 2: data.js is the freshness point: network first, cached copy when offline. */
+  if (url.pathname.endsWith("/assets/data.js")) {
     e.respondWith(
       fetch(req)
         .then((res) => {
@@ -77,8 +93,24 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  /* Everything else: cache first, network fallback. */
+  /* Tier 3: everything else: stale-while-revalidate. The cached copy answers now;
+     the revalidation fetch uses cache:'reload' so it bypasses the HTTP cache
+     (GitHub Pages serves max-age=600) and lands a truly fresh copy for next load.
+     Cache miss goes straight to network and caches the response. */
   e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then((hit) => hit || fetch(req))
+    caches.match(req, { ignoreSearch: true }).then((hit) => {
+      const refresh = fetch(new Request(req, { cache: "reload" })).then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        return res;
+      });
+      if (hit) {
+        e.waitUntil(refresh.catch(() => {}));
+        return hit;
+      }
+      return refresh;
+    })
   );
 });

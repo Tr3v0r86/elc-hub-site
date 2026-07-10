@@ -5,7 +5,7 @@
    Styles consume tokens.css custom properties only.
    Self-contained; include with <script src> after tokens.css. */
 (function () {
-  const VERSION = 'v0.2';
+  const VERSION = (window.PORTAL||{}).version || 'v0.2';
   const TO = 'trevorc@elc.ac.th';
   const RELAY = 'https://elc-feedback-relay.elcportal.workers.dev/feedback';
 
