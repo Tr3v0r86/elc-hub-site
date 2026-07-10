@@ -80,11 +80,16 @@ input[type="search"]{min-width:220px}
 </form>
 <div id="list"></div>
 <script>
-const K = new URL(location).searchParams.get('k') || '';
+// Token rides the link once, then sticks per device (issue 0033): a bookmarked
+// or token-stripped share of this URL still gets live counts + working votes.
+const qk = new URL(location).searchParams.get('k');
+if (qk) try { localStorage['elc-board-k'] = qk; } catch {}
+const K = qk || localStorage['elc-board-k'] || '';
 const voter = localStorage['elc-board-voter'] ||= crypto.randomUUID();
 const mine = JSON.parse(localStorage['elc-board-votes'] || '{}');
 const BUCKETS = { aug: 'August draft', backlog: 'Backlog', never: 'Never' };
 let ideas = [], suggestions = [], votes = {}, bucket = '', lens = '', q = '';
+let live = false;   // votes API reachable with a working token; false = read-only, never fake a vote
 
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 // Same-origin when served by the Worker; absolute when hosted statically at elc-hub.com/ideas/.
@@ -96,7 +101,8 @@ async function load() {
   try {
     const r = await fetch(API + '/api/votes?k=' + encodeURIComponent(K));
     votes = r.ok ? await r.json() : {};
-  } catch { votes = {}; }              // API down: counts default to 0, page still renders
+    live = r.ok;
+  } catch { votes = {}; live = false; }   // API down or no token: read-only, page still renders
   try {
     const r = await fetch(API + '/api/suggestions?k=' + encodeURIComponent(K));
     if (r.ok) { suggestions = await r.json(); suggestedTab(); }
@@ -122,7 +128,7 @@ function render() {
     .filter(i => (!bucket || i.decision === bucket) && (!lens || i.lens === lens) &&
                  (!ql || (i.name + ' ' + i.what + ' ' + i.value).toLowerCase().includes(ql)))
     .sort((a, b) => score(b) - score(a) || a.name.localeCompare(b.name));   // score desc, name tiebreak
-  document.getElementById('count').textContent = rows.length + ' of ' + all.length + ' ideas';
+  document.getElementById('count').textContent = rows.length + ' of ' + all.length + ' ideas' + (live ? '' : ' · read-only view, open from the project window to vote');
   document.getElementById('list').innerHTML = rows.map(i => {
     const v = votes[i.id] || { up: 0, down: 0, score: 0 };
     const my = mine[i.id] || 0;
@@ -131,9 +137,9 @@ function render() {
       : `<span class="chip">${BUCKETS[i.decision] || esc(i.decision)}</span><span class="chip">effort ${esc(i.effort)}</span><span class="chip">${esc(i.lens)}</span>`;
     return `<article class="row" data-id="${i.id}">
       <div class="votes">
-        <button type="button" class="up" aria-pressed="${my === 1}" aria-label="upvote ${esc(i.name)}" onclick="vote('${i.id}',1)">▲ +${v.up}</button>
+        <button type="button" class="up" aria-pressed="${my === 1}" aria-label="upvote ${esc(i.name)}" onclick="vote('${i.id}',1)"${live ? '' : ' disabled title="Read-only view: open the board from the project window to vote"'}>▲ +${v.up}</button>
         <span class="net">${v.score > 0 ? '+' : ''}${v.score}</span>
-        <button type="button" class="down" aria-pressed="${my === -1}" aria-label="downvote ${esc(i.name)}" onclick="vote('${i.id}',-1)">▼ -${v.down}</button>
+        <button type="button" class="down" aria-pressed="${my === -1}" aria-label="downvote ${esc(i.name)}" onclick="vote('${i.id}',-1)"${live ? '' : ' disabled title="Read-only view: open the board from the project window to vote"'}>▼ -${v.down}</button>
       </div>
       <div class="body">
         <h2>${esc(i.name)}${i.wow ? ' <span class="wow" title="wow idea">★</span>' : ''}</h2>
@@ -146,6 +152,7 @@ function render() {
 }
 
 async function vote(id, dir) {
+  if (!live) return;                               // read-only: never fake a vote that will not persist
   const prev = mine[id] || 0;
   const next = prev === dir ? 0 : dir;             // tap again = retract
   mine[id] = next; localStorage['elc-board-votes'] = JSON.stringify(mine);
