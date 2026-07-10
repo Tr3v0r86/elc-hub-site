@@ -13,40 +13,91 @@
   function icsEsc(s) {
     return String(s).replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\r?\n/g, '\\n');
   }
-  function toICS(ev) {
+  function icsDates(ev) {
     var dt = ev.date.replace(/-/g, '');                              // YYYYMMDD
     var end = new Date(ev.date + 'T00:00:00Z'); end.setUTCDate(end.getUTCDate() + 1);
-    var dtEnd = end.toISOString().slice(0, 10).replace(/-/g, '');    // all-day DTEND is exclusive (next day)
+    return { start: dt, end: end.toISOString().slice(0, 10).replace(/-/g, '') }; // all-day DTEND is exclusive (next day)
+  }
+  function icsVevent(ev) {
+    var d = icsDates(ev);
     var summary = icsEsc(ev.title + (ev.sub ? ', ' + ev.sub : ''));
     var slug = ev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     // ponytail: no RFC-5545 75-octet line folding; every current SUMMARY is under
     // the limit. Add a fold here if a longer event title ever lands.
     return [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ELC Portal//Calendar//EN', 'CALSCALE:GREGORIAN',
-      'BEGIN:VEVENT', 'UID:' + dt + '-' + slug + '@portal.elc.ac.th',
-      'DTSTAMP:' + dt + 'T000000Z', 'DTSTART;VALUE=DATE:' + dt, 'DTEND;VALUE=DATE:' + dtEnd,
-      'SUMMARY:' + summary, 'END:VEVENT', 'END:VCALENDAR'
-    ].join('\r\n');
+      'BEGIN:VEVENT', 'UID:' + d.start + '-' + slug + '@portal.elc.ac.th',
+      'DTSTAMP:' + d.start + 'T000000Z', 'DTSTART;VALUE=DATE:' + d.start, 'DTEND;VALUE=DATE:' + d.end,
+      'SUMMARY:' + summary, 'END:VEVENT'
+    ];
   }
-  // Self-check (silent on pass): comma escaping + all-day start/end.
+  function icsWrap(lines) {
+    return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ELC Portal//Calendar//EN', 'CALSCALE:GREGORIAN']
+      .concat(lines, ['END:VCALENDAR']).join('\r\n');
+  }
+  function toICS(ev) { return icsWrap(icsVevent(ev)); }
+  function toICSAll(evs) {
+    return icsWrap(evs.reduce(function (acc, ev) { return acc.concat(icsVevent(ev)); }, []));
+  }
+  var FN_MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function icsFilename(ev) {
+    var d = new Date(ev.date + 'T00:00:00Z');
+    var clean = ev.title.replace(/[\/\\:*?"<>|]/g, '').replace(/\s+/g, ' ').trim();
+    return 'ELC - ' + clean + ' - ' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + ' ' + d.getUTCFullYear() + '.ics';
+  }
+  function icsDownload(text, filename) {
+    var blob = new Blob([text], { type: 'text/calendar;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+  }
+  function gcalUrl(ev) {
+    var d = icsDates(ev);
+    return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' +
+      encodeURIComponent(ev.title + (ev.sub ? ', ' + ev.sub : '')) + '&dates=' + d.start + '/' + d.end;
+  }
+
+  // Platform add buttons (issue 0032): Google opens a pre-filled event in a new
+  // tab (no file), Apple downloads a named .ics. Monochrome marks, tokens-coloured;
+  // Claude Design may restyle (rule 7). Shared by the calendar agenda + windows strips.
+  var G_MARK = '<svg viewBox="0 0 488 512" aria-hidden="true"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>';
+  var A_MARK = '<svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>';
+  function addBtns(date, title, sub) {
+    var ev = { date: date, title: title, sub: sub || '' };
+    var esc = function (s) { return String(s).replace(/"/g, '&quot;'); };
+    return '<span class="cal-add">' +
+      '<a class="add-btn" target="_blank" rel="noopener" href="' + gcalUrl(ev) + '"' +
+      ' title="Add to Google Calendar" aria-label="Add ' + esc(title) + ' to Google Calendar">' + G_MARK + '</a>' +
+      '<button type="button" class="add-btn ics-btn" data-date="' + date + '" data-title="' + esc(title) + '" data-sub="' + esc(sub || '') + '"' +
+      ' title="Add to Apple Calendar (.ics file)" aria-label="Add ' + esc(title) + ' to Apple Calendar">' + A_MARK + '</button></span>';
+  }
+  window.elcAddBtns = addBtns; // consumed by the calendar page's agenda renderer
+  // Self-check (silent on pass): comma escaping, all-day start/end, multi-event, filename.
   console.assert(toICS({ date: '2026-08-03', title: 'Fest, Session 2', sub: 'to 7 Aug' }).indexOf('SUMMARY:Fest\\, Session 2\\, to 7 Aug') > -1, 'toICS: comma escape');
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTSTART;VALUE=DATE:20260803') > -1, 'toICS: all-day start');
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTEND;VALUE=DATE:20260804') > -1, 'toICS: all-day end');
+  console.assert(toICSAll([{ date: '2026-08-03', title: 'a', sub: '' }, { date: '2026-08-04', title: 'b', sub: '' }]).split('BEGIN:VEVENT').length === 3, 'toICSAll: two events, one calendar');
+  console.assert(icsFilename({ date: '2026-08-14', title: 'New Family Orientation' }) === 'ELC - New Family Orientation - 14 Aug 2026.ics', 'icsFilename: readable name');
 
-  // Delegated: any .ics-btn downloads its event from data-date/title/sub.
+  // Delegated: any .ics-btn downloads its event, named after it (issue 0032).
   document.addEventListener('click', function (e) {
     var btn = e.target.closest ? e.target.closest('.ics-btn') : null;
     if (!btn) return;
     e.preventDefault();
     var date = btn.getAttribute('data-date'), title = btn.getAttribute('data-title');
     if (!date || !title) return;
-    var blob = new Blob([toICS({ date: date, title: title, sub: btn.getAttribute('data-sub') || '' })], { type: 'text/calendar;charset=utf-8' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = 'elc-' + date + '.ics';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+    var ev = { date: date, title: title, sub: btn.getAttribute('data-sub') || '' };
+    icsDownload(toICS(ev), icsFilename(ev));
   });
+
+  // Whole-year download (calendar page, issue 0032): every event, one named file.
+  var icsAll = document.getElementById('ics-all');
+  if (icsAll && P.calendarEvents) {
+    icsAll.addEventListener('click', function () {
+      icsDownload(toICSAll(P.calendarEvents), 'ELC calendar 2026-27.ics');
+    });
+  }
 
   var bkkToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
 
@@ -92,8 +143,7 @@
         var when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
         return '<div class="win-row"><span class="win-date num">' + d.getUTCDate() + ' ' + MONS[d.getUTCMonth()] + '</span>' +
           '<div class="win-main"><div class="wt">' + w.label + '</div><div class="ws">' + w.sub + '</div></div>' +
-          '<span class="win-count">' + when + '</span>' +
-          '<button type="button" class="ics-btn" data-date="' + w.date + '" data-title="' + w.label + '" data-sub="' + w.sub + '" title="Add to your calendar" aria-label="Add ' + w.label + ' to your calendar">Add</button></div>';
+          '<span class="win-count">' + when + '</span>' + addBtns(w.date, w.label, w.sub) + '</div>';
       }).join('');
     }
   }

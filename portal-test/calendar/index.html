@@ -62,7 +62,8 @@
       <div>
         <div class="cal-agenda" id="cal-agenda"></div>
         <div class="cal-sub">
-          <p class="cal-note mono">Calendar subscription is coming. For now this page is the truth.</p>
+          <button type="button" class="btn ghost sm" id="ics-all">Download the year (.ics) <span class="arw">&darr;</span></button>
+          <p class="cal-note mono">Opens in Apple Calendar; imports into Google Calendar. A snapshot of today's dates: a live subscription that updates itself is coming.</p>
         </div>
       </div>
     </div>
@@ -150,7 +151,7 @@
         '<div class="ev-row"><span class="dte' + (e.date === todayIso ? ' today' : '') + '">' +
         WD[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
         '<div class="ev-main"><div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div></div>' +
-        '<button type="button" class="ics-btn" data-date="' + e.date + '" data-title="' + e.title + '" data-sub="' + e.sub + '" title="Add to your calendar" aria-label="Add ' + e.title + ' to your calendar">Add</button></div>'
+        window.elcAddBtns(e.date, e.title, e.sub) + '</div>'
       );
     });
     /* Keep the agenda column readable: cap Later this term at 12 rows; the grid holds the year. */

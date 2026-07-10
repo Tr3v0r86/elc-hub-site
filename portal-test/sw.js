@@ -1,6 +1,6 @@
 /* ELC Portal service worker: offline shell, cache-first.
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v6";
+const CACHE = "elc-portal-shell-v7";
 
 const SHELL = [
   "./",
