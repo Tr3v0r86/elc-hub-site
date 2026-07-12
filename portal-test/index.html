@@ -7,12 +7,31 @@
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F4F2EA">
 <meta name="description" content="Everything on this term, in one place. The calendar, registration and policies for ELC families.">
+<meta property="og:title" content="ELC Portal">
+<meta property="og:description" content="Everything on this term, in one place. The calendar, registration and policies for ELC families.">
+<meta property="og:url" content="https://elc-hub.com/portal-test/">
+<meta property="og:image" content="https://elc-hub.com/portal-test/assets/icon-512.png">
+<meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/app.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "School",
+  "name": "ELC International Schools",
+  "url": "https://elc-hub.com/portal-test/",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Thong Lor",
+    "addressRegion": "Bangkok",
+    "addressCountry": "TH"
+  }
+}
+</script>
 </head>
 <body>
   <div class="topline"></div>
@@ -37,8 +56,10 @@
         <div class="dd-panel">
           <a href="help/">Quick answers</a>
           <a href="new-families/">New families</a>
+          <a href="glossary/">Glossary</a>
         </div>
       </details>
+      <div class="nav-search"><input type="search" id="q" data-root="" placeholder="Search the portal" aria-label="Search the portal"><div id="q-results" hidden></div></div>
     </nav>
   </header>
 
@@ -50,6 +71,9 @@
 
     <!-- registration windows countdown (issue 0031); render.js removes it when nothing is upcoming -->
     <div class="windows" id="reg-windows"></div>
+
+    <!-- outdoor-air decision tile (sprint 3 F4); render.js removes it when PORTAL.air is null -->
+    <div class="windows" id="air-tile"></div>
 
     <div class="bento">
       <!-- THIS WEEK -->
@@ -94,7 +118,7 @@
       </a>
 
       <!-- ARMONIA -->
-      <a class="tile reg-card tile-top-purple link" href="activities/">
+      <a class="tile reg-card tile-top-purple link" href="armonia/">
         <span class="eyebrow">Programme</span>
         <h3>Armonia</h3>
         <p>Music, drama and dance performance, together.</p>
@@ -128,6 +152,8 @@
         <span class="btn gold block">Open policies <span class="arw">&rarr;</span></span>
       </a>
     </div>
+
+    <p class="page-note">There is more to school life than the schedule. <a href="community/">Get to know the ELC community</a>.</p>
   </div>
 
   <div class="foot-strip">

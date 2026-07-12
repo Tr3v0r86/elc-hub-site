@@ -6,6 +6,12 @@
 <title>Calendar · ELC Portal</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F4F2EA">
+<meta name="description" content="One calendar for everything at ELC, week by week, with every term, break and key date for the year.">
+<meta property="og:title" content="Calendar · ELC Portal">
+<meta property="og:description" content="One calendar for everything at ELC, week by week, with every term, break and key date for the year.">
+<meta property="og:url" content="https://elc-hub.com/portal-test/calendar/">
+<meta property="og:image" content="https://elc-hub.com/portal-test/assets/icon-512.png">
+<meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
 <link rel="manifest" href="../manifest.json">
 <link rel="apple-touch-icon" href="../assets/icon-180.png">
@@ -36,8 +42,10 @@
         <div class="dd-panel">
           <a href="../help/">Quick answers</a>
           <a href="../new-families/">New families</a>
+          <a href="../glossary/">Glossary</a>
         </div>
       </details>
+      <div class="nav-search"><input type="search" id="q" data-root="../" placeholder="Search the portal" aria-label="Search the portal"><div id="q-results" hidden></div></div>
     </nav>
   </header>
 
@@ -70,7 +78,9 @@
         <div class="cal-agenda" id="cal-agenda"></div>
         <div class="cal-sub">
           <button type="button" class="btn ghost sm" id="ics-all">Download the year (.ics) <span class="arw">&darr;</span></button>
+          <button type="button" class="btn ghost sm" id="ics-key">Key dates (.ics) <span class="arw">&darr;</span></button>
           <p class="cal-note mono">Opens in Apple Calendar; imports into Google Calendar. A snapshot of today's dates: a live subscription that updates itself is coming.</p>
+          <p class="btn-row"><a class="btn ghost sm" href="print/?range=week">Print this week</a><a class="btn ghost sm" href="print/?range=term">Print the term</a></p>
         </div>
       </div>
     </div>

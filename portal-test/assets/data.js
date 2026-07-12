@@ -2,8 +2,17 @@
    Pages render these islands via assets/render.js. Statuses are honest
    (rule 6): football live, the rest open 7 Sep. */
 window.PORTAL = {
-  version: 'v0.2',
+  version: 'v0.5',
   term: 'Term 1',
+
+  // Pages still being finalised (sprint 3 D5). render.js prepends a visible
+  // "We are finalising this page" chip on any page whose <main data-page> key is
+  // listed here. Removing a key = that page's verify-artifact row is signed off
+  // (docs/verify-v0.5.md).
+  draftPages: ['glossary', 'photo-consent', 'how-to-pay', 'gate-card',
+               'armonia', 'armonia-expressive-languages', 'armonia-science',
+               'armonia-technology', 'armonia-sport', 'armonia-drama',
+               'armonia-music', 'community-giving'],
 
   // School status (issue 0031 item 1). null = normal day, no banner anywhere.
   // To raise a notice, replace null with an object and deploy (see docs/runbook.md):
@@ -11,22 +20,47 @@ window.PORTAL = {
   //             title: 'Early pickup today',
   //             body: 'All campuses close at 1pm. Buses leave at 1:15.',
   //             expires: '2026-08-20' }          // last day the banner shows; it kills itself after
+  // BEGIN SHEET-OWNED: status
   status: null,
+  // END SHEET-OWNED: status
+
+  // Outdoor air quality (sprint 3 F4). null = no air tile anywhere (it is hidden).
+  // When the outdoor-play call is made (runbook, manual for now), set the level so
+  // the home tile and the status page show today's decision:
+  //   air: { level: 'caution',                 // 'good' | 'caution' | 'indoor'
+  //          note: 'Short outdoor breaks only.',
+  //          updated: 'today, 9am' }            // shown verbatim after "Updated "
+  // BEGIN SHEET-OWNED: air
+  air: null,
+  // END SHEET-OWNED: air
 
   // Contacts: the single edit point every contact chip on the site reads from.
   // phone: null renders as "Coming" until the real number is supplied (rule 6).
   // ⚠️ office@ per people directory (Praveen); Trevor to verify parent-facing (issue 0031).
   contacts: {
-    office:     { label: 'School office',   email: 'office@elc.ac.th',     phone: null },
-    activities: { label: 'Activities team', email: 'activities@elc.ac.th', phone: null }
+    office:     { label: 'School office',   email: 'office@elc.ac.th',     phone: '+66 (0)2 381 2919' },
+    activities: { label: 'Activities team', email: 'activities@elc.ac.th', phone: '+66 (0)2 381 2919' }
   },
+
+  // Office hours per campus (sprint 3 P7). null renders one honest "Office hours
+  // coming" row wherever [data-strip="office"] appears (gate card, help, contacts).
+  // Fill when confirmed:
+  //   officeHours: [
+  //     { campus: 'The City School', hours: 'Mon to Fri, 7:30am to 4:30pm', note: '' },
+  //     { campus: 'Dove Centre',      hours: 'Mon to Fri, 8am to 4pm',       note: 'Term time only' }
+  //   ]
+  // BEGIN SHEET-OWNED: officeHours
+  officeHours: null,
+  // END SHEET-OWNED: officeHours
 
   // Registration windows (issue 0031 item 4): dated strip with countdowns on
   // home + activities. Rows disappear the day after `date`. Honest dates only.
+  // BEGIN SHEET-OWNED: regWindows
   regWindows: [
     { date: '2026-08-20', label: 'Sport parent info evening', sub: 'Basketball, cricket and swimming explained' },
     { date: '2026-09-07', label: 'Sport sign-up opens', sub: 'Basketball, cricket and swimming' }
   ],
+  // END SHEET-OWNED: regWindows
 
   // Safeguarding leads (issue 0031 item 6): /safeguarding/ renders a card per
   // entry; empty = the page shows the generic route only. Fill when confirmed:
@@ -67,10 +101,13 @@ window.PORTAL = {
   ],
   sportNote: 'Parent info evening 20 Aug. Sign-up opens 7 Sep.',
 
+  // (Refund and withdrawal content is deliberately NOT on the portal, Trevor 2026-07-12.)
+
   // REAL 2026/27 events: parsed from "The City School Events 26" sheet per issue 0018,
   // filter rule applied (staff-only dropped; two no-school staff days rescued per Trevor
   // 2026-07-09; Dec 5 Saturday performance confirmed). Review trail:
   // docs/sources/events-review-2026-27.md. Future live feed (0004) swaps in behind this.
+  // type:'gold' MEANS key date / milestone (drives the key-dates .ics feed); 'purple' = everything else.
   calendarEvents: [
     { date: '2026-08-03', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
     { date: '2026-08-12', type: 'purple', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
@@ -87,18 +124,18 @@ window.PORTAL = {
     { date: '2026-08-20', type: 'purple', title: 'Y2 Coffee Morning', sub: '' },
     { date: '2026-08-21', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '' },
     { date: '2026-08-25', type: 'purple', title: 'Dove Coffee Morning', sub: 'Dove Centre' },
-    { date: '2026-09-07', type: 'purple', title: 'Parent Social Morning', sub: '' },
+    { date: '2026-09-07', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2026-09-17', type: 'purple', title: 'Safeguarding parent info session', sub: '' },
     { date: '2026-09-18', type: 'purple', title: 'International Schools Holiday', sub: '' },
     { date: '2026-09-24', type: 'purple', title: 'Open Evening', sub: '' },
     { date: '2026-10-01', type: 'purple', title: 'ISB parent info session', sub: '' },
     { date: '2026-10-02', type: 'purple', title: 'Parent Teacher Conferences (Progress)', sub: 'No school for children' },
-    { date: '2026-10-05', type: 'purple', title: 'Parent Social Morning', sub: '' },
+    { date: '2026-10-05', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2026-10-08', type: 'purple', title: 'Digital Safety parent info session', sub: '' },
     { date: '2026-10-12', type: 'purple', title: 'Holiday: ELC October mid-term break', sub: 'to 16 Oct' },
     { date: '2026-10-23', type: 'purple', title: 'King Chulalongkorn Memorial Day', sub: 'No school for children' },
-    { date: '2026-10-29', type: 'purple', title: 'Parent Workshop: Emotional Regulation', sub: '' },
-    { date: '2026-11-02', type: 'purple', title: 'Parent Social Morning', sub: '' },
+    { date: '2026-10-29', type: 'purple', title: 'Parent Workshop: Emotional Regulation', sub: '', community: true },
+    { date: '2026-11-02', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2026-11-04', type: 'purple', title: 'ELC celebrates Loy Krathong', sub: '' },
     { date: '2026-11-23', type: 'purple', title: 'Y1 and Y2 Holiday Pageant', sub: '' },
     { date: '2026-11-26', type: 'purple', title: 'K1 Holiday Pageant', sub: '' },
@@ -107,24 +144,24 @@ window.PORTAL = {
     { date: '2026-12-07', type: 'purple', title: 'King Rama IX Birthday Substitution Holiday', sub: '' },
     { date: '2026-12-11', type: 'purple', title: 'Y3 to Y6 Holiday Choir Concert', sub: '' },
     { date: '2026-12-14', type: 'purple', title: 'Parent Teacher Conferences (Report Card)', sub: 'No school for children' },
-    { date: '2026-12-16', type: 'purple', title: 'K2 to Y6 Fun Field Day', sub: '' },
-    { date: '2026-12-17', type: 'purple', title: 'K1 and Dove Centre Fun Field Day', sub: '' },
+    { date: '2026-12-16', type: 'purple', title: 'K2 to Y6 Fun Field Day', sub: '', community: true },
+    { date: '2026-12-17', type: 'purple', title: 'K1 and Dove Centre Fun Field Day', sub: '', community: true },
     { date: '2026-12-18', type: 'gold',   title: 'Last day of Term 1', sub: '11:30 hometime K1 and K2, 12:00 hometime Y1 to Y6' },
     { date: '2026-12-21', type: 'purple', title: 'Holiday: Christmas and New Year', sub: 'to 9 Jan' },
     { date: '2027-01-11', type: 'purple', title: 'No school for children (staff training day)', sub: '' },
     { date: '2027-01-12', type: 'gold',   title: 'School resumes for Term 2', sub: '' },
     { date: '2027-01-14', type: 'purple', title: 'Puberty Workshop', sub: 'Y5 and Y6' },
-    { date: '2027-01-18', type: 'purple', title: 'Parent Social Morning', sub: '' },
-    { date: '2027-01-28', type: 'purple', title: 'Parent Workshop: Supporting Behaviours', sub: '' },
-    { date: '2027-02-01', type: 'purple', title: 'Parent Social Morning', sub: '' },
-    { date: '2027-02-08', type: 'purple', title: 'Parent Workshop: Making Learning Visible', sub: '' },
+    { date: '2027-01-18', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-01-28', type: 'purple', title: 'Parent Workshop: Supporting Behaviours', sub: '', community: true },
+    { date: '2027-02-01', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-02-08', type: 'purple', title: 'Parent Workshop: Making Learning Visible', sub: '', community: true },
     { date: '2027-02-11', type: 'purple', title: 'Project Through the Years at ELC', sub: '' },
     { date: '2027-02-12', type: 'purple', title: 'Project Through the Years at ELC', sub: '' },
     { date: '2027-02-12', type: 'purple', title: 'Project in Kindergarten', sub: '' },
-    { date: '2027-02-19', type: 'purple', title: 'Parent Workshop: An Author\'s Workshop', sub: '' },
+    { date: '2027-02-19', type: 'purple', title: 'Parent Workshop: An Author\'s Workshop', sub: '', community: true },
     { date: '2027-02-19', type: 'purple', title: 'Athletics Day', sub: '' },
     { date: '2027-02-22', type: 'purple', title: 'Holiday: ELC February mid-term break', sub: 'to 26 Feb' },
-    { date: '2027-03-01', type: 'purple', title: 'Parent Social Morning', sub: '' },
+    { date: '2027-03-01', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2027-03-04', type: 'purple', title: 'Atelier explorations and learning', sub: '' },
     { date: '2027-03-09', type: 'purple', title: 'Wycombe Abbey Head of School info session', sub: '' },
     { date: '2027-03-11', type: 'purple', title: 'Emergent reading skill development', sub: '' },
@@ -139,9 +176,9 @@ window.PORTAL = {
     { date: '2027-04-06', type: 'purple', title: 'Chakri Day Holiday', sub: '' },
     { date: '2027-04-13', type: 'purple', title: 'Thai New Year: Songkran', sub: 'to 15 Apr' },
     { date: '2027-04-22', type: 'purple', title: 'Math at ELC', sub: '' },
-    { date: '2027-04-26', type: 'purple', title: 'Art From The Heart exhibition and fundraising week', sub: 'to 29 Apr' },
+    { date: '2027-04-26', type: 'purple', title: 'Art From The Heart exhibition and fundraising week', sub: 'to 29 Apr', community: true },
     { date: '2027-04-26', type: 'purple', title: 'New Families and PE Families to ELC', sub: '' },
-    { date: '2027-05-03', type: 'purple', title: 'Parent Social Morning', sub: '' },
+    { date: '2027-05-03', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2027-05-04', type: 'purple', title: 'Coronation Day Holiday', sub: '' },
     { date: '2027-05-05', type: 'purple', title: 'Little Steps, Big Futures: charting your child\'s K to 6 journey', sub: '' },
     { date: '2027-05-06', type: 'purple', title: 'Little Steps, Big Futures: charting your child\'s K to 6 journey', sub: '' },
@@ -149,7 +186,7 @@ window.PORTAL = {
     { date: '2027-05-13', type: 'purple', title: 'Navigating the AI Terrain', sub: '' },
     { date: '2027-05-20', type: 'purple', title: 'Visakha Bucha Holiday', sub: '' },
     { date: '2027-06-03', type: 'purple', title: 'The Queen\'s Birthday: normal school day', sub: '' },
-    { date: '2027-06-07', type: 'purple', title: 'Parent Social Morning', sub: '' },
+    { date: '2027-06-07', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2027-06-09', type: 'purple', title: 'Wan Wai Khru: Teacher\'s Appreciation Day', sub: '' },
     { date: '2027-06-17', type: 'gold',   title: 'Last day of the school year', sub: '' },
     { date: '2027-06-18', type: 'purple', title: 'No school for children (staff training day)', sub: '' },
@@ -163,6 +200,10 @@ window.PORTAL = {
   // sheet 1J5J8xNhre5N3mr88vLSlSKUK_efVJ6rb6pq8zdRca9Q). Rule: admissions and fee
   // documents NEVER surface on the portal (Trevor, 2026-07-08). Sizes from live
   // HEAD checks 2026-07-08. href:null = no real document yet; render honest, never href="#".
+  // Optional per-doc fields (sprint 3): reviewed:'YYYY-MM' -> a "Reviewed <Mon YYYY>"
+  // mono stamp; rule:'one operative sentence' -> an "In short:" line. Honest only: set
+  // reviewed from the registry's stated review date, rule from the PDF's own words, and
+  // flag every extracted rule on docs/verify-v0.5.md (misquoting policy is worse than silence).
   docs: [
     { group: 'Start here', name: 'Parent handbook, 2026/27', sub: 'How the school runs, from the day to the year. The one to read first.', kind: 'PDF', tag: 'PDF · 1.9 MB', href: 'https://www.elc.ac.th/wp-content/uploads/Parent-Handbook-2026-27.pdf' },
     { group: 'Start here', name: 'Term dates and calendar', sub: 'Every term, break and key date for the year ahead.', kind: 'LINK', tag: 'View', href: '../calendar/' },
@@ -183,6 +224,7 @@ window.PORTAL = {
     { group: 'Everyday', name: 'Data privacy policy', sub: 'How we handle your family\'s information and images.', kind: 'PDF', tag: 'PDF · 85 KB', href: 'https://www.elc.ac.th/wp-content/uploads/Data-Privacy-Policy.pdf' },
     { group: 'Everyday', name: 'Student technology acceptance', sub: 'How children use school technology, agreed each year.', kind: 'PDF', tag: 'PDF · 861 KB', href: 'https://www.elc.ac.th/wp-content/uploads/Student-Technology-Acceptance.pdf' },
     { group: 'Everyday', name: 'Digital assets acceptable use', sub: 'The rules for school accounts, devices and systems.', kind: 'PDF', tag: 'PDF · 163 KB', href: 'https://www.elc.ac.th/wp-content/uploads/ELC-Digital_Assets-Acceptable_Use_Policy.pdf' },
+    { group: 'Everyday', name: 'Photo consent and takedown', sub: 'What we photograph, your choices, and our 48 hour takedown promise.', kind: 'LINK', tag: 'View', href: 'photo-consent/' },
     { group: 'Activities', name: 'Activity terms and conditions', sub: 'Booking, places and what happens if plans change.', kind: 'PDF', tag: null, href: null }
   ]
 };

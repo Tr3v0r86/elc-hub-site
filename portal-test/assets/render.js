@@ -26,6 +26,43 @@
     var d = new Date(dateISO + 'T00:00:00Z');
     return d <= endThis ? 0 : d <= endNext ? 1 : 2;
   }
+  // Monday-to-Sunday bounds (ISO) of the week containing todayISO. Pure + assertable.
+  function weekBounds(todayISO) {
+    var mon = weekStart(todayISO);
+    var sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
+    return { start: mon.toISOString().slice(0, 10), end: sun.toISOString().slice(0, 10) };
+  }
+  // Fridge-print "term" end: the next key date titled like a term close (else 120
+  // days out). evs must be sorted ascending. Pure + assertable.
+  function termEnd(evs, todayISO) {
+    var re = /Last day of Term|Holiday: Christmas/;
+    for (var i = 0; i < evs.length; i++) {
+      if (evs[i].date >= todayISO && re.test(evs[i].title)) return evs[i].date;
+    }
+    var d = new Date(todayISO + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 120);
+    return d.toISOString().slice(0, 10);
+  }
+  // type:'gold' = key date / milestone; drives the key-dates .ics feed (issue 0032 F3).
+  function goldOnly(evs) { return evs.filter(function (e) { return e.type === 'gold'; }); }
+  function fmtDMY(iso) {
+    var d = new Date(iso + 'T00:00:00Z');
+    return d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+  }
+  function fmtReviewed(ym) {                                    // 'YYYY-MM' -> 'Reviewed May 2026'
+    var p = String(ym).split('-');
+    return 'Reviewed ' + (FN_MONS[parseInt(p[1], 10) - 1] || '') + ' ' + p[0];
+  }
+  // Draft-chip membership (sprint 3 D5). Pure + assertable.
+  function isDraftPage(key, list) { return !!key && !!list && list.indexOf(key) > -1; }
+  // Shared strip (sprint 3 D3): a doc-list of {nm, sub} rows under one mono icon.
+  // Used by the office-hours strip, the air tile and the refund ladder.
+  function stripRows(items, iconText) {
+    return '<div class="doc-list">' + items.map(function (it) {
+      return '<div class="doc-row"><span class="ic">' + iconText + '</span>' +
+        '<div class="meta"><div class="nm">' + it.nm + '</div>' +
+        (it.sub ? '<div class="sub">' + it.sub + '</div>' : '') + '</div></div>';
+    }).join('') + '</div>';
+  }
 
   // Per-event add-to-calendar (.ics), issue 0027. All-day VEVENT: events are
   // date-only, so no time and no Bangkok-offset bug. RFC 5545 escaping on
@@ -91,6 +128,13 @@
       '<button type="button" class="add-btn ics-btn" data-date="' + date + '" data-title="' + esc(title) + '" data-sub="' + esc(sub || '') + '"' +
       ' title="Add to Apple Calendar (.ics file)" aria-label="Add ' + esc(title) + ' to Apple Calendar">' + A_MARK + '</button></span>';
   }
+  // Share mark (issue 0032 F10): native share where available, LINE fallback.
+  var S_MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 12v8h16v-8M12 3v13M8 7l4-4 4 4"/></svg>';
+  function shareBtn(url, title) {
+    var esc = function (s) { return String(s).replace(/"/g, '&quot;'); };
+    return '<button type="button" class="add-btn share-btn" data-url="' + esc(url) + '" data-title="' + esc(title) + '"' +
+      ' title="Share" aria-label="Share ' + esc(title) + '">' + S_MARK + '</button>';
+  }
   // Self-check (silent on pass): comma escaping, all-day start/end, multi-event, filename.
   console.assert(toICS({ date: '2026-08-03', title: 'Fest, Session 2', sub: 'to 7 Aug' }).indexOf('SUMMARY:Fest\\, Session 2\\, to 7 Aug') > -1, 'toICS: comma escape');
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTSTART;VALUE=DATE:20260803') > -1, 'toICS: all-day start');
@@ -99,6 +143,11 @@
   console.assert(icsFilename({ date: '2026-08-14', title: 'New Family Orientation' }) === 'ELC - New Family Orientation - 14 Aug 2026.ics', 'icsFilename: readable name');
   console.assert(weekStart('2026-10-08').toISOString().slice(0, 10) === '2026-10-05' && weekStart('2026-10-11').toISOString().slice(0, 10) === '2026-10-05', 'weekStart: Monday for a Thursday + the Sunday edge');
   console.assert(agendaBucket('2026-10-02', '2026-10-02') === 0 && agendaBucket('2026-10-05', '2026-10-02') === 1 && agendaBucket('2026-10-12', '2026-10-02') === 2, 'agendaBucket: This/Next/Later around 2026-10-02');
+  console.assert(goldOnly([{ type: 'gold' }, { type: 'purple' }, { type: 'gold' }]).length === 2, 'goldOnly: gold events only');
+  console.assert(weekBounds('2026-10-08').start === '2026-10-05' && weekBounds('2026-10-08').end === '2026-10-11', 'weekBounds: Monday to Sunday');
+  console.assert(termEnd([{ date: '2026-12-18', title: 'Last day of Term 1' }], '2026-07-11') === '2026-12-18', 'termEnd: next term close');
+  console.assert(termEnd([{ date: '2026-08-01', title: 'x' }], '2026-01-01') === '2026-05-01', 'termEnd: 120-day fallback');
+  console.assert(isDraftPage('glossary', ['glossary', 'refunds']) && !isDraftPage('calendar-print', ['glossary']), 'isDraftPage: membership');
 
   // Delegated: any .ics-btn downloads its event, named after it (issue 0032).
   document.addEventListener('click', function (e) {
@@ -117,6 +166,35 @@
     icsAll.addEventListener('click', function () {
       icsDownload(toICSAll(P.calendarEvents), 'ELC calendar 2026-27.ics');
     });
+  }
+
+  // Key-dates .ics (calendar page, issue 0032 F3): gold events only, one named file.
+  var icsKey = document.getElementById('ics-key');
+  if (icsKey && P.calendarEvents) {
+    icsKey.addEventListener('click', function () {
+      icsDownload(toICSAll(goldOnly(P.calendarEvents)), 'ELC key dates 2026-27.ics');
+    });
+  }
+
+  // Share buttons (issue 0032 F10): delegated. Native share, else LINE share URL.
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.share-btn');
+    if (!btn) return;
+    e.preventDefault();
+    var url = btn.getAttribute('data-url') || location.href;
+    var title = btn.getAttribute('data-title') || document.title;
+    if (navigator.share) { navigator.share({ title: title, url: url }).catch(function () {}); }
+    else { window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(url), '_blank', 'noopener'); }
+  });
+
+  // Draft chip (sprint 3 D5): a page still being finalised gets a visible marker at
+  // the top of <main>. Reuses the .status.soon pill look; no new CSS (rule 7).
+  var draftMain = document.querySelector('main[data-page]');
+  if (draftMain && isDraftPage(draftMain.dataset.page, P.draftPages)) {
+    var chip = document.createElement('div');
+    chip.className = 'status soon draft-chip';
+    chip.textContent = 'We are finalising this page. Details may change.';
+    draftMain.insertBefore(chip, draftMain.firstChild);
   }
 
   // School status banner (issue 0031): injected under the header on every page
@@ -165,6 +243,49 @@
     }
   }
 
+  // La Comunità seams (sprint 4, issue 0039). #community-events (community/) lists
+  // upcoming community-tagged calendarEvents rows; #giving-next (community/giving/)
+  // shows the next community-tagged fundraising entry. Both self-remove when nothing
+  // is upcoming (air-tile pattern): the pages hardcode no claim either way.
+  var commEvents = document.getElementById('community-events');
+  if (commEvents && P.calendarEvents) {
+    var commRows = P.calendarEvents
+      .filter(function (e) { return e.community && e.date >= bkkToday; })
+      .sort(function (a, b) { return a.date < b.date ? -1 : 1; })
+      .slice(0, 6);
+    if (!commRows.length) commEvents.remove();
+    else {
+      commEvents.hidden = false;
+      commEvents.className = 'section';
+      commEvents.innerHTML =
+        '<div class="sec-eyebrow"><span class="eyebrow">Coming up</span><span class="ln"></span></div>' +
+        commRows.map(function (e) {
+          var d = new Date(e.date + 'T00:00:00Z');
+          return '<div class="ev-row"><span class="dte">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
+            '<div class="ev-main"><div class="et">' + e.title + '</div>' +
+            (e.sub ? '<div class="es">' + e.sub + '</div>' : '') + '</div>' +
+            addBtns(e.date, e.title, e.sub) + '</div>';
+        }).join('');
+    }
+  }
+  var givingNext = document.getElementById('giving-next');
+  if (givingNext && P.calendarEvents) {
+    var drive = P.calendarEvents
+      .filter(function (e) { return e.community && e.date >= bkkToday && /fundrais/i.test(e.title); })
+      .sort(function (a, b) { return a.date < b.date ? -1 : 1; })[0];
+    if (!drive) givingNext.remove();
+    else {
+      givingNext.hidden = false;
+      givingNext.className = 'section';
+      givingNext.innerHTML =
+        '<div class="sec-eyebrow"><span class="eyebrow">The next drive</span><span class="ln"></span></div>' +
+        '<div class="doc-list"><a class="doc-row" href="../../calendar/">' +
+        '<span class="ic">CAL</span><div class="meta"><div class="nm">' + drive.title + '</div>' +
+        '<div class="sub">' + fmtDMY(drive.date) + (drive.sub ? ' · ' + drive.sub : '') + '</div></div>' +
+        '<div class="rt"><span class="tag">View calendar</span></div></a></div>';
+    }
+  }
+
   // Contact chips: any [data-contact="office|activities"] gets the live email
   // (and phone when it exists) from PORTAL.contacts, one edit point site-wide.
   var chips = document.querySelectorAll('[data-contact]');
@@ -177,6 +298,51 @@
         : ' &middot; <span class="status soon">Phone coming</span>';
       el.innerHTML = '<a href="mailto:' + c.email + '">' + c.email + '</a>' + phone;
     });
+  }
+
+  // Office-hours strip (sprint 3 P7): any [data-strip="office"]. null renders one
+  // honest "coming" row (shared stripRows helper, D3).
+  var offStrips = document.querySelectorAll('[data-strip="office"]');
+  if (offStrips.length) {
+    var offRows = (P.officeHours && P.officeHours.length)
+      ? P.officeHours.map(function (o) { return { nm: o.campus, sub: [o.hours, o.note].filter(Boolean).join(' · ') }; })
+      : [{ nm: 'Office hours coming', sub: '' }];
+    var offHtml = stripRows(offRows, 'HRS');
+    offStrips.forEach(function (el) { el.innerHTML = offHtml; });
+  }
+
+  // Outdoor-air tile (sprint 3 F4): #air-tile. null = removed (no tile). Otherwise
+  // one row: today's outdoor-play decision, the note, and when it was updated.
+  var airTile = document.getElementById('air-tile');
+  if (airTile && !P.air) { airTile.remove(); }
+  else if (airTile) {
+    var AIR_MSG = { good: 'Outdoor play is on today', caution: 'Outdoor time is shortened today', indoor: 'We are indoors today' };
+    var airSub = [P.air.note, P.air.updated ? 'Updated ' + P.air.updated : ''].filter(Boolean).join(' · ');
+    airTile.innerHTML = stripRows([{ nm: AIR_MSG[P.air.level] || 'Outdoor play update', sub: airSub }], 'AIR');
+  }
+
+  // Rail reachability (status page, sprint 3 W1/D4): #rails-health. Any failure =
+  // the block is removed silently. Never "healthy/down": a 200 proves reachable only.
+  var railsMount = document.getElementById('rails-health');
+  if (railsMount) {
+    // Remove the whole section (eyebrow included), not just the inner list, so a
+    // down worker leaves no orphan heading. Falls back to the mount if unwrapped.
+    var railsKill = function () { (railsMount.closest('.section') || railsMount).remove(); };
+    try {
+      fetch('https://elc-ops.elcportal.workers.dev/api/rails', { cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+        .then(function (data) {
+          var rails = Array.isArray(data) ? data : (data && data.rails) || [];
+          if (!rails.length) throw 0;
+          railsMount.innerHTML = rails.map(function (rl) {
+            var ok = rl.ok || rl.reachable;
+            return '<div class="doc-row"><span class="ic">' + (ok ? 'OK' : '...') + '</span>' +
+              '<div class="meta"><div class="nm">' + rl.name + '</div>' +
+              '<div class="sub">' + (ok ? 'Reachable, checked just now' : 'Could not reach just now. We are re-checking.') + '</div></div></div>';
+          }).join('');
+        })
+        .catch(railsKill);
+    } catch (e) { railsKill(); }
   }
 
   // Safeguarding lead cards (#dsl-cards): one per PORTAL.safeguarding entry;
@@ -241,6 +407,7 @@
   // sprint-2 H5). The month grid stays page-local on that page by design.
   var calAgenda = document.getElementById('cal-agenda');
   if (calAgenda && P.calendarEvents) {
+    var shareUrl = location.origin + location.pathname;   // the calendar page itself (F10)
     var evs = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
     var today0 = new Date(bkkToday + 'T00:00:00Z');
     var buckets = [
@@ -255,7 +422,7 @@
         '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
         DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
         '<div class="ev-main"><div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div></div>' +
-        addBtns(e.date, e.title, e.sub) + '</div>'
+        addBtns(e.date, e.title, e.sub) + shareBtn(shareUrl, e.title) + '</div>'
       );
     });
     /* Keep the agenda column readable: cap Later this term at 12 rows; the grid holds the year. */
@@ -268,7 +435,36 @@
       .map(function (g) { return '<div class="' + g.cls + '">' + g.h + '</div>' + g.rows.join(''); }).join('');
   }
 
-  // Sport rows + status pills (home sport tile).
+  // Fridge print (calendar/print/, sprint 3 F2): #print-list. ?range=week|term
+  // (default week). week = this Bangkok Mon-Sun; term = today through the next term
+  // close (else 120 days). Dense date rows; an empty range says so plainly.
+  var printList = document.getElementById('print-list');
+  if (printList && P.calendarEvents) {
+    var pRange = new URLSearchParams(location.search).get('range') === 'term' ? 'term' : 'week';
+    var pAsc = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    var pw = weekBounds(bkkToday);
+    var pBounds = pRange === 'term'
+      ? { start: bkkToday, end: termEnd(pAsc, bkkToday), label: 'This term' }
+      : { start: pw.start, end: pw.end, label: 'This week' };
+    var pRows = pAsc.filter(function (e) { return e.date >= pBounds.start && e.date <= pBounds.end; });
+    printList.innerHTML = pRows.length
+      ? pRows.map(function (e) {
+          var d = new Date(e.date + 'T00:00:00Z');
+          return '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
+            DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
+            '<div class="ev-main"><div class="et">' + e.title + '</div>' +
+            (e.sub ? '<div class="es">' + e.sub + '</div>' : '') + '</div></div>';
+        }).join('')
+      : '<div class="ev-row"><div class="ev-main"><div class="et">No dated events in this range.</div></div></div>';
+    var pLabel = document.getElementById('print-range-label');
+    if (pLabel) pLabel.textContent = pBounds.label + ' · printed ' + fmtDMY(bkkToday);
+  }
+
+  // Sport rows + status pills (home sport tile). status vocab: open | soon |
+  // waitlist | full (sprint 3 F5). Each value maps straight to a .status.<value>
+  // class + its label, so waitlist/full need no code branch here.
+  // NOTE for integrator (Lane D): app.css defines only .status.open and .status.soon.
+  // .status.waitlist and .status.full render unstyled until Lane D adds their rules.
   var grid = document.getElementById('sport-grid');
   if (grid && P.sports) {
     grid.innerHTML = P.sports.map(function (s) {
@@ -301,8 +497,14 @@
     var ARW = '<svg class="dl" viewBox="0 0 24 24"><path d="M12 3v12M7 11l5 5 5-5M5 20h14"/></svg>';
     groups.innerHTML = order.map(function (g) {
       var rows = byGroup[g].map(function (d) {
+        // Freshness stamp (F6) rides the sub line; the operative rule (F7) is a
+        // second sub line. Both are honest-only and set from real registry truth.
+        var reviewed = d.reviewed ? ' <span class="mono">' + fmtReviewed(d.reviewed) + '</span>' : '';
         var inner = '<span class="ic">' + d.kind + '</span>' +
-          '<div class="meta"><div class="nm">' + d.name + '</div><div class="sub">' + d.sub + '</div></div>' +
+          '<div class="meta"><div class="nm">' + d.name + '</div>' +
+            '<div class="sub">' + d.sub + reviewed + '</div>' +
+            (d.rule ? '<div class="sub">In short: ' + d.rule + '</div>' : '') +
+          '</div>' +
           '<div class="rt">' +
             (d.due ? '<span class="live"><span class="dot"></span>' + d.due + '</span>' : '') +
             (d.href ? '<span class="tag">' + d.tag + '</span>' + ARW
@@ -317,4 +519,87 @@
         '<div class="doc-list">' + rows + '</div></div>';
     }).join('');
   }
+
+  // Page-open beacon (issue 0028 / W1): one anonymous datapoint per view, to the
+  // ops worker. DNT '1' opts out. Fire-and-forget: no cookies, no IP/UA stored, and
+  // it never blocks or errors the page (wrapped, sendBeacon returns immediately).
+  try {
+    if (!navigator.doNotTrack || navigator.doNotTrack !== '1') {
+      navigator.sendBeacon && navigator.sendBeacon(
+        'https://elc-ops.elcportal.workers.dev/hit',
+        JSON.stringify({ path: location.pathname.replace(/^.*portal-test/, '') || location.pathname })
+      );
+    }
+  } catch (e) {}
+})();
+
+/* Portal-wide search (sprint 3 F1). Self-contained, appended after the main
+   render IIFE (lane A owns that one). The index (assets/search-index.json) is
+   built at deploy by tools/build-search.py; if it is absent the fetch fails and
+   search silently stays inert (no console error). Every page's search input
+   carries data-root = its rel prefix, so result links resolve from any depth. */
+(function () {
+  var input = document.getElementById('q');
+  var box = document.getElementById('q-results');
+  if (!input || !box) return;
+  var root = input.getAttribute('data-root') || '';
+  var index = null, loading = false;
+
+  // A field may be a string or (defensively) an array; fold to one lowercased string.
+  function field(v) { return (Array.isArray(v) ? v.join(' ') : (v == null ? '' : v)).toLowerCase(); }
+  // Rank: a title hit (3) beats a heading hit (2) beats a body hit (1); 0 = no hit.
+  function score(e, q) {
+    if (field(e.t).indexOf(q) > -1) return 3;
+    if (field(e.h).indexOf(q) > -1) return 2;
+    if (field(e.b).indexOf(q) > -1) return 1;
+    return 0;
+  }
+  console.assert(
+    score({ t: 'Swimming', h: '', b: 'pool' }, 'swim') > score({ t: '', h: '', b: 'swimming club' }, 'swim'),
+    'search: a title hit outranks a body hit');
+
+  function hide() { box.hidden = true; box.textContent = ''; }
+
+  function run() {
+    var q = input.value.trim().toLowerCase();
+    if (q.length < 2) { hide(); return; }
+    if (!index) return;                       // not loaded yet; focus handler will re-run
+    var hits = index.map(function (e) { return { e: e, s: score(e, q) }; })
+                    .filter(function (r) { return r.s > 0; })
+                    .sort(function (a, b) { return b.s - a.s; })
+                    .slice(0, 6);
+    box.textContent = '';
+    if (!hits.length) {
+      var none = document.createElement('div');
+      none.className = 'q-none';
+      none.textContent = 'No pages match';
+      box.appendChild(none);
+    } else {
+      hits.forEach(function (r) {
+        var a = document.createElement('a');
+        // u is site-root-relative (home is "/"); data-root is the prefix back to
+        // root, so strip u's leading slash before joining. Empty (home from home)
+        // falls back to "./".
+        a.href = (root + String(r.e.u).replace(/^\//, '')) || './';
+        a.textContent = r.e.t;
+        box.appendChild(a);
+      });
+    }
+    box.hidden = false;
+  }
+
+  function load() {
+    if (index) { run(); return; }
+    if (loading) return;
+    loading = true;
+    fetch(root + 'assets/search-index.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) { index = Array.isArray(j) ? j : (j && j.pages) || []; run(); })
+      .catch(function () { loading = false; });   // silent: leave search inert
+  }
+
+  input.addEventListener('focus', load);
+  input.addEventListener('input', run);
+  input.addEventListener('blur', function () { setTimeout(hide, 150); });  // let a result click land first
+  input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { hide(); input.blur(); } });
 })();

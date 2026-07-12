@@ -299,6 +299,11 @@ nav{display:flex;align-items:center;gap:28px;}
 .prose strong{font-weight:600;color:var(--ink);}
 .prose a{color:var(--purple);text-decoration:underline;text-underline-offset:2px;}
 
+/* story-figure: mechanical scaffold, visual pass = Claude Design (rule 7) */
+.story-figure{margin:18px 0;}
+.story-figure img{display:block;max-width:100%;height:auto;border:1px solid var(--rule);border-radius:10px;}
+.story-figure figcaption{margin-top:8px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
+
 /* ============ RESPONSIVE ============ */
 /* issue 0026: desktop-only home layout fixes. Two-column bento exists only above
    940px; mobile (<720) and the 721-940 stacked layout are untouched.

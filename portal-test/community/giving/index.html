@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giving · Community · ELC Portal</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F4F2EA">
+<meta name="description" content="How ELC families raise funds and support the wider community: Art from the Heart, charity days and community partners.">
+<meta property="og:title" content="Giving · Community · ELC Portal">
+<meta property="og:description" content="How ELC families raise funds and support the wider community: Art from the Heart, charity days and community partners.">
+<meta property="og:url" content="https://elc-hub.com/portal-test/community/giving/">
+<meta property="og:image" content="https://elc-hub.com/portal-test/assets/icon-512.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F4F2EA'/%3E%3Ccircle cx='32' cy='33' r='18' fill='none' stroke='%237D639B' stroke-width='4'/%3E%3Cline x1='32' y1='11' x2='32' y2='21' stroke='%23A8443A' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='4.4' fill='%237D639B'/%3E%3C/svg%3E">
+<link rel="manifest" href="../../manifest.json">
+<link rel="apple-touch-icon" href="../../assets/icon-180.png">
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/app.css">
+</head>
+<body>
+  <div class="topline"></div>
+  <svg id="topo" aria-hidden="true"></svg>
+
+  <header>
+    <a class="brand" href="../../">
+      <svg class="dial" id="mark" viewBox="0 0 64 64" fill="none" aria-label="ELC Portal"><circle cx="32" cy="32" r="24" stroke-width="4"/><line x1="32" y1="4" x2="32" y2="16" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="5.5"/></svg>
+      <div>
+        <div class="wm">ELC</div>
+        <div class="desc">Portal</div>
+      </div>
+    </a>
+    <span class="tape">v0.2 mockup</span>
+    <nav>
+      <a class="navlink" href="../../">This week</a>
+      <a class="navlink" href="../../activities/">Activities</a>
+      <a class="navlink" href="../../calendar/">Calendar</a>
+      <a class="navlink" href="../../policies/">Policies</a>
+      <details class="nav-dd">
+        <summary class="navlink">FAQ</summary>
+        <div class="dd-panel">
+          <a href="../../help/">Quick answers</a>
+          <a href="../../new-families/">New families</a>
+          <a href="../../glossary/">Glossary</a>
+        </div>
+      </details>
+      <div class="nav-search"><input type="search" id="q" data-root="../../" placeholder="Search the portal" aria-label="Search the portal"><div id="q-results" hidden></div></div>
+    </nav>
+  </header>
+
+  <div class="crumb"><a href="../../">This week</a> &nbsp;/&nbsp; <a href="../">Community</a> &nbsp;/&nbsp; Giving</div>
+
+  <!-- Sprint 4 (issue 0039, lane A2). Giving and community support: past facts paraphrased
+       from the ELC blog (docs/content/blog-library.md). #giving-next is an integrator seam:
+       the next fundraising drive renders data-driven from calendarEvents with a computed
+       empty state; this page hardcodes no claim about whether a drive is live. Draft-chipped
+       via data-page (integrator adds community-giving to draftPages). -->
+  <main class="wrap sub" data-page="community-giving">
+    <div class="page-head">
+      <span class="eyebrow">La Comunità · Giving</span>
+      <h1>From me to we.</h1>
+      <p class="lead">Giving at ELC starts with the children. In the sala, the school's gathering place, they build connections with each other, with their teachers and with the world, and somewhere in that the me becomes a we. The fundraising this community does grows out of exactly that.</p>
+    </div>
+
+    <!-- Integrator seam: the next fundraising drive renders here from calendarEvents; empty state is computed. -->
+    <section id="giving-next" hidden></section>
+
+    <div class="section">
+      <div class="sec-eyebrow"><span class="eyebrow">What this community has done</span><span class="ln"></span></div>
+      <figure class="story-figure"><img src="../../assets/img/blog/art-from-the-heart-fundraising-event-1.jpg" alt="Collaborative paintings displayed on wooden easels in a school courtyard" loading="lazy" width="1024" height="768"><figcaption>Class artworks on their easels for the Art from the Heart raffle.</figcaption></figure>
+      <p class="txt">For Art from the Heart, every class made a collaborative artwork and families bought raffle tickets to take one home. The money raised went to the Pediatric Cardiac Surgery Foundation to fund life-saving heart surgery. <a href="https://www.elc.ac.th/blog/art-from-the-heart-fundraising-event/">Read the story on our blog</a>.</p>
+      <figure class="story-figure"><img src="../../assets/img/blog/elc-charity-1.jpg" alt="Parents and children making paper crafts together at a long table" loading="lazy" width="1024" height="680"><figcaption>Families making together at a charity book and bake day.</figcaption></figure>
+      <p class="txt">Charity days here have a familiar shape: children and parents making, baking and selling together, and children learning along the way that privilege carries a duty to others. <a href="https://www.elc.ac.th/blog/elc-charity/">Read the story on our blog</a>.</p>
+      <p class="txt">The giving reaches beyond the school gates too. Families have been invited to stand with the Bookworm Foundation, which works for equal reading opportunities for children in Chiang Mai, and the Bangkok Community Help Foundation has shared with the school community how much difference even a thousand baht can make close to home. Read the stories on our blog: <a href="https://www.elc.ac.th/blog/bookworm-foundation/">Bookworm Foundation</a> and <a href="https://www.elc.ac.th/blog/bangkok-community-help-foundation/">Bangkok Community Help Foundation</a>.</p>
+    </div>
+
+    <p class="page-note">When a fundraising drive opens, it appears at the top of this page. Back to <a href="../">La Comunità</a>.</p>
+  </main>
+
+  <div class="foot-strip">
+    <span class="l">portal.elc.ac.th · ELC International Schools, Thong Lor</span>
+    <span class="r">No login needed. Your child's learning lives in the Parent App.</span>
+    <span class="foot-links"><a class="m-only" href="../../help/">Quick answers</a><a class="m-only" href="../../new-families/">New families</a><a href="../../status/">Status</a><a href="../../privacy/">Privacy</a><a href="../../safeguarding/">Safeguarding</a><a href="../../verify/">Is it really us</a></span>
+    <span class="fine">v0.2 mockup · for internal feedback, not a live school page</span>
+  </div>
+
+  <div class="tabbar">
+    <a class="tab" href="../../"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>This week</a>
+    <a class="tab" href="../../activities/"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>Activities</a>
+    <a class="tab" href="../../calendar/"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18"/></svg>Calendar</a>
+    <a class="tab" href="../../policies/"><svg class="ic" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Policies</a>
+  </div>
+
+  <script src="../../assets/data.js"></script>
+  <script src="../../assets/render.js"></script>
+  <script src="../../assets/contour.js"></script>
+  <script src="../../assets/feedback.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(new URL('sw.js', document.querySelector('link[rel="manifest"]').href).href);
+  }
+  </script>
+<style>#pw-pill{position:fixed;bottom:26px;left:26px;z-index:9998;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--aubergine);background:var(--paper);border:1px solid var(--aubergine);border-radius:999px;padding:9px 14px;text-decoration:none;}@media(max-width:720px){#pw-pill{bottom:80px;left:16px;font-size:11.5px;padding:8px 12px;}}</style>
+<a id="pw-pill" href="../../project/">Project window</a>
+</body>
+</html>
