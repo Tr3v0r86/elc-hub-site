@@ -9,7 +9,7 @@ window.PORTAL = {
   // "We are finalising this page" chip on any page whose <main data-page> key is
   // listed here. Removing a key = that page's verify-artifact row is signed off
   // (docs/verify-v0.5.md).
-  draftPages: ['glossary', 'photo-consent', 'how-to-pay', 'gate-card',
+  draftPages: ['hopes-and-wishes', 'glossary', 'photo-consent', 'how-to-pay', 'gate-card',
                'armonia', 'armonia-expressive-languages', 'armonia-science',
                'armonia-technology', 'armonia-sport', 'armonia-drama',
                'armonia-music', 'community-giving'],
@@ -62,6 +62,21 @@ window.PORTAL = {
   ],
   // END SHEET-OWNED: regWindows
 
+  // Booking windows (plan 2026-07-16 item 1.4): bounded "book now" rows in the same
+  // strip, rendered BEFORE the countdown rows. Whole row is one link; no add-to-
+  // calendar. HAND-KEPT, deliberately NOT sheet-owned: pull-sheet.py regenerates
+  // the fenced blocks and its schema cannot express these rows (it would silently
+  // wipe them). href is SITE-ROOT-relative and gate-checked against disk. Schema:
+  //   { from: '2026-08-10',                    // first day shown (inclusive)
+  //     until: '2026-08-19',                   // last day (inclusive); self-removes after
+  //     href: 'hopes-and-wishes/',             // must resolve to site/<href>index.html
+  //     label: 'Book your Hopes and Wishes time',
+  //     sub: 'All year groups · 17 to 19 Aug' }
+  bookingWindows: [
+    { from: '2026-08-10', until: '2026-08-19', href: 'hopes-and-wishes/',
+      label: 'Book your Hopes and Wishes time', sub: 'All year groups · 17 to 19 Aug' }
+  ],
+
   // Safeguarding leads (issue 0031 item 6): /safeguarding/ renders a card per
   // entry; empty = the page shows the generic route only. Fill when confirmed:
   //   { campus: 'The City School', name: '...', role: 'Designated Safeguarding Lead', email: '...' }
@@ -78,9 +93,11 @@ window.PORTAL = {
       title: 'Welcome to a new year.',
       body: 'This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and it will grow. Tell us what is missing with the feedback button, and we will build it.',
       sig: 'Payal, Head of School · Trevor, Head of Operations and Educational Experience' },
+    // Optional cta (plan 1.5): renders as one link after the body, gone after `until`.
     { from: '2026-08-10', eyebrow: 'A note from Payal and Trevor', when: 'This week',
       title: 'We start with your hopes.',
       body: 'This week your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is our favourite way to begin. Everything else on this page can wait until you have booked your time.',
+      cta: { href: 'hopes-and-wishes/', label: 'Book your time', until: '2026-08-19' },
       sig: 'Payal and Trevor' },
     { from: '2026-08-17', eyebrow: 'A note from Payal and Trevor', when: 'This week',
       title: 'Come for coffee.',
@@ -90,6 +107,104 @@ window.PORTAL = {
       title: 'Everyone is in.',
       body: 'From this week every child, every year group, every campus is in school. The rhythm of the year starts now: the week ahead lives on this page, and anything you need to sign up for is under Activities. We are glad you are here.',
       sig: 'Payal and Trevor' }
+  ],
+
+  // ---- Hopes and Wishes / PTC booking (issue 0043, plan 2026-07-16) ----
+  // The start-of-year parent-teacher conference. ONE page (site/hopes-and-wishes/)
+  // renders these islands via render.js; Payal emails the single link. The SAME page
+  // + rail is reused for the October and March PTCs by editing this block (CONTEXT "PTC").
+  // HAND-KEPT (Sarah/Neung edit): plain data, deliberately NOT a SHEET-OWNED fence
+  // (pull-sheet.py knows only its four schemas and would wipe these rows).
+  // Booking is LINK-OUT only (rule 1): each bookingUrl opens the teacher's Google
+  // Calendar appointment page in a new tab; no embed ships until the device-QA gate
+  // passes. Every field null-degrades honestly (rule 6): no bookingUrl -> "Booking
+  // link coming" (never a dead button, never href="#"), no photo -> initials
+  // placeholder, no bio -> "a short introduction is on the way". Booking closes by
+  // DATE (derived from ptc.dates), no manual active flag anyone must remember to flip.
+  ptc: {
+    name: 'Hopes and Wishes',
+    // Calendar truth (mirrors the calendarEvents H&W rows; build-api.mjs asserts they
+    // match). booking-open derives from these: open while today <= the last date.
+    dates: [
+      { date: '2026-08-17', groups: 'Y1 to Y6' },
+      { date: '2026-08-18', groups: 'K2' },
+      { date: '2026-08-19', groups: 'K1' }
+    ],
+    slotNote: 'Twenty minutes, one to one with your child\'s teacher.',   // hours TBC (Payal)
+    questionnaireUrl: null,   // Jotform; null renders an honest "coming" row
+    packUrl: null             // Nuts and Bolts PDF; same
+  },
+
+  // Booking cards, class-keyed (a co-taught class carries two teachers on one card,
+  // one bookingUrl). `year` drives the grouping + the jump strip (explicit order in
+  // render.js, not lexicographic). REPRESENTATIVE set K1->Y6 (matches the design
+  // study); the full ~24-card roster lands on staffing sign-off (Payal + Heather +
+  // Trevor) with photos + teacher-checked bios. Roster + bio source:
+  // docs/sources/staffing-2026-27.md. Bios are drafts and await each teacher's check
+  // (the page carries the "finalising" chip). photo:null until sign-off + photo import
+  // to assets/img/team/; only the demo card is live today.
+  classes: [
+    // INTERACTIVE TEST CARD (Trevor, 2026-07-16): real photo + real live booking link
+    // + sample bio. Proves the whole flow end to end and gives the embed QA gate a
+    // live schedule to test against. Fate at parent launch = Trevor's call (remove, or
+    // repurpose as a "Questions about booking?" support card). Link source: Trevor's
+    // Gmail signature, /u/0/ account segment stripped.
+    { class: 'How booking works', year: 'demo', campus: null, flag: null,
+      teachers: [ { name: 'Trevor Cardozo', role: 'Head of operations and educational experience',
+        photo: 'assets/img/trevor.png',
+        bio: 'SAMPLE (Trevor edits): Born in Canada, Trevor has taught in Bangkok and at Upper Canada College, and now leads operations and educational experience at ELC. He is happiest weaving technology into education: computers, robotics and digital media.' } ],
+      bookingUrl: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3iBMbLleKHpScuhn2uyBpVYxrOGdtpq3pLUwzuWBACrTJCGJM2rOParGZx4TyU1K5DacnUEoat?gv=true' },
+
+    { class: 'K1 Bee', year: 'K1', campus: null, flag: null,
+      teachers: [ { name: 'Blathain Callaghan', role: 'Class teacher', photo: null,
+        bio: 'From Ireland and in Bangkok since 2019, Bee joins ELC this year. With a degree in early childhood studies and ten years alongside our youngest learners, she is passionate about learning through play. Off the clock: Gaelic football, museums and exploring the city.' } ],
+      bookingUrl: null },
+
+    { class: 'K1 new class', year: 'K1', campus: null, flag: 'New teacher joining',
+      teachers: [ { name: 'Teacher to be confirmed', role: 'Class teacher', photo: null, bio: null } ],
+      bookingUrl: null },
+
+    { class: 'K2 Nasreen', year: 'K2', campus: null, flag: null,
+      teachers: [ { name: 'Nasreen Hassan', role: 'Class teacher', photo: null,
+        bio: 'Ms Nas comes from Cape Town with fifteen years of teaching behind her, ten of them international. In her K2 room, curiosity and joy sit beside the academics, and she counts a child happy to arrive as half the job done. Outside school: yoga, cooking and the hand pan.' } ],
+      bookingUrl: null },
+
+    { class: 'Y1 Rowan', year: 'Y1', campus: null, flag: null,
+      teachers: [ { name: 'Rowan Hayworth', role: 'Class teacher', photo: null,
+        bio: 'Rowan trained in Scotland and taught in Spain before Bangkok. He believes every child deserves to feel safe, heard and valued, and shows up each day with the energy for it. Beyond the classroom you will find him playing Gaelic football or padel, mic in hand given the chance.' } ],
+      bookingUrl: null },
+
+    { class: 'Y2 Kobus', year: 'Y2', campus: null, flag: null,
+      teachers: [ { name: 'Kobus Roux', role: 'Class teacher', photo: null,
+        bio: 'Born in South Africa and in Thailand since 2015, Kobus is a qualified elementary teacher who loves building a real relationship with every child in a room where all feel seen. This is his second year as a City School homeroom teacher. Outside: rugby, scuba diving, hiking and family.' } ],
+      bookingUrl: null },
+
+    { class: 'Y3 Sophie', year: 'Y3', campus: null, flag: null,
+      teachers: [ { name: 'Sophie Mottet', role: 'Class teacher', photo: null,
+        bio: 'Now in her third year on the Year 3 team, Sophie studied psychology in Montreal and teaching in Wellington. She builds classrooms grounded in curiosity, respect and connection, and keeps learning alongside the children. At home she is happiest trying out a new recipe.' } ],
+      bookingUrl: null },
+
+    { class: 'Y4 Lauren', year: 'Y4', campus: null, flag: null,
+      teachers: [ { name: 'Lauren Marsh', role: 'Class teacher', photo: null,
+        bio: 'Lauren joins Year 4 with fifteen years across Key Stage 2, most recently in Thailand and before that Shanghai and England. A specialist in maths and history, she co-creates a room where children take the risks real learning needs. Mum to Winnie; loves the outdoors, gardening and reading.' } ],
+      bookingUrl: null },
+
+    { class: 'Y5 Clifford and Athena', year: 'Y5', campus: null, flag: null,
+      teachers: [
+        { name: 'Clifford Sumner', role: 'Class teacher, room 5A', photo: null,
+          bio: 'Originally from the UK with a decade teaching in Seoul, Clifford is in his second year in Bangkok. He is drawn to educational technology and to shaping learning around each child in a collaborative room. Outside school he reads, stays active and heads for the water when he can.' },
+        { name: 'Athena', role: 'Class teacher, room 5B', flag: 'Name to confirm', photo: null, bio: null }
+      ],
+      bookingUrl: null },
+
+    { class: 'Y6 Maddy and Chrissy', year: 'Y6', campus: null, flag: null,
+      teachers: [
+        { name: 'Madison Moore', role: 'Class teacher', photo: null,
+          bio: 'Maddy is from the United States, where a design degree led her to teaching. After two years in Year 4 she steps up to Year 6, aiming for a room where children feel safe, have fun and are genuinely challenged. Outside class: reading, learning Thai and taking up golf.' },
+        { name: 'Chrissy Turnbull', role: 'Class teacher', photo: null,
+          bio: 'Back for her fifth year at the City School, Chrissy leads Year 6 literacy and our responsive classroom and SEL work. A Hong Kong upbringing, a first career in events and thirteen years of teaching give her a wide-angle view of childhood. Off duty: travel, music, films and pilates.' }
+      ],
+      bookingUrl: null }
   ],
 
   // Honest sport statuses (PRD 0002 F2 confirmed truth as of 2026-07-07)
@@ -108,18 +223,27 @@ window.PORTAL = {
   // 2026-07-09; Dec 5 Saturday performance confirmed). Review trail:
   // docs/sources/events-review-2026-27.md. Future live feed (0004) swaps in behind this.
   // type:'gold' MEANS key date / milestone (drives the key-dates .ics feed); 'purple' = everything else.
+  // Optional href (plan 2026-07-16 item 1.1): SITE-ROOT-relative page path
+  // ('hopes-and-wishes/') renders the title as a link wherever the event appears
+  // and becomes the share target. CLICK-ONLY: href never promotes an event visually
+  // (D2); homepage prominence stays editorial (bookingWindows/notes). Rows sharing
+  // one href are one event (the slice-2 grouping key). NOTE: docs[] hrefs further
+  // down use the OTHER convention (page-relative from policies/), do not mix.
+  // build-api.mjs strips href from the public calendar JSON.
+  // The three Hopes and Wishes rows below carry href: 'hopes-and-wishes/' (plan §2c);
+  // build-api.mjs asserts they match ptc.dates.
   calendarEvents: [
     { date: '2026-08-03', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
     { date: '2026-08-12', type: 'purple', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
     { date: '2026-08-14', type: 'gold',   title: 'New Family Orientation', sub: '' },
-    { date: '2026-08-17', type: 'purple', title: 'Y1 to Y6 Hopes and Wishes meetings', sub: '' },
+    { date: '2026-08-17', type: 'purple', title: 'Y1 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
     { date: '2026-08-17', type: 'purple', title: 'K1 Coffee Morning', sub: '' },
     { date: '2026-08-18', type: 'gold',   title: 'Y1 to Y6 first day of school', sub: '' },
-    { date: '2026-08-18', type: 'purple', title: 'K2 Hopes and Wishes meetings', sub: '' },
+    { date: '2026-08-18', type: 'purple', title: 'K2 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
     { date: '2026-08-18', type: 'purple', title: 'Y1 Coffee Morning', sub: '' },
     { date: '2026-08-19', type: 'gold',   title: 'K2 first day of school', sub: '' },
     { date: '2026-08-19', type: 'purple', title: 'K2 Coffee Morning for parents', sub: '' },
-    { date: '2026-08-19', type: 'purple', title: 'K1 Hopes and Wishes meetings', sub: '' },
+    { date: '2026-08-19', type: 'purple', title: 'K1 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
     { date: '2026-08-20', type: 'gold',   title: 'K1 first day of school', sub: '' },
     { date: '2026-08-20', type: 'purple', title: 'Y2 Coffee Morning', sub: '' },
     { date: '2026-08-21', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '' },

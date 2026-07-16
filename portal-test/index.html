@@ -69,8 +69,11 @@
       <h1>Everything on this term, <span class="turn">in one place.</span></h1>
     </div>
 
-    <!-- registration windows countdown (issue 0031); render.js removes it when nothing is upcoming -->
-    <div class="windows" id="reg-windows"></div>
+    <!-- registration windows countdown (issue 0031) + booking windows (plan 1.4);
+         render.js replaces the contents, or removes the strip when nothing is upcoming.
+         The static anchor is the JS-off Hopes and Wishes path (plan 1.9): timeless copy,
+         since the destination page owns open/closed state. -->
+    <div class="windows" id="reg-windows"><a class="win-row book-row" href="hopes-and-wishes/"><div class="win-main"><div class="wt">Hopes and Wishes details</div></div></a></div>
 
     <!-- outdoor-air decision tile (sprint 3 F4); render.js removes it when PORTAL.air is null -->
     <div class="windows" id="air-tile"></div>
@@ -125,12 +128,13 @@
         <span class="btn block">Explore Armonia <span class="arw">&rarr;</span></span>
       </a>
 
-      <!-- EVENTS -->
-      <a class="tile reg-card tile-top-purple link" href="activities/">
+      <!-- EVENTS (plan 2026-07-16 item 1.6: points at the calendar, copy names the
+           real destination; "reserve a place" was a lie on a page with no booking) -->
+      <a class="tile reg-card tile-top-purple link" href="calendar/">
         <span class="eyebrow">Events</span>
         <h3>Events</h3>
-        <p>Workshops, FotA and community days. Reserve a place before it fills.</p>
-        <span class="btn block">See events <span class="arw">&rarr;</span></span>
+        <p>Workshops, FotA and community days. Every date for the year, in one place.</p>
+        <span class="btn block">See the calendar <span class="arw">&rarr;</span></span>
       </a>
 
       <!-- SPORT -->

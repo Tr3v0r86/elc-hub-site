@@ -7,7 +7,7 @@
    contract changes DO need one (stale HTML + fresh JS is a real mixed-version risk
    under SWR).
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v10";
+const CACHE = "elc-portal-shell-v12";
 
 const SHELL = [
   "./",
@@ -25,6 +25,7 @@ const SHELL = [
   "safeguarding/",
   "verify/",
   "glossary/",
+  "hopes-and-wishes/",
   "policies/photo-consent/",
   "arrival/",
   "how-to-pay/",
@@ -75,9 +76,12 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("activate", (e) => {
+  // Delete only OUR old caches (elc-portal-*): the caches API is origin-wide, and
+  // an unscoped delete would evict a sibling deployment's caches on a shared
+  // origin (plan 2026-07-16 item 1.7).
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k.indexOf("elc-portal-") === 0 && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });

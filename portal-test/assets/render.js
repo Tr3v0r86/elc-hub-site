@@ -12,6 +12,32 @@
   var FN_MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function escAttr(s) { return String(s).replace(/"/g, '&quot;'); }
+
+  // Event-link seam (plan 2026-07-16, slice 1). Data hrefs are SITE-ROOT-relative
+  // ('hopes-and-wishes/'); ROOT is this page's prefix back to the site root, read
+  // from the search input's data-root (every page carries one at correct depth,
+  // same convention the search widget below already resolves links with).
+  // The grammar guard mirrors tools/check-data-hrefs.mjs: bare directory path
+  // only: no scheme, no leading slash, no dot-segments. The deploy gate is the
+  // real enforcement; this keeps a hand-edit between deploys from rendering a
+  // broken or unsafe anchor. Falsy/invalid href = plain text (today's behavior).
+  var qRoot = document.getElementById('q');
+  var ROOT = (qRoot && qRoot.getAttribute('data-root')) || '';
+  var HREF_RE = /^[a-z0-9-]+(\/[a-z0-9-]+)*\/$/;
+  function evHref(h) { return (typeof h === 'string' && HREF_RE.test(h)) ? ROOT + h : null; }
+  // Absolute form for share targets: the LINE fallback embeds the URL verbatim,
+  // so a relative path there would be a dead share (plan 1.3).
+  function absHref(h) { var r = evHref(h); return r ? new URL(r, location.href).href : null; }
+
+  // Booking window state (plan 1.4). Pure + assertable. Inclusive from..until;
+  // rows missing from/until are never booking rows (the legacy regWindows shape).
+  function bookingState(w, todayISO) {
+    if (!w || !w.from || !w.until) return { show: false };
+    if (todayISO < w.from || todayISO > w.until) return { show: false };
+    var days = Math.round((new Date(w.until + 'T00:00:00Z') - new Date(todayISO + 'T00:00:00Z')) / 86400000);
+    return { show: true, days: days, closes: days === 0 ? 'Closes today' : days === 1 ? 'Closes tomorrow' : days + ' days left' };
+  }
   // Monday (UTC midnight) of the week containing the given ISO date.
   function weekStart(iso) {
     var d = new Date(iso + 'T00:00:00Z');
@@ -148,6 +174,17 @@
   console.assert(termEnd([{ date: '2026-12-18', title: 'Last day of Term 1' }], '2026-07-11') === '2026-12-18', 'termEnd: next term close');
   console.assert(termEnd([{ date: '2026-08-01', title: 'x' }], '2026-01-01') === '2026-05-01', 'termEnd: 120-day fallback');
   console.assert(isDraftPage('glossary', ['glossary', 'refunds']) && !isDraftPage('calendar-print', ['glossary']), 'isDraftPage: membership');
+  // Booking window lifecycle (plan 1.4, F5): from-1d / from / mid / until / until+1d,
+  // plus the legacy-shaped-row trap (no from/until must never render as booking).
+  console.assert(!bookingState({ from: '2026-08-10', until: '2026-08-19' }, '2026-08-09').show, 'bookingState: hidden the day before from');
+  console.assert(bookingState({ from: '2026-08-10', until: '2026-08-19' }, '2026-08-10').days === 9, 'bookingState: opens on from with 9 days left');
+  console.assert(bookingState({ from: '2026-08-10', until: '2026-08-19' }, '2026-08-15').closes === '4 days left', 'bookingState: mid-window copy');
+  console.assert(bookingState({ from: '2026-08-10', until: '2026-08-19' }, '2026-08-19').closes === 'Closes today', 'bookingState: closes-today on until');
+  console.assert(!bookingState({ from: '2026-08-10', until: '2026-08-19' }, '2026-08-20').show, 'bookingState: gone after until');
+  console.assert(!bookingState({ date: '2026-08-19', label: 'x' }, '2026-08-15').show, 'bookingState: legacy regWindows shape never books');
+  // href grammar (plan 1.2/1.8): bare site-relative directory paths only.
+  console.assert(HREF_RE.test('hopes-and-wishes/') && HREF_RE.test('events/sports-day/'), 'href grammar: accepts dir paths');
+  console.assert(!HREF_RE.test('/abs/') && !HREF_RE.test('../up/') && !HREF_RE.test('https://x.test/') && !HREF_RE.test('no-slash'), 'href grammar: rejects abs, dot-segments, schemes, non-dir');
 
   // Delegated: any .ics-btn downloads its event, named after it (issue 0032).
   document.addEventListener('click', function (e) {
@@ -225,22 +262,35 @@
     }
   }
 
-  // Registration windows strip (issue 0031): rows with live day countdowns,
-  // rendered wherever #reg-windows exists. Past rows drop off.
+  // Registration windows strip (issue 0031) + booking windows (plan 1.4): rendered
+  // wherever #reg-windows exists. Booking rows (hand-kept PORTAL.bookingWindows,
+  // bounded from..until, whole row = one anchor, no add-to-calendar) render FIRST,
+  // then the legacy countdown rows. Branch on the island: a booking row must never
+  // reach the legacy filter (`undefined >= ISO` is silently false). Past rows drop off.
   var winMount = document.getElementById('reg-windows');
-  if (winMount && P.regWindows) {
-    var upcoming = P.regWindows.filter(function (w) { return w.date >= bkkToday; });
-    if (!upcoming.length) { winMount.remove(); }
-    else {
-      winMount.innerHTML = upcoming.map(function (w) {
-        var d = new Date(w.date + 'T00:00:00Z');
-        var days = Math.round((d - new Date(bkkToday + 'T00:00:00Z')) / 86400000);
-        var when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
-        return '<div class="win-row"><span class="win-date num">' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
-          '<div class="win-main"><div class="wt">' + w.label + '</div><div class="ws">' + w.sub + '</div></div>' +
-          '<span class="win-count">' + when + '</span>' + addBtns(w.date, w.label, w.sub) + '</div>';
-      }).join('');
-    }
+  if (winMount) {
+    var bookRows = (P.bookingWindows || []).map(function (w) {
+      var st = bookingState(w, bkkToday);
+      var bHref = st.show && w.label ? evHref(w.href) : null;
+      if (!bHref) return '';
+      var u = new Date(w.until + 'T00:00:00Z');
+      return '<a class="win-row book-row" href="' + bHref + '" aria-label="' + escAttr(w.label) + ' · booking page">' +
+        '<span class="win-date num">to ' + u.getUTCDate() + ' ' + FN_MONS[u.getUTCMonth()] + '</span>' +
+        '<div class="win-main"><div class="wt">' + w.label + '</div>' +
+        (w.sub ? '<div class="ws">' + w.sub + '</div>' : '') + '</div>' +
+        '<span class="win-count">' + st.closes + '</span></a>';
+    }).join('');
+    var upcoming = (P.regWindows || []).filter(function (w) { return w.date >= bkkToday; });
+    var regRows = upcoming.map(function (w) {
+      var d = new Date(w.date + 'T00:00:00Z');
+      var days = Math.round((d - new Date(bkkToday + 'T00:00:00Z')) / 86400000);
+      var when = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
+      return '<div class="win-row"><span class="win-date num">' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
+        '<div class="win-main"><div class="wt">' + w.label + '</div><div class="ws">' + w.sub + '</div></div>' +
+        '<span class="win-count">' + when + '</span>' + addBtns(w.date, w.label, w.sub) + '</div>';
+    }).join('');
+    if (!bookRows && !regRows) { winMount.remove(); }
+    else { winMount.innerHTML = bookRows + regRows; }
   }
 
   // La Comunità seams (sprint 4, issue 0039). #community-events (community/) lists
@@ -261,9 +311,11 @@
         '<div class="sec-eyebrow"><span class="eyebrow">Coming up</span><span class="ln"></span></div>' +
         commRows.map(function (e) {
           var d = new Date(e.date + 'T00:00:00Z');
+          var mHref = evHref(e.href);   // plan 1.2: same linked-title rule as the agendas
+          var mInner = '<div class="et">' + e.title + '</div>' +
+            (e.sub ? '<div class="es">' + e.sub + '</div>' : '');
           return '<div class="ev-row"><span class="dte">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
-            '<div class="ev-main"><div class="et">' + e.title + '</div>' +
-            (e.sub ? '<div class="es">' + e.sub + '</div>' : '') + '</div>' +
+            '<div class="ev-main">' + (mHref ? '<a class="ev-link" href="' + mHref + '" aria-label="' + escAttr(e.title) + ' · event page">' + mInner + '</a>' : mInner) + '</div>' +
             addBtns(e.date, e.title, e.sub) + '</div>';
         }).join('');
     }
@@ -379,6 +431,19 @@
       noteTitle.textContent = current.title;
       document.getElementById('note-body').textContent = current.body;
       document.getElementById('note-sig').textContent = current.sig;
+      // Note CTA (plan 1.5): optional expiring link after the body. createElement +
+      // textContent only: the note is this file's textContent surface, and stays so.
+      // Renders only with BOTH href and label, and only until `until` (inclusive).
+      var noteBody = document.getElementById('note-body');
+      var ctaHref = current.cta && current.cta.label && (!current.cta.until || current.cta.until >= bkkToday)
+        ? evHref(current.cta.href) : null;
+      if (ctaHref && noteBody) {
+        var ctaA = document.createElement('a');
+        ctaA.className = 'note-cta';
+        ctaA.href = ctaHref;
+        ctaA.textContent = current.cta.label;
+        noteBody.parentNode.insertBefore(ctaA, noteBody.nextSibling);
+      }
     }
   }
 
@@ -394,9 +459,12 @@
     agenda.innerHTML = rows.slice(0, 5).map(function (e) {
       var d = new Date(e.date + 'T00:00:00Z');
       var isToday = e.date === bkkToday;
+      var aHref = evHref(e.href);   // plan 1.2: linked title when the event has a page
+      var text = e.title + (e.sub ? ', ' + e.sub : '');
       return '<div class="agenda-row">' +
         '<span class="d num' + (isToday ? ' today' : '') + '">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
-        '<span class="t">' + e.title + (e.sub ? ', ' + e.sub : '') + '</span>' +
+        (aHref ? '<a class="t ev-link" href="' + aHref + '" aria-label="' + escAttr(e.title) + ' · event page">' + text + '</a>'
+               : '<span class="t">' + text + '</span>') +
         (isToday ? '<span class="live"><span class="dot"></span>Today</span>' : '') +
         '</div>';
     }).join('');
@@ -418,11 +486,13 @@
     evs.forEach(function (e) {
       var d = new Date(e.date + 'T00:00:00Z');
       if (d < today0) return; /* past events drop off the agenda */
+      var cHref = evHref(e.href);   // plan 1.2/1.3: linked title + the event page becomes the share target
+      var inner = '<div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div>';
       buckets[agendaBucket(e.date, bkkToday)].rows.push(
         '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
         DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
-        '<div class="ev-main"><div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div></div>' +
-        addBtns(e.date, e.title, e.sub) + shareBtn(shareUrl, e.title) + '</div>'
+        '<div class="ev-main">' + (cHref ? '<a class="ev-link" href="' + cHref + '" aria-label="' + escAttr(e.title) + ' · event page">' + inner + '</a>' : inner) + '</div>' +
+        addBtns(e.date, e.title, e.sub) + shareBtn(cHref ? absHref(e.href) : shareUrl, e.title) + '</div>'
       );
     });
     /* Keep the agenda column readable: cap Later this term at 12 rows; the grid holds the year. */
@@ -517,6 +587,82 @@
       return '<div class="section">' +
         '<div class="sec-eyebrow"><span class="eyebrow">' + g + '</span><span class="ln"></span></div>' +
         '<div class="doc-list">' + rows + '</div></div>';
+    }).join('');
+  }
+
+  // Hopes and Wishes / PTC booking cards (issue 0043, plan 2026-07-16). Mount-gated
+  // on #team-cards (year sections) + #team-jump (anchor strip). Class-keyed and
+  // null-degrading (rule 6): no bookingUrl -> "Booking link coming" (never href="#"),
+  // no photo -> initials placeholder, no bio -> "coming" line. Booking is LINK-OUT
+  // only (rule 1); no embed. Open/dormant derives from ptc.dates, no manual flag.
+  var teamMount = document.getElementById('team-cards');
+  if (teamMount && P.ptc && P.classes) {
+    var YEAR_ORDER = ['demo', 'K1', 'K2', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6'];
+    var YEAR_LABEL = { demo: 'See how it works', K1: 'Kindergarten 1', K2: 'Kindergarten 2',
+      Y1: 'Year 1', Y2: 'Year 2', Y3: 'Year 3', Y4: 'Year 4', Y5: 'Year 5', Y6: 'Year 6' };
+    // Booking open while today <= the last PTC date; dormant after. Pure + assertable.
+    function ptcOpen(dates, todayISO) {
+      if (!dates || !dates.length) return false;
+      return todayISO <= dates.map(function (d) { return d.date; }).sort().pop();
+    }
+    // live = open + a real link; coming = open + no link yet; closed = window past.
+    function cardState(cls, open) { return !open ? 'closed' : (cls.bookingUrl ? 'live' : 'coming'); }
+    function initials(name) {
+      var w = String(name || '').trim().split(/\s+/);
+      return (((w[0] || '?')[0]) + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase();
+    }
+    console.assert(ptcOpen([{ date: '2026-08-17' }, { date: '2026-08-19' }, { date: '2026-08-18' }], '2026-08-15'), 'ptcOpen: open on the last day and before');
+    console.assert(!ptcOpen([{ date: '2026-08-19' }], '2026-08-20'), 'ptcOpen: dormant after the last date');
+    console.assert(cardState({ bookingUrl: 'x' }, true) === 'live' && cardState({}, true) === 'coming' && cardState({ bookingUrl: 'x' }, false) === 'closed', 'cardState: live / coming / closed');
+    console.assert(initials('Kobus Roux') === 'KR' && initials('Athena') === 'A', 'initials: two names, then one');
+
+    var ptcIsOpen = ptcOpen(P.ptc.dates, bkkToday);
+    var byYear = {};
+    P.classes.forEach(function (c) { (byYear[c.year] = byYear[c.year] || []).push(c); });
+    var years = YEAR_ORDER.filter(function (y) { return byYear[y]; });
+
+    var jump = document.getElementById('team-jump');
+    if (jump) {
+      jump.innerHTML = years.map(function (y) {
+        return '<a class="f" href="#y-' + y + '">' + (y === 'demo' ? 'Demo' : y) + '</a>';
+      }).join('');
+    }
+    // Honest closed line when the window has passed (cards stay; Book turns off).
+    var ptcStatus = document.getElementById('ptc-status');
+    if (ptcStatus && !ptcIsOpen) {
+      ptcStatus.textContent = 'Bookings are closed. The next conferences are in October.';
+    }
+
+    function avatar(t) {
+      return t.photo
+        ? '<img class="headshot" src="' + ROOT + escAttr(t.photo) + '" alt="" width="48" height="48" loading="lazy">'
+        : '<span class="hs-ph" aria-hidden="true">' + initials(t.name) + '</span>';
+    }
+    function teacherLine(t) {
+      return '<div class="tname">' + t.name +
+        (t.role ? ' <span class="role">' + t.role + '</span>' : '') +
+        (t.flag ? ' <span class="chip">' + t.flag + '</span>' : '') + '</div>' +
+        (t.bio ? '<p class="tbio">' + t.bio + '</p>' : '<p class="tbio none">A short introduction is on the way.</p>');
+    }
+    function bookCell(cls, state) {
+      if (state === 'live') return '<a class="btn sm" target="_blank" rel="noopener" href="' + escAttr(cls.bookingUrl) + '" aria-label="Book a time with ' + escAttr(cls.class) + ', opens in a new tab">Book a time</a>';
+      return '<span class="status soon">' + (state === 'closed' ? 'Bookings closed' : 'Booking link coming') + '</span>';
+    }
+    teamMount.innerHTML = years.map(function (y) {
+      var cards = byYear[y].map(function (c) {
+        var state = cardState(c, ptcIsOpen);
+        var chips = (c.teachers.length > 1 ? '<span class="chip">Two teachers</span>' : '') +
+          (c.campus ? '<span class="chip">' + c.campus + '</span>' : '') +
+          (c.flag ? '<span class="chip">' + c.flag + '</span>' : '');
+        return '<div class="doc-row team-card">' +
+          '<span class="tc-faces">' + c.teachers.map(avatar).join('') + '</span>' +
+          '<div class="meta"><div class="nm">' + c.class + (chips ? ' ' + chips : '') + '</div>' +
+          c.teachers.map(teacherLine).join('') + '</div>' +
+          '<div class="rt">' + bookCell(c, state) + '</div></div>';
+      }).join('');
+      return '<div class="section" id="y-' + y + '">' +
+        '<div class="sec-eyebrow"><span class="eyebrow">' + (YEAR_LABEL[y] || y) + '</span><span class="ln"></span></div>' +
+        '<div class="doc-list">' + cards + '</div></div>';
     }).join('');
   }
 

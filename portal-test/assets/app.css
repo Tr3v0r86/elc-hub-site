@@ -345,6 +345,61 @@ nav{display:flex;align-items:center;gap:28px;}
   .feature .photo{height:168px;}
 }
 
+/* ---- event links + booking rows (plan 2026-07-16 §2b). Dedicated .ev-link
+        selector: .agenda-row .t / .ev-row .et pin color to --ink, which defeats
+        the global anchor rule; links need their own contract. Tokens only
+        (ADR-0002). :visited is the site's first (also the post-booking
+        breadcrumb); underline = the non-colour cue. ---- */
+.ev-link{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;}
+.ev-link .et,.ev-link .es{text-decoration:none;}
+.ev-link:hover{color:var(--purple);}
+.ev-link:hover .et{color:var(--purple);}
+.ev-link:visited{color:var(--muted);text-decoration-color:var(--rule);}
+.ev-link:visited .et{color:var(--muted);}
+.ev-link:active{color:var(--aubergine);}
+.ev-link:focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:2px;}
+.ev-main .ev-link{display:block;}
+
+/* Booking strip row (plan 1.4): the whole row is one anchor, min 44px target,
+   no add-to-calendar controls. Rides the .win-row layout. */
+a.win-row.book-row{color:inherit;min-height:44px;}
+a.win-row.book-row .wt{color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;}
+a.win-row.book-row:hover .wt,a.win-row.book-row:hover .win-count{color:var(--purple);}
+a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;}
+
+/* Leadership-note CTA (plan 1.5): one quiet text link after the body. */
+.note-cta{display:inline-block;margin-top:10px;font-size:14.5px;font-weight:600;text-decoration:underline;text-underline-offset:3px;}
+
+/* ---- Hopes and Wishes / PTC team cards (issue 0043): STRUCTURAL SCAFFOLD only,
+        visual pass = Claude Design (rule 7). Composes the existing .doc-list /
+        .doc-row / .headshot / .status / .chip vocabulary; tokens only (ADR-0002).
+        The A/B/C card direction + photo treatment is Claude Design's call. ---- */
+.team-card{align-items:flex-start;}
+.team-card .tc-faces{display:inline-flex;gap:6px;flex:none;padding-top:2px;}
+.team-card .headshot{width:48px;height:48px;}
+.hs-ph{width:48px;height:48px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--paper);color:var(--purple);font-family:var(--serif);font-size:16px;box-shadow:0 0 0 2px var(--purple);}
+.team-card .nm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.team-card .tname{font-family:var(--serif);font-size:14.5px;color:var(--charcoal);margin-top:5px;}
+.team-card .tname .role{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-left:6px;}
+.team-card .tbio{font-size:13.5px;line-height:1.55;color:var(--charcoal);margin-top:6px;max-width:62ch;}
+.team-card .tbio.none{color:var(--muted);font-style:italic;}
+.team-card .rt{align-self:center;}
+/* jump strip reuses .filter/.f; give it clear breathing room under the dates */
+#team-jump{margin:22px 0 30px;}
+
+/* 375px-class geometry (plan §2b): calendar-row actions stack beneath the
+   date + title; touch targets reach 44px; anchors keep clear of the buttons. */
+@media(max-width:420px){
+  .ev-row{flex-wrap:wrap;row-gap:6px;}
+  .ev-row .ev-main{min-width:calc(100% - 66px);}
+  .ev-row .cal-add{margin-left:66px;}
+  .win-row{flex-wrap:wrap;row-gap:6px;}
+  .win-row .win-main{min-width:calc(100% - 150px);}
+  .win-row .cal-add{margin-left:72px;}
+  .add-btn{min-width:44px;min-height:44px;}
+}
+
 /* ---- content visible by default (no blank-on-load); motion kept out for calm ---- */
 
 /* ---- print / PDF: clean flow, drop the fixed contour field, keep colours ---- */
