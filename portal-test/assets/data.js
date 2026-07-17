@@ -68,13 +68,13 @@ window.PORTAL = {
   // the fenced blocks and its schema cannot express these rows (it would silently
   // wipe them). href is SITE-ROOT-relative and gate-checked against disk. Schema:
   //   { from: '2026-08-10',                    // first day shown (inclusive)
-  //     until: '2026-08-19',                   // last day (inclusive); self-removes after
+  //     until: '2026-08-18',                   // last day (inclusive); self-removes after
   //     href: 'hopes-and-wishes/',             // must resolve to site/<href>index.html
   //     label: 'Book your Hopes and Wishes time',
-  //     sub: 'All year groups · 17 to 19 Aug' }
+  //     sub: 'All year groups · 17 to 18 Aug' }
   bookingWindows: [
-    { from: '2026-08-10', until: '2026-08-19', href: 'hopes-and-wishes/',
-      label: 'Book your Hopes and Wishes time', sub: 'All year groups · 17 to 19 Aug' }
+    { from: '2026-08-10', until: '2026-08-18', href: 'hopes-and-wishes/',
+      label: 'Book your Hopes and Wishes time', sub: 'All year groups · 17 to 18 Aug' }
   ],
 
   // Safeguarding leads (issue 0031 item 6): /safeguarding/ renders a card per
@@ -97,7 +97,7 @@ window.PORTAL = {
     { from: '2026-08-10', eyebrow: 'A note from Payal and Trevor', when: 'This week',
       title: 'We start with your hopes.',
       body: 'This week your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is our favourite way to begin. Everything else on this page can wait until you have booked your time.',
-      cta: { href: 'hopes-and-wishes/', label: 'Book your time', until: '2026-08-19' },
+      cta: { href: 'hopes-and-wishes/', label: 'Book your time', until: '2026-08-18' },
       sig: 'Payal and Trevor' },
     { from: '2026-08-17', eyebrow: 'A note from Payal and Trevor', when: 'This week',
       title: 'Come for coffee.',
@@ -125,10 +125,11 @@ window.PORTAL = {
     name: 'Hopes and Wishes',
     // Calendar truth (mirrors the calendarEvents H&W rows; build-api.mjs asserts they
     // match). booking-open derives from these: open while today <= the last date.
+    // Dates per the City School calendar 3rd version (docs/sources/calendars.md:
+    // the Drive working deck is the date authority; the April draft said 17/18/19).
     dates: [
-      { date: '2026-08-17', groups: 'Y1 to Y6' },
-      { date: '2026-08-18', groups: 'K2' },
-      { date: '2026-08-19', groups: 'K1' }
+      { date: '2026-08-17', groups: 'K2 to Y6' },
+      { date: '2026-08-18', groups: 'K1' }
     ],
     slotNote: 'Twenty minutes, one to one with your child\'s teacher.',   // hours TBC (Payal)
     questionnaireUrl: null,   // Jotform; null renders an honest "coming" row
@@ -236,17 +237,15 @@ window.PORTAL = {
     { date: '2026-08-03', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
     { date: '2026-08-12', type: 'purple', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
     { date: '2026-08-14', type: 'gold',   title: 'New Family Orientation', sub: '' },
-    { date: '2026-08-17', type: 'purple', title: 'Y1 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
+    { date: '2026-08-17', type: 'purple', title: 'K2 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
     { date: '2026-08-17', type: 'purple', title: 'K1 Coffee Morning', sub: '' },
-    { date: '2026-08-18', type: 'gold',   title: 'Y1 to Y6 first day of school', sub: '' },
-    { date: '2026-08-18', type: 'purple', title: 'K2 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
+    { date: '2026-08-18', type: 'gold',   title: 'K2 to Y6 first day of school', sub: '' },
+    { date: '2026-08-18', type: 'purple', title: 'K1 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
     { date: '2026-08-18', type: 'purple', title: 'Y1 Coffee Morning', sub: '' },
-    { date: '2026-08-19', type: 'gold',   title: 'K2 first day of school', sub: '' },
-    { date: '2026-08-19', type: 'purple', title: 'K2 Coffee Morning for parents', sub: '' },
-    { date: '2026-08-19', type: 'purple', title: 'K1 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
-    { date: '2026-08-20', type: 'gold',   title: 'K1 first day of school', sub: '' },
-    { date: '2026-08-20', type: 'purple', title: 'Y2 Coffee Morning', sub: '' },
-    { date: '2026-08-21', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '' },
+    { date: '2026-08-19', type: 'gold',   title: 'K1 first day of school', sub: '' },
+    { date: '2026-08-20', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '' },
+    { date: '2026-08-21', type: 'purple', title: 'Y2 Coffee Morning', sub: '' },
+    { date: '2026-08-24', type: 'purple', title: 'K2 Coffee Morning for parents', sub: '' },
     { date: '2026-08-25', type: 'purple', title: 'Dove Coffee Morning', sub: 'Dove Centre' },
     { date: '2026-09-07', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2026-09-17', type: 'purple', title: 'Safeguarding parent info session', sub: '' },

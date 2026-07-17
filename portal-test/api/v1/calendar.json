@@ -1,6 +1,6 @@
 {
   "term": "Term 1",
-  "generated": "2026-07-16T23:18:12.737Z",
+  "generated": "2026-07-17T10:40:14.340Z",
   "events": [
     {
       "date": "2026-08-03",
@@ -23,7 +23,7 @@
     {
       "date": "2026-08-17",
       "type": "purple",
-      "title": "Y1 to Y6 Hopes and Wishes meetings",
+      "title": "K2 to Y6 Hopes and Wishes meetings",
       "sub": ""
     },
     {
@@ -35,13 +35,13 @@
     {
       "date": "2026-08-18",
       "type": "gold",
-      "title": "Y1 to Y6 first day of school",
+      "title": "K2 to Y6 first day of school",
       "sub": ""
     },
     {
       "date": "2026-08-18",
       "type": "purple",
-      "title": "K2 Hopes and Wishes meetings",
+      "title": "K1 Hopes and Wishes meetings",
       "sub": ""
     },
     {
@@ -53,37 +53,25 @@
     {
       "date": "2026-08-19",
       "type": "gold",
-      "title": "K2 first day of school",
-      "sub": ""
-    },
-    {
-      "date": "2026-08-19",
-      "type": "purple",
-      "title": "K2 Coffee Morning for parents",
-      "sub": ""
-    },
-    {
-      "date": "2026-08-19",
-      "type": "purple",
-      "title": "K1 Hopes and Wishes meetings",
-      "sub": ""
-    },
-    {
-      "date": "2026-08-20",
-      "type": "gold",
       "title": "K1 first day of school",
       "sub": ""
     },
     {
       "date": "2026-08-20",
       "type": "purple",
-      "title": "Y2 Coffee Morning",
+      "title": "Y3 to Y6 Coffee Morning for parents",
       "sub": ""
     },
     {
       "date": "2026-08-21",
       "type": "purple",
-      "title": "Y3 to Y6 Coffee Morning for parents",
+      "title": "Y2 Coffee Morning",
+      "sub": ""
+    },
+    {
+      "date": "2026-08-24",
+      "type": "purple",
+      "title": "K2 Coffee Morning for parents",
       "sub": ""
     },
     {
