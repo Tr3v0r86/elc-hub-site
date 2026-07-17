@@ -12,7 +12,7 @@ window.PORTAL = {
   draftPages: ['hopes-and-wishes', 'glossary', 'photo-consent', 'how-to-pay', 'gate-card',
                'armonia', 'armonia-expressive-languages', 'armonia-science',
                'armonia-technology', 'armonia-sport', 'armonia-drama',
-               'armonia-music', 'community-giving'],
+               'armonia-music', 'community-giving', 'nuts-and-bolts'],
 
   // School status (issue 0031 item 1). null = normal day, no banner anywhere.
   // To raise a notice, replace null with an object and deploy (see docs/runbook.md):
@@ -39,7 +39,10 @@ window.PORTAL = {
   // ⚠️ office@ per people directory (Praveen); Trevor to verify parent-facing (issue 0031).
   contacts: {
     office:     { label: 'School office',   email: 'office@elc.ac.th',     phone: '+66 (0)2 381 2919' },
-    activities: { label: 'Activities team', email: 'activities@elc.ac.th', phone: '+66 (0)2 381 2919' }
+    activities: { label: 'Activities team', email: 'activities@elc.ac.th', phone: '+66 (0)2 381 2919' },
+    // Nurse Apple, per the comms Nuts & Bolts doc (docs/sources/nuts-and-bolts-doc.md).
+    // No dedicated nurse line: the school number reaches her (Trevor, 2026-07-17).
+    nurse:      { label: 'School nurse',    email: 'apples@elc.ac.th',     phone: '+66 (0)2 381 2919' }
   },
 
   // Office hours per campus (sprint 3 P7). null renders one honest "Office hours

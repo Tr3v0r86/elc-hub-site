@@ -28,6 +28,7 @@ const SHELL = [
   "hopes-and-wishes/",
   "policies/photo-consent/",
   "arrival/",
+  "nuts-and-bolts/",
   "how-to-pay/",
   "sport/",
   "armonia/",
