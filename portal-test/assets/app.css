@@ -7,6 +7,7 @@
    ============================================================ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 img,svg{display:block;max-width:100%;}
+html{overflow-x:hidden;}
 body{font-family:var(--sans);font-weight:300;background:var(--paper);color:var(--ink);line-height:1.6;
   -webkit-font-smoothing:antialiased;position:relative;min-height:100vh;overflow-x:hidden;}
 a{color:var(--purple);text-decoration:none;}
@@ -83,14 +84,10 @@ nav{display:flex;align-items:center;gap:28px;}
 .feature .photo .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(31,25,40,0.44),rgba(31,25,40,0) 46%,rgba(31,25,40,0.05));}
 .feature .photo .lab{position:absolute;top:15px;left:18px;}
 .feature .body{padding:18px 22px 20px;display:flex;flex-direction:column;flex:1;}
-.agenda-row{display:flex;align-items:center;gap:15px;padding:12px 0;border-bottom:1px solid var(--rule-2);}
-.agenda-row:last-of-type{border-bottom:none;}
-.agenda-row .d{font-size:13px;color:var(--muted);width:56px;flex:none;}
-.agenda-row .d.today{color:var(--red);}
-.agenda-row .t{flex:1;font-size:14.5px;color:var(--ink);font-weight:400;}
+.ruler{height:9px;width:56px;border-bottom:2px solid var(--red);background-image:repeating-linear-gradient(90deg,var(--red) 0 1px,transparent 1px 9px);}
+/* due badge on policy doc rows (render.js docs renderer emits .live for docs[].due) */
 .live{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);}
 .live .dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex:none;}
-.ruler{height:9px;width:56px;border-bottom:2px solid var(--red);background-image:repeating-linear-gradient(90deg,var(--red) 0 1px,transparent 1px 9px);}
 .feature .foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:16px;}
 
 /* ---- note from leadership ---- */
@@ -346,7 +343,7 @@ nav{display:flex;align-items:center;gap:28px;}
 }
 
 /* ---- event links + booking rows (plan 2026-07-16 §2b). Dedicated .ev-link
-        selector: .agenda-row .t / .ev-row .et pin color to --ink, which defeats
+        selector: .ev-row .et pins color to --ink, which defeats
         the global anchor rule; links need their own contract. Tokens only
         (ADR-0002). :visited is the site's first (also the post-booking
         breadcrumb); underline = the non-colour cue. ---- */
@@ -370,23 +367,79 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 /* Leadership-note CTA (plan 1.5): one quiet text link after the body. */
 .note-cta{display:inline-block;margin-top:10px;font-size:14.5px;font-weight:600;text-decoration:underline;text-underline-offset:3px;}
 
-/* ---- Hopes and Wishes / PTC team cards (issue 0043): STRUCTURAL SCAFFOLD only,
-        visual pass = Claude Design (rule 7). Composes the existing .doc-list /
-        .doc-row / .headshot / .status / .chip vocabulary; tokens only (ADR-0002).
-        The A/B/C card direction + photo treatment is Claude Design's call. ---- */
-.team-card{align-items:flex-start;}
-.team-card .tc-faces{display:inline-flex;gap:6px;flex:none;padding-top:2px;}
+/* ---- Hopes and Wishes / PTC team cards (issue 0043): Direction A "Editorial
+        index", VISUAL PASS ONLY (Claude Design handback 2026-07-17). Re-skins the
+        scaffold's existing contract in place: .team-card (as .doc-row), .tc-faces /
+        .headshot / .hs-ph, .meta / .nm, .tname / .role, .tbio / .tbio.none, .rt :
+        plus the composed .status / .chip / .btn it already documents. NO new
+        required classes, so render.js output converges as-is. Tokens only
+        (ADR-0002), zero raw hex. Null states: photo -> .hs-ph initials; no link ->
+        .status.soon; no bio -> .tbio.none honest line.
+        ONE selector remapped at integration: the handback anchored scroll-margin
+        on .sec-eyebrow[id], but render.js puts the jump id on the year-group
+        .section wrapper (#y-K1...), so the rule targets that instead. ---- */
+#team-cards .section{scroll-margin-top:84px;}        /* group wrapper = jump anchor */
+.team-card{align-items:flex-start;gap:16px;}
+.team-card .tc-faces{display:inline-flex;flex:none;padding-top:2px;}
 .team-card .headshot{width:48px;height:48px;}
-.hs-ph{width:48px;height:48px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  background:var(--paper);color:var(--purple);font-family:var(--serif);font-size:16px;box-shadow:0 0 0 2px var(--purple);}
-.team-card .nm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.team-card .tname{font-family:var(--serif);font-size:14.5px;color:var(--charcoal);margin-top:5px;}
-.team-card .tname .role{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-left:6px;}
-.team-card .tbio{font-size:13.5px;line-height:1.55;color:var(--charcoal);margin-top:6px;max-width:62ch;}
-.team-card .tbio.none{color:var(--muted);font-style:italic;}
-.team-card .rt{align-self:center;}
-/* jump strip reuses .filter/.f; give it clear breathing room under the dates */
-#team-jump{margin:22px 0 30px;}
+.team-card .tc-faces>*+*{margin-left:-16px;box-shadow:0 0 0 2px var(--purple),0 0 0 4px var(--white);}
+.hs-ph{width:48px;height:48px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--paper);color:var(--purple);font-family:var(--serif);font-size:16px;box-shadow:0 0 0 2px var(--purple);}
+.team-card .meta{flex:1;min-width:0;}
+.team-card .nm{font-family:var(--serif);font-size:18px;line-height:1.2;color:var(--ink);display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.team-card .tname{font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.team-card .tname .role{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap;}
+.team-card .tbio{font-size:13px;line-height:1.55;color:var(--charcoal);margin-top:7px;max-width:60ch;}
+.team-card .tbio.none{color:var(--faint);font-style:italic;}
+.team-card .chip{font-size:8.5px;padding:2px 8px;white-space:nowrap;}     /* meta + name-to-confirm reuse .chip */
+.team-card .rt{align-self:center;flex:none;display:flex;align-items:center;gap:10px;}
+.team-card .rt .btn{white-space:nowrap;min-height:44px;}   /* live booking link, >=44px target */
+#team-jump{margin:20px 0 28px;}
+#team-jump .f{display:inline-flex;align-items:center;min-height:44px;}   /* >=44px tap, .cm-jump precedent */
+@media(max-width:560px){
+  .team-card{flex-wrap:wrap;}
+  .team-card .rt{align-self:flex-start;margin-left:60px;margin-top:2px;}
+}
+
+/* ---- Coffee Mornings (issue 0049): structural scaffold only. Claude Design
+        owns the hero/photo and visual handback; these rules keep every state
+        readable, targetable and responsive with the existing tokens. ---- */
+.cm-intro{margin-bottom:34px;}
+.page-hero{height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  margin-bottom:24px;border-radius:10px;background:var(--aubergine);color:var(--text-on-dark);}
+.page-hero span{font-family:var(--serif);font-size:clamp(30px,8vw,52px);line-height:1;}
+.page-hero img{width:100%;height:100%;object-fit:cover;}
+.cm-jump{margin:16px 0 0;}
+.cm-jump .f{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;}
+.cm-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-height:240px;}
+.cm-group{min-width:0;scroll-margin-top:calc(var(--nav-h) + 20px);}
+.cm-group:target{outline:2px solid var(--purple);outline-offset:6px;border-radius:10px;}
+.cm-group h3{margin:0 0 8px;font-family:var(--serif);font-size:25px;color:var(--ink);}
+.cm-card{min-width:0;padding:20px;background:var(--white);border:1px solid var(--rule);border-left:4px solid var(--purple);border-radius:10px;}
+.cm-card.today{border-left-color:var(--red);}
+.cm-card.past{border-left-color:var(--rule);}
+.cm-state{display:inline-block;margin-bottom:10px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.cm-card.today .cm-state{color:var(--red);}
+.cm-date{font-family:var(--serif);font-size:24px;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--ink);}
+.cm-details{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin:18px 0 0;}
+.cm-details div{min-width:0;}
+.cm-details dt{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.cm-details dd{margin:4px 0 0;color:var(--ink);overflow-wrap:anywhere;}
+.cm-slides{margin-top:18px;padding-top:12px;border-top:1px solid var(--rule);}
+.cm-slide{display:inline-flex;align-items:center;min-height:44px;color:var(--purple);font-weight:700;text-underline-offset:3px;}
+.cm-slide-note,.cm-pending,.cm-failure{margin:0;color:var(--muted);}
+.cm-url{overflow-wrap:anywhere;}
+#coffee-page-url{font-family:var(--mono);font-size:12px;user-select:all;}
+.cm-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.cm-action{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;color:var(--ink);font-weight:600;text-decoration:none;}
+.cm-inline-action{display:inline-flex;align-items:center;min-height:44px;}
+.cm-jump .f:focus-visible,.cm-slide:focus-visible,.cm-action:focus-visible,.cm-inline-action:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+.cm-expect p,.cm-keep p{max-width:68ch;}
+.cm-mornings .sec-eyebrow h2,.cm-expect .sec-eyebrow h2,.cm-keep .sec-eyebrow h2{margin:0;}
+
+@media(min-width:760px){
+  .page-hero{height:320px;}
+  .cm-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
 
 /* 375px-class geometry (plan §2b): calendar-row actions stack beneath the
    date + title; touch targets reach 44px; anchors keep clear of the buttons. */
@@ -415,3 +468,44 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
   .tile:hover,.tile.link:hover,.policies:hover{box-shadow:var(--shadow-quiet)!important;transform:none!important;}
   a{color:inherit;}
 }
+
+/* ============================================================
+   SLICE 2: homepage events bands (issue 0047 · Claude Design).
+   "Coming up" (curated editorial event cards) + "Ongoing" (persistent
+   quick-links) replace the mixed bento event surfaces. Extends
+   .section / .sec-eyebrow / .reg-card / .ev-link: not a new card
+   system. Tokens only (ADR-0002): no raw hex/rgba added.
+   ============================================================ */
+.band{margin-bottom:38px;}
+.band .sec-eyebrow .more{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex:none;transition:color .15s;}
+.band .sec-eyebrow .more:hover{color:var(--purple);}
+.band .sec-eyebrow .more .arw{font-family:var(--mono);}
+
+/* Coming up: curated editorial event cards. Whole card = one tap target
+   (extends .ev-link; the underline cue rides the title, not the whole box). */
+.ev-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.ev-card{padding:20px 20px 18px;display:flex;flex-direction:column;}
+.ev-card.ev-link{text-decoration:none;color:var(--ink);}
+.ev-card .when{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:11px;}
+.ev-card h3{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.12;margin-bottom:8px;color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;transition:color .15s,text-decoration-color .15s;}
+.ev-card p{font-size:13.5px;line-height:1.55;color:var(--charcoal);flex:1;margin:0;}
+.ev-card .go{margin-top:15px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);display:inline-flex;align-items:center;gap:7px;}
+.ev-card.ev-link:hover{box-shadow:var(--shadow-hard);border-color:var(--purple);transform:translateY(-1px);}
+.ev-card.ev-link:hover h3{color:var(--purple);text-decoration-color:var(--purple);}
+.ev-card.ev-link:visited h3{color:var(--muted);text-decoration-color:var(--rule);}
+.ev-card.ev-link:active h3{color:var(--aubergine);}
+.ev-card.ev-link:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+.ev-empty{padding:16px 20px;font-weight:300;font-size:14px;color:var(--muted);}
+.ev-empty a{color:var(--purple);text-decoration:underline;text-underline-offset:3px;}
+
+/* Ongoing band reuses .bento + existing .reg-card / .sport / .policies; a slim
+   calendar quick-link takes the retired Events card's slot. */
+.quick-cal{grid-column:span 4;}
+
+/* the leadership note reads as a letter when it spans full width */
+.note.home-note{max-width:none;}
+.note.home-note h2,.note.home-note p,.note.home-note .sig{max-width:72ch;}
+
+@media(max-width:940px){.ev-cards{grid-template-columns:1fr 1fr;}}
+@media(max-width:720px){.ev-cards{grid-template-columns:1fr;}.quick-cal{grid-column:span 12;}}
+@media print{.ev-card{break-inside:avoid;}.ev-card.ev-link h3{color:var(--ink)!important;text-decoration-color:var(--gold)!important;}}

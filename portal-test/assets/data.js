@@ -12,7 +12,7 @@ window.PORTAL = {
   draftPages: ['hopes-and-wishes', 'glossary', 'photo-consent', 'how-to-pay', 'gate-card',
                'armonia', 'armonia-expressive-languages', 'armonia-science',
                'armonia-technology', 'armonia-sport', 'armonia-drama',
-               'armonia-music', 'community-giving', 'nuts-and-bolts'],
+               'armonia-music', 'community-giving', 'nuts-and-bolts', 'coffee-mornings'],
 
   // School status (issue 0031 item 1). null = normal day, no banner anywhere.
   // To raise a notice, replace null with an object and deploy (see docs/runbook.md):
@@ -80,6 +80,27 @@ window.PORTAL = {
       label: 'Book your Hopes and Wishes time', sub: 'All year groups · 17 to 18 Aug' }
   ],
 
+  // Coming up cards (slice 2, issue 0047). EDITORIAL curation (D2): each row here
+  // promotes ONE event group to a homepage card. href is the group identity: every
+  // calendarEvents row sharing it folds into the card, and render.js computes the
+  // exact date window from those rows. A card ages out when the group's last date
+  // passes; groups surface once their next date is within ~30 days; the band caps
+  // at 4 (overflow rewrites the header link to "+N more"). The title lives HERE:
+  // a grouped card's name exists in no single row (plan decision #19).
+  // HAND-KEPT like bookingWindows: pull-sheet.py never touches this island.
+  // Schema: { href: 'hopes-and-wishes/',   // group key; must resolve on disk (gate-checked)
+  //           title: 'Hopes and Wishes',   // group display title
+  //           blurb: 'One card sentence.',
+  //           go: 'Find your class' }      // card action label
+  featuredEvents: [
+    { href: 'hopes-and-wishes/', title: 'Hopes and Wishes',
+      blurb: 'Twenty minutes with your child\'s teacher to start the year, in your words.',
+      go: 'Find your class' },
+    { href: 'coffee-mornings/', title: 'Coffee mornings',
+      blurb: 'Meet your year group\'s teachers and see how the year will run, over coffee.',
+      go: 'Find your coffee morning' }
+  ],
+
   // Safeguarding leads (issue 0031 item 6): /safeguarding/ renders a card per
   // entry; empty = the page shows the generic route only. Fill when confirmed:
   //   { campus: 'The City School', name: '...', role: 'Designated Safeguarding Lead', email: '...' }
@@ -105,6 +126,7 @@ window.PORTAL = {
     { from: '2026-08-17', eyebrow: 'A note from Payal and Trevor', when: 'This week',
       title: 'Come for coffee.',
       body: 'Coffee mornings run this week, campus by campus. No agenda beyond meeting the people who will spend the year with your child, and the other families walking the same route. Times are on the calendar; just come.',
+      cta: { href: 'coffee-mornings/', label: 'Find your coffee morning' },
       sig: 'Payal and Trevor' },
     { from: '2026-08-24', eyebrow: 'A note from Payal and Trevor', when: 'This week',
       title: 'Everyone is in.',
@@ -310,26 +332,27 @@ window.PORTAL = {
   // Optional href (plan 2026-07-16 item 1.1): SITE-ROOT-relative page path
   // ('hopes-and-wishes/') renders the title as a link wherever the event appears
   // and becomes the share target. CLICK-ONLY: href never promotes an event visually
-  // (D2); homepage prominence stays editorial (bookingWindows/notes). Rows sharing
-  // one href are one event (the slice-2 grouping key). NOTE: docs[] hrefs further
-  // down use the OTHER convention (page-relative from policies/), do not mix.
+  // (D2); homepage prominence stays editorial (featuredEvents/bookingWindows/notes).
+  // Rows sharing one href are one event (the slice-2 grouping key: a featuredEvents
+  // card folds every row with its href). NOTE: docs[] hrefs further down use the
+  // OTHER convention (page-relative from policies/), do not mix.
   // build-api.mjs strips href from the public calendar JSON.
-  // The three Hopes and Wishes rows below carry href: 'hopes-and-wishes/' (plan §2c);
+  // The two Hopes and Wishes rows below carry href: 'hopes-and-wishes/' (plan §2c);
   // build-api.mjs asserts they match ptc.dates.
   calendarEvents: [
     { date: '2026-08-03', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
     { date: '2026-08-12', type: 'purple', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
     { date: '2026-08-14', type: 'gold',   title: 'New Family Orientation', sub: '' },
     { date: '2026-08-17', type: 'purple', title: 'K2 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
-    { date: '2026-08-17', type: 'purple', title: 'K1 Coffee Morning', sub: '' },
+    { date: '2026-08-17', type: 'purple', title: 'K1 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'K1', time: null, venue: null, slides: null },
     { date: '2026-08-18', type: 'gold',   title: 'K2 to Y6 first day of school', sub: '' },
     { date: '2026-08-18', type: 'purple', title: 'K1 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
-    { date: '2026-08-18', type: 'purple', title: 'Y1 Coffee Morning', sub: '' },
+    { date: '2026-08-18', type: 'purple', title: 'Y1 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'Y1', time: null, venue: null, slides: null },
     { date: '2026-08-19', type: 'gold',   title: 'K1 first day of school', sub: '' },
-    { date: '2026-08-20', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '' },
-    { date: '2026-08-21', type: 'purple', title: 'Y2 Coffee Morning', sub: '' },
-    { date: '2026-08-24', type: 'purple', title: 'K2 Coffee Morning for parents', sub: '' },
-    { date: '2026-08-25', type: 'purple', title: 'Dove Coffee Morning', sub: 'Dove Centre' },
+    { date: '2026-08-20', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '', href: 'coffee-mornings/', cohort: 'Y3 to Y6', time: null, venue: null, slides: null },
+    { date: '2026-08-21', type: 'purple', title: 'Y2 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'Y2', time: null, venue: null, slides: null },
+    { date: '2026-08-24', type: 'purple', title: 'K2 Coffee Morning for parents', sub: '', href: 'coffee-mornings/', cohort: 'K2', time: null, venue: null, slides: null },
+    { date: '2026-08-25', type: 'purple', title: 'Dove Coffee Morning', sub: 'Dove Centre', href: 'coffee-mornings/', cohort: 'Dove', time: null, venue: null, slides: null },
     { date: '2026-09-07', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
     { date: '2026-09-17', type: 'purple', title: 'Safeguarding parent info session', sub: '' },
     { date: '2026-09-18', type: 'purple', title: 'International Schools Holiday', sub: '' },

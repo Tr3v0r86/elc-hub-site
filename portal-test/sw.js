@@ -7,7 +7,7 @@
    contract changes DO need one (stale HTML + fresh JS is a real mixed-version risk
    under SWR).
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v14";
+const CACHE = "elc-portal-shell-v16";
 
 const SHELL = [
   "./",
@@ -26,6 +26,7 @@ const SHELL = [
   "verify/",
   "glossary/",
   "hopes-and-wishes/",
+  "coffee-mornings/",
   "policies/photo-consent/",
   "arrival/",
   "nuts-and-bolts/",
@@ -54,7 +55,6 @@ const SHELL = [
   "assets/icon-512.png",
   "assets/img/hos.png",
   "assets/img/trevor.png",
-  "assets/img/photo-propeller-girl.jpg",
   "assets/fonts/hanken-grotesk-normal-7579623a.woff2",
   "assets/fonts/hanken-grotesk-normal-c95efb87.woff2",
   "assets/fonts/inter-tight-normal-17cab155.woff2",

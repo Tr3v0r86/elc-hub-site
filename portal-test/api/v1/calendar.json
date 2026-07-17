@@ -1,6 +1,6 @@
 {
   "term": "Term 1",
-  "generated": "2026-07-17T11:34:29.696Z",
+  "generated": "2026-07-17T20:30:07.688Z",
   "events": [
     {
       "date": "2026-08-03",
@@ -30,7 +30,11 @@
       "date": "2026-08-17",
       "type": "purple",
       "title": "K1 Coffee Morning",
-      "sub": ""
+      "sub": "",
+      "cohort": "K1",
+      "time": null,
+      "venue": null,
+      "slides": null
     },
     {
       "date": "2026-08-18",
@@ -48,7 +52,11 @@
       "date": "2026-08-18",
       "type": "purple",
       "title": "Y1 Coffee Morning",
-      "sub": ""
+      "sub": "",
+      "cohort": "Y1",
+      "time": null,
+      "venue": null,
+      "slides": null
     },
     {
       "date": "2026-08-19",
@@ -60,25 +68,41 @@
       "date": "2026-08-20",
       "type": "purple",
       "title": "Y3 to Y6 Coffee Morning for parents",
-      "sub": ""
+      "sub": "",
+      "cohort": "Y3 to Y6",
+      "time": null,
+      "venue": null,
+      "slides": null
     },
     {
       "date": "2026-08-21",
       "type": "purple",
       "title": "Y2 Coffee Morning",
-      "sub": ""
+      "sub": "",
+      "cohort": "Y2",
+      "time": null,
+      "venue": null,
+      "slides": null
     },
     {
       "date": "2026-08-24",
       "type": "purple",
       "title": "K2 Coffee Morning for parents",
-      "sub": ""
+      "sub": "",
+      "cohort": "K2",
+      "time": null,
+      "venue": null,
+      "slides": null
     },
     {
       "date": "2026-08-25",
       "type": "purple",
       "title": "Dove Coffee Morning",
-      "sub": "Dove Centre"
+      "sub": "Dove Centre",
+      "cohort": "Dove",
+      "time": null,
+      "venue": null,
+      "slides": null
     },
     {
       "date": "2026-09-07",

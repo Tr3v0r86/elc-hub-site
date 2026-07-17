@@ -45,7 +45,7 @@
         <div class="desc">Portal</div>
       </div>
     </a>
-    <span class="tape">v0.2 mockup</span>
+    <span class="tape">v0.5</span>
     <nav>
       <a class="navlink active" href="./">This week</a>
       <a class="navlink" href="activities/">Activities</a>
@@ -78,84 +78,96 @@
     <!-- outdoor-air decision tile (sprint 3 F4); render.js removes it when PORTAL.air is null -->
     <div class="windows" id="air-tile"></div>
 
-    <div class="bento">
-      <!-- THIS WEEK -->
-      <div class="tile feature">
-        <div class="photo">
-          <img src="assets/img/photo-propeller-girl.jpg" alt="A child absorbed in making">
-          <div class="scrim"></div>
-          <div class="lab"><span class="eyebrow on-dark">This week at ELC</span></div>
-        </div>
-        <div class="body">
-          <div id="agenda"></div>
-          <div class="foot">
-            <div class="ruler"></div>
-            <a class="btn ghost sm" href="calendar/">View the year <span class="arw">&rarr;</span></a>
-          </div>
+    <!-- NOTE FROM LEADERSHIP (slice 2: promoted to a full-width letter above the
+         bands, per brief.md section order; copy + sample-copy tag unchanged) -->
+    <div class="tile note tile-top-purple home-note">
+      <div class="who">
+        <img class="headshot" src="assets/img/hos.png" alt="Payal" width="56" height="56">
+        <!-- Trevor headshot appears when assets/img/trevor.png lands (issue 0007 F-item) -->
+        <img class="headshot" src="assets/img/trevor.png" alt="Trevor" width="56" height="56" onerror="this.style.display='none'">
+        <div>
+          <span class="eyebrow" id="note-eyebrow">A note from Payal and Trevor</span>
+          <div class="when" id="note-when">This month · August</div>
         </div>
       </div>
-
-      <!-- NOTE FROM LEADERSHIP -->
-      <div class="tile note tile-top-purple">
-        <div class="who">
-          <img class="headshot" src="assets/img/hos.png" alt="Payal" width="56" height="56">
-          <!-- Trevor headshot appears when assets/img/trevor.png lands (issue 0007 F-item) -->
-          <img class="headshot" src="assets/img/trevor.png" alt="Trevor" width="56" height="56" onerror="this.style.display='none'">
-          <div>
-            <span class="eyebrow" id="note-eyebrow">A note from Payal and Trevor</span>
-            <div class="when" id="note-when">This month · August</div>
-          </div>
-        </div>
-        <h2 id="note-title">Welcome to a new year.</h2>
-        <p id="note-body">This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and it will grow. Tell us what is missing with the feedback button, and we will build it.</p>
-        <div class="sig" id="note-sig">Payal, Head of School &middot; Trevor, Head of Operations and Educational Experience</div>
-        <span class="chip">Sample copy &middot; awaiting Payal's read</span>
-      </div>
-
-      <!-- ASA -->
-      <a class="tile reg-card tile-top-purple link" href="activities/">
-        <span class="eyebrow">After school</span>
-        <h3>ASA</h3>
-        <p>The hours after three, well spent. Sport, arts, design and tech, in short term blocks.</p>
-        <span class="btn block">Register for ASA <span class="arw">&rarr;</span></span>
-      </a>
-
-      <!-- ARMONIA -->
-      <a class="tile reg-card tile-top-purple link" href="armonia/">
-        <span class="eyebrow">Programme</span>
-        <h3>Armonia</h3>
-        <p>Music, drama and dance performance, together.</p>
-        <span class="btn block">Explore Armonia <span class="arw">&rarr;</span></span>
-      </a>
-
-      <!-- EVENTS (plan 2026-07-16 item 1.6: points at the calendar, copy names the
-           real destination; "reserve a place" was a lie on a page with no booking) -->
-      <a class="tile reg-card tile-top-purple link" href="calendar/">
-        <span class="eyebrow">Events</span>
-        <h3>Events</h3>
-        <p>Workshops, FotA and community days. Every date for the year, in one place.</p>
-        <span class="btn block">See the calendar <span class="arw">&rarr;</span></span>
-      </a>
-
-      <!-- SPORT -->
-      <div class="tile sport">
-        <div class="head">
-          <div><span class="eyebrow">Sport · Term 1</span><h3>Pick a season. Try out, train, play.</h3></div>
-          <a class="btn purple" href="activities/">Register for sport <span class="arw">&rarr;</span></a>
-        </div>
-        <div class="grid" id="sport-grid"></div>
-        <p class="sub" id="sport-note"></p>
-      </div>
-
-      <!-- POLICIES -->
-      <a class="policies" href="policies/">
-        <div class="rings"></div>
-        <span class="eyebrow on-dark">Documents</span>
-        <h3>Policies &amp; forms</h3>
-        <p>Term dates, uniform, medical and conduct. Read it once, find it always.</p>
-        <span class="btn gold block">Open policies <span class="arw">&rarr;</span></span>
-      </a>
+      <h2 id="note-title">Welcome to a new year.</h2>
+      <p id="note-body">This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and it will grow. Tell us what is missing with the feedback button, and we will build it.</p>
+      <div class="sig" id="note-sig">Payal, Head of School &middot; Trevor, Head of Operations and Educational Experience</div>
+      <span class="chip">Sample copy &middot; awaiting Payal's read</span>
     </div>
+
+    <!-- COMING UP band (slice 2, issue 0047). render.js fills #agenda with curated
+         .ev-card anchors from PORTAL.featuredEvents (group-by-href, cap 4, most
+         imminent first) and rewrites #cu-more to "+N more" on overflow (removes it
+         otherwise). The static card below is the JS-off anchor (plan 1.9 precedent):
+         timeless copy, the destination page owns open/closed state. -->
+    <section class="section band" aria-labelledby="cu-h">
+      <div class="sec-eyebrow">
+        <span class="eyebrow" id="cu-h">Coming up</span>
+        <span class="ln"></span>
+        <a class="more" href="calendar/" id="cu-more">Full calendar <span class="arw">&rarr;</span></a>
+      </div>
+      <div class="ev-cards" id="agenda">
+        <a class="tile ev-card ev-link" href="hopes-and-wishes/" aria-label="Hopes and Wishes &middot; booking page">
+          <h3>Hopes and Wishes</h3>
+          <p>Twenty minutes with your child's teacher to start the year, in your words.</p>
+          <span class="go">Find your class <span class="arw">&rarr;</span></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ONGOING band (slice 2). Persistent quick-links, not time-bound: ASA,
+         Armonia, Sport, Policies regrouped under one heading. The slice-1 Events
+         reg-card (repointed to calendar/) is retired into an honest Calendar
+         quick-link, since Coming up now owns events. Reuses the .bento grid. -->
+    <section class="section band" aria-labelledby="og-h">
+      <div class="sec-eyebrow"><span class="eyebrow" id="og-h">Ongoing</span><span class="ln"></span></div>
+      <div class="bento">
+        <!-- ASA -->
+        <a class="tile reg-card tile-top-purple link" href="activities/">
+          <span class="eyebrow">After school</span>
+          <h3>ASA</h3>
+          <p>The hours after three, well spent. Sport, arts, design and tech, in short term blocks.</p>
+          <span class="btn block">Register for ASA <span class="arw">&rarr;</span></span>
+        </a>
+
+        <!-- ARMONIA -->
+        <a class="tile reg-card tile-top-purple link" href="armonia/">
+          <span class="eyebrow">Programme</span>
+          <h3>Armonia</h3>
+          <p>Music, drama and dance performance, together.</p>
+          <span class="btn block">Explore Armonia <span class="arw">&rarr;</span></span>
+        </a>
+
+        <!-- CALENDAR quick-link (slice 2: the Events reg-card retired here; eyebrow
+             was "Events", Coming up now owns event promotion) -->
+        <a class="tile reg-card tile-top-purple link quick-cal" href="calendar/">
+          <span class="eyebrow">The year</span>
+          <h3>Calendar</h3>
+          <p>Every date for the year: events, terms and days off, in one place.</p>
+          <span class="btn block">Open the calendar <span class="arw">&rarr;</span></span>
+        </a>
+
+        <!-- SPORT -->
+        <div class="tile sport">
+          <div class="head">
+            <div><span class="eyebrow">Sport · Term 1</span><h3>Pick a season. Try out, train, play.</h3></div>
+            <a class="btn purple" href="activities/">Register for sport <span class="arw">&rarr;</span></a>
+          </div>
+          <div class="grid" id="sport-grid"></div>
+          <p class="sub" id="sport-note"></p>
+        </div>
+
+        <!-- POLICIES -->
+        <a class="policies" href="policies/">
+          <div class="rings"></div>
+          <span class="eyebrow on-dark">Documents</span>
+          <h3>Policies &amp; forms</h3>
+          <p>Term dates, uniform, medical and conduct. Read it once, find it always.</p>
+          <span class="btn gold block">Open policies <span class="arw">&rarr;</span></span>
+        </a>
+      </div>
+    </section>
 
     <p class="page-note">There is more to school life than the schedule. <a href="community/">Get to know the ELC community</a>.</p>
   </div>
@@ -164,7 +176,7 @@
     <span class="l">portal.elc.ac.th · ELC International Schools, Thong Lor</span>
     <span class="r">No login needed. Your child's learning lives in the Parent App.</span>
     <span class="foot-links"><a class="m-only" href="help/">Quick answers</a><a class="m-only" href="new-families/">New families</a><a href="status/">Status</a><a href="privacy/">Privacy</a><a href="safeguarding/">Safeguarding</a><a href="verify/">Is it really us</a></span>
-    <span class="fine">v0.2 mockup · for internal feedback, not a live school page</span>
+    <span class="fine">v0.5 · for internal feedback, not a live school page</span>
   </div>
 
   <!-- bottom tabs (mobile) -->

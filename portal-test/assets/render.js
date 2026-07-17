@@ -447,27 +447,71 @@
     }
   }
 
-  // This-week agenda rows (home feature tile), derived from calendarEvents:
-  // this week's events (Mon to Sun, Bangkok), else the next 3 upcoming.
+  // Coming up band (slice 2, issue 0047): curated editorial event cards on
+  // #agenda, replacing the this-week-else-next-3 rows. Curation is editorial
+  // (D2): PORTAL.featuredEvents selects event GROUPS; rows sharing the entry's
+  // href are one event, one card (documented identity, plan §3). A group surfaces
+  // when its next date is within the rolling ~30-day window and drops when its
+  // last date passes. Cap 4, most imminent first; overflow rewrites #cu-more to
+  // "+N more" (removed otherwise); empty = the .ev-empty honest line.
   var agenda = document.getElementById('agenda');
-  if (agenda && P.calendarEvents) {
-    var mon = weekStart(bkkToday);
-    var sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
-    var monISO = mon.toISOString().slice(0, 10), sunISO = sun.toISOString().slice(0, 10);
-    var rows = P.calendarEvents.filter(function (e) { return e.date >= monISO && e.date <= sunISO; });
-    if (!rows.length) rows = P.calendarEvents.filter(function (e) { return e.date > bkkToday; }).slice(0, 3);
-    agenda.innerHTML = rows.slice(0, 5).map(function (e) {
-      var d = new Date(e.date + 'T00:00:00Z');
-      var isToday = e.date === bkkToday;
-      var aHref = evHref(e.href);   // plan 1.2: linked title when the event has a page
-      var text = e.title + (e.sub ? ', ' + e.sub : '');
-      return '<div class="agenda-row">' +
-        '<span class="d num' + (isToday ? ' today' : '') + '">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
-        (aHref ? '<a class="t ev-link" href="' + aHref + '" aria-label="' + escAttr(e.title) + ' · event page">' + text + '</a>'
-               : '<span class="t">' + text + '</span>') +
-        (isToday ? '<span class="live"><span class="dot"></span>Today</span>' : '') +
-        '</div>';
-    }).join('');
+  if (agenda && P.calendarEvents && P.featuredEvents) {
+    var CU_WINDOW_DAYS = 30, CU_CAP = 4;
+    function isoPlusDays(iso, n) {
+      var d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n);
+      return d.toISOString().slice(0, 10);
+    }
+    // Exact window bounds from the grouped rows (sorted ISO dates): single day
+    // "SAT 22 Aug"; range "MON 17 to TUE 18 Aug" ("to", never a dash: house
+    // idiom); cross-month keeps both months. CSS uppercases the visible label.
+    function cuLabel(dates, withDow) {
+      function part(iso, withMonth) {
+        var d = new Date(iso + 'T00:00:00Z');
+        return (withDow ? DOW[d.getUTCDay()] + ' ' : '') + d.getUTCDate() +
+          (withMonth ? ' ' + FN_MONS[d.getUTCMonth()] : '');
+      }
+      var a = dates[0], b = dates[dates.length - 1];
+      if (a === b) return part(a, true);
+      return part(a, a.slice(0, 7) !== b.slice(0, 7)) + ' to ' + part(b, true);
+    }
+    console.assert(cuLabel(['2026-08-17', '2026-08-18'], true) === 'MON 17 to TUE 18 Aug', 'cuLabel: same-month range, month once');
+    console.assert(cuLabel(['2026-08-22'], true) === 'SAT 22 Aug', 'cuLabel: single day');
+    console.assert(cuLabel(['2026-09-28', '2026-10-02'], false) === '28 Sep to 2 Oct', 'cuLabel: cross-month keeps both, aria form drops the weekday');
+
+    var cuHorizon = isoPlusDays(bkkToday, CU_WINDOW_DAYS);
+    var cuGroups = P.featuredEvents.map(function (f) {
+      // The group identity must be a valid, present site href (rule 6): a card
+      // exists to link out, and a missing href would also false-match every
+      // href-less calendar row (undefined === undefined). Invalid = no card.
+      var aHref = evHref(f.href);
+      if (!aHref) return null;
+      var dates = P.calendarEvents
+        .filter(function (e) { return e.href === f.href && e.date; })
+        .map(function (e) { return e.date; }).sort();
+      var next = dates.filter(function (d) { return d >= bkkToday; })[0] || null;
+      return { f: f, href: aHref, dates: dates, next: next };
+    }).filter(function (g) { return g && g.next && g.next <= cuHorizon; })
+      .sort(function (a, b) { return a.next < b.next ? -1 : 1; });
+
+    var cuMore = document.getElementById('cu-more');
+    if (cuMore) {
+      if (cuGroups.length > CU_CAP) {
+        cuMore.innerHTML = '+' + (cuGroups.length - CU_CAP) + ' more <span class="arw">&rarr;</span>';
+      } else { cuMore.remove(); }
+    }
+    if (!cuGroups.length) {
+      agenda.innerHTML = '<p class="ev-empty">Nothing coming up in the next few weeks. ' +
+        '<a href="' + ROOT + 'calendar/">See the whole year</a>.</p>';
+    } else {
+      agenda.innerHTML = cuGroups.slice(0, CU_CAP).map(function (g) {
+        return '<a class="tile ev-card ev-link" href="' + g.href + '" aria-label="' +
+          escAttr(g.f.title) + ', ' + cuLabel(g.dates, false) + ' · event page">' +
+          '<span class="when">' + cuLabel(g.dates, true) + '</span>' +
+          '<h3>' + g.f.title + '</h3>' +
+          '<p>' + g.f.blurb + '</p>' +
+          '<span class="go">' + g.f.go + ' <span class="arw">&rarr;</span></span></a>';
+      }).join('');
+    }
   }
 
   // Calendar page agenda (#cal-agenda): This week / Next week / Later this term,
@@ -664,6 +708,200 @@
         '<div class="sec-eyebrow"><span class="eyebrow">' + (YEAR_LABEL[y] || y) + '</span><span class="ln"></span></div>' +
         '<div class="doc-list">' + cards + '</div></div>';
     }).join('');
+  }
+
+  // Coffee Mornings (issue 0049): one calendar-derived card per static cohort
+  // wrapper. Dates stay single-copy in calendarEvents; the page adds no island.
+  var coffeeMount = document.getElementById('coffee-cards');
+  if (coffeeMount) {
+    var COFFEE_IDS = { K1: 'k1', K2: 'k2', Y1: 'y1', Y2: 'y2', 'Y3 to Y6': 'y3-6', Dove: 'dove' };
+    function validISODate(date) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return false;
+      var parsed = new Date(date + 'T00:00:00Z');
+      return !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === date;
+    }
+    function coffeeRows(events) {
+      return (events || []).filter(function (e) { return e.href === 'coffee-mornings/'; })
+        .slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    }
+    function coffeeState(date, todayISO) {
+      return date < todayISO ? 'past' : date === todayISO ? 'today' : 'upcoming';
+    }
+    function validHTTPS(href) {
+      if (typeof href !== 'string' || !/^https:\/\//i.test(href)) return false;
+      try {
+        var url = new URL(href);
+        return url.protocol === 'https:' && !!url.hostname;
+      } catch (e) {
+        return false;
+      }
+    }
+    function validSlides(slides) {
+      if (slides === null) return true;
+      if (!slides || typeof slides !== 'object' || Array.isArray(slides)) return false;
+      var keys = Object.keys(slides);
+      return keys.indexOf('href') > -1 && keys.every(function (key) { return key === 'href' || key === 'tag'; }) &&
+        validHTTPS(slides.href) && (slides.tag === undefined || typeof slides.tag === 'string');
+    }
+    function coffeeValid(row) {
+      return !!row && !!COFFEE_IDS[row.cohort] && validISODate(row.date) &&
+        row.date >= '2026-08-01' && row.date <= '2027-07-31' &&
+        (row.time === null || typeof row.time === 'string') &&
+        (row.venue === null || typeof row.venue === 'string') &&
+        validSlides(row.slides);
+    }
+    function coffeeSetValid(rows) {
+      if (rows.length !== 6 || !rows.every(coffeeValid)) return false;
+      var cohorts = rows.map(function (row) { return row.cohort; });
+      return new Set(cohorts).size === 6 && Object.keys(COFFEE_IDS).every(function (cohort) {
+        return cohorts.indexOf(cohort) > -1;
+      });
+    }
+    function dayAfter(date) {
+      var d = new Date(date + 'T00:00:00Z');
+      d.setUTCDate(d.getUTCDate() + 1);
+      return d.toISOString().slice(0, 10);
+    }
+    function coffeeSlides(row, todayISO) {
+      var state = coffeeState(row.date, todayISO);
+      if (row.slides) {
+        return '<a class="cm-slide" target="_blank" rel="noopener" href="' + escAttr(row.slides.href) + '">View ' + row.cohort + ' slides' + (row.slides.tag ? ' · ' + row.slides.tag : '') + '</a>';
+      }
+      if (state !== 'past') return '<p class="cm-slide-note">Slides will be added within 24 hours after the morning.</p>';
+      var due = dayAfter(row.date);
+      if (todayISO <= due) return '<p class="cm-slide-note">Slides are on their way. Expected by ' + fmtDMY(due) + '.</p>';
+      var office = P.contacts && P.contacts.office && P.contacts.office.email;
+      var helpHref = office ? 'mailto:' + office : ROOT + 'help/';
+      return '<p class="cm-slide-note">Slides are not available yet. <a class="cm-inline-action" href="' + escAttr(helpHref) + '">' +
+        (office ? 'Ask the school office' : 'Get help') + '</a>.</p>';
+    }
+    function coffeeCard(row) {
+      var state = coffeeState(row.date, bkkToday);
+      var date = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      }).format(new Date(row.date + 'T00:00:00Z'));
+      var stateLabel = state === 'today' ? 'This morning' : state === 'past' ? 'Past morning' : 'Upcoming';
+      var slides = coffeeSlides(row, bkkToday);
+      return '<div class="cm-card ' + state + '">' +
+        '<span class="chip cm-cohort">' + row.cohort + '</span>' +
+        '<span class="cm-state">' + stateLabel + '</span>' +
+        '<div class="cm-date">' + date + '</div>' +
+        '<dl class="cm-details"><div><dt>Time</dt><dd>' + (row.time || 'To be confirmed') + '</dd></div>' +
+        '<div><dt>Place</dt><dd>' + (row.venue || 'To be confirmed') + '</dd></div></dl>' +
+        '<div class="cm-slides">' + slides + '</div></div>';
+    }
+
+    console.assert(coffeeRows([
+      { href: 'coffee-mornings/', date: '2026-08-24' },
+      { href: 'calendar/', date: '2026-08-01' },
+      { href: 'coffee-mornings/', date: '2026-08-17' }
+    ]).map(function (e) { return e.date; }).join(',') === '2026-08-17,2026-08-24', 'coffeeRows: explicit date order');
+    console.assert(coffeeState('2026-08-18', '2026-08-17') === 'upcoming' &&
+      coffeeState('2026-08-17', '2026-08-17') === 'today' &&
+      coffeeState('2026-08-16', '2026-08-17') === 'past', 'coffeeState: upcoming, today, past');
+    console.assert(coffeeRows(P.calendarEvents).length === 6, 'coffeeRows: six Coffee Mornings rows');
+    console.assert(!validISODate('2026-02-30') && !validISODate('2026-99-99'), 'validISODate: malformed dates rejected');
+    var plantedCoffeeRow = {
+      href: 'coffee-mornings/', cohort: 'K1', date: '2026-08-17', time: null, venue: null, slides: null
+    };
+    console.assert(['deck/k1', 'data:text/html,unsafe', 'http://example.com/k1'].every(function (href) {
+      return !coffeeValid(Object.assign({}, plantedCoffeeRow, { slides: { href: href } }));
+    }) && !coffeeValid(Object.assign({}, plantedCoffeeRow, { slides: 'https://example.com/k1' })),
+    'coffeeValid: unsafe and malformed slides rejected');
+    console.assert(!coffeeValid(Object.assign({}, plantedCoffeeRow, { time: {} })) &&
+      !coffeeValid(Object.assign({}, plantedCoffeeRow, { venue: 7 })) &&
+      !coffeeValid(Object.assign({}, plantedCoffeeRow, { slides: { href: 'https://example.com/k1', tag: 7 } })) &&
+      !coffeeValid(Object.assign({}, plantedCoffeeRow, { date: '2027-08-01' })),
+    'coffeeValid: malformed fields and out-of-season dates rejected');
+    console.assert(coffeeValid(Object.assign({}, plantedCoffeeRow, { slides: { href: 'https://example.com/k1', tag: 'PDF' } })),
+      'coffeeValid: absolute HTTPS slides with optional string tag');
+    var plantedCoffeeRows = Object.keys(COFFEE_IDS).map(function (cohort, index) {
+      return Object.assign({}, plantedCoffeeRow, { cohort: cohort, date: '2026-08-' + String(17 + index).padStart(2, '0') });
+    });
+    console.assert(coffeeSetValid(plantedCoffeeRows), 'coffee set: exact cohort set accepted');
+    console.assert(!coffeeSetValid(plantedCoffeeRows.concat(Object.assign({}, plantedCoffeeRows[0]))) &&
+      !coffeeSetValid(plantedCoffeeRows.map(function (row, index) {
+        return index === 5 ? Object.assign({}, row, { cohort: 'K1' }) : row;
+      })) && !coffeeSetValid(plantedCoffeeRows.map(function (row, index) {
+        return index === 5 ? Object.assign({}, row, { cohort: 'Unknown' }) : row;
+      })), 'coffee set: seventh, duplicate and unknown cohorts rejected');
+    var plantedCoffeeCard = coffeeCard(plantedCoffeeRow);
+    console.assert(plantedCoffeeCard.indexOf('<span class="chip cm-cohort">K1</span>') === plantedCoffeeCard.indexOf('>') + 1,
+      'coffeeCard: cohort chip is the first card element');
+    console.assert(coffeeSlides({ cohort: 'K1', date: '2026-08-17', slides: null }, '2026-08-18').indexOf('Expected by 18 Aug 2026') > -1,
+      'coffeeSlides: missing past deck keeps its dated expectation through the due date');
+    console.assert(coffeeSlides({ cohort: 'K1', date: '2026-08-17', slides: null }, '2026-08-19').indexOf('Slides are not available yet') > -1 &&
+      coffeeSlides({ cohort: 'K1', date: '2026-08-17', slides: null }, '2026-08-19').indexOf('on their way') === -1 &&
+      coffeeSlides({ cohort: 'K1', date: '2026-08-17', slides: null }, '2026-08-19').indexOf('mailto:office@elc.ac.th') > -1,
+      'coffeeSlides: overdue deck is unavailable, not on its way');
+    console.assert(coffeeSlides({ cohort: 'K1', date: '2026-08-20', slides: null }, '2026-08-17').indexOf('within 24 hours') > -1,
+      'coffeeSlides: upcoming promise unchanged');
+    console.assert(coffeeSlides({ cohort: 'K1', date: '2026-08-17', slides: { href: 'https://example.com/deck', tag: 'PDF' } }, '2026-08-19').indexOf('target="_blank" rel="noopener"') > -1,
+      'coffeeSlides: posted deck action unchanged');
+
+    var rows = coffeeRows(P.calendarEvents);
+    var contractValid = coffeeSetValid(rows);
+    var mounts = {};
+    coffeeMount.querySelectorAll('[data-cohort]').forEach(function (el) { mounts[el.dataset.cohort] = el; });
+    var handled = {}, validRows = [], malformed = 0;
+    rows.forEach(function (row) {
+      var mount = mounts[row.cohort];
+      if (!coffeeValid(row) || !mount || handled[row.cohort]) {
+        malformed += 1;
+        if (mount && !handled[row.cohort]) {
+          mount.innerHTML = '<p class="cm-failure">This morning\'s details could not be loaded.</p>';
+          handled[row.cohort] = true;
+        }
+        return;
+      }
+      mount.innerHTML = coffeeCard(row);
+      handled[row.cohort] = true;
+      validRows.push(row);
+    });
+
+    var missing = 0;
+    Object.keys(mounts).forEach(function (cohort) {
+      if (!handled[cohort]) {
+        mounts[cohort].innerHTML = '<p class="cm-failure">This morning\'s details are unavailable.</p>';
+        missing += 1;
+      }
+    });
+    var coffeeErrors = document.getElementById('coffee-errors');
+    if (coffeeErrors && !rows.length) {
+      var office = P.contacts && P.contacts.office && P.contacts.office.email;
+      coffeeErrors.innerHTML = '<p class="cm-failure">Morning details are unavailable. Check the <a class="cm-inline-action" href="' + ROOT + 'calendar/">calendar</a>' +
+        (office ? ' or <a class="cm-inline-action" href="mailto:' + escAttr(office) + '">email the school office</a>' : '') + '.</p>';
+    } else if (coffeeErrors && (!contractValid || malformed || missing)) {
+      coffeeErrors.innerHTML = '<p class="cm-failure">One morning\'s details could not be loaded. Check the calendar for the latest information.</p>';
+    }
+
+    var coffeeTitle = document.getElementById('coffee-title');
+    if (coffeeTitle && rows.length === 6 && !malformed && !missing &&
+        validRows.every(function (row) { return coffeeState(row.date, bkkToday) === 'past'; })) {
+      coffeeTitle.textContent = 'This year\'s mornings';
+    }
+
+    var saveGuide = document.getElementById('coffee-save-guide');
+    if (saveGuide) {
+      var ua = navigator.userAgent || '';
+      var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone;
+      saveGuide.textContent = standalone
+        ? 'This page is already saved with the Portal on your device.'
+        : /Line\//i.test(ua)
+          ? 'Open this page in your browser first, then use the browser menu to add it to your home screen.'
+          : /iPhone|iPad|iPod/i.test(ua)
+            ? 'In Safari, tap Share, then Add to Home Screen.'
+            : 'Bookmark this page, or use your browser menu to add it to your home screen.';
+    }
+    var coffeeUrl = document.getElementById('coffee-page-url');
+    if (coffeeUrl) coffeeUrl.textContent = location.href.split('#')[0];
+
+    if (location.hash) {
+      var hashTarget = document.getElementById(location.hash.slice(1));
+      if (hashTarget && hashTarget.classList.contains('cm-group')) {
+        requestAnimationFrame(function () { hashTarget.scrollIntoView({ block: 'start' }); });
+      }
+    }
   }
 
   // Page-open beacon (issue 0028 / W1): one anonymous datapoint per view, to the
