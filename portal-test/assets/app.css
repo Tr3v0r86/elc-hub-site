@@ -34,11 +34,6 @@ header .tape{margin-left:14px;margin-right:auto;flex:none;}
 header{position:sticky;top:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;
   padding:0 clamp(20px,4vw,44px);background:rgba(244,242,234,0.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
-.brand .dial{width:32px;height:32px;flex:none;}
-.dial circle:first-of-type{stroke:var(--purple);}
-.dial line{stroke:var(--red);}
-.dial circle:last-of-type{fill:var(--purple);}
-.brand .wm{font-family:var(--wordmark);font-weight:600;font-size:22px;letter-spacing:-0.01em;line-height:1;color:var(--ink);}
 .brand .desc{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);align-self:center;padding-left:13px;border-left:1px solid var(--rule);}
 nav{display:flex;align-items:center;gap:28px;}
 .navlink{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--charcoal);padding:6px 2px;cursor:pointer;
@@ -80,15 +75,13 @@ nav{display:flex;align-items:center;gap:28px;}
 /* ---- this week feature ---- */
 .feature{grid-column:span 7;overflow:hidden;display:flex;flex-direction:column;}
 .feature .photo{position:relative;height:210px;}
-.feature .photo img{width:100%;height:100%;object-fit:cover;}
-.feature .photo .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(31,25,40,0.44),rgba(31,25,40,0) 46%,rgba(31,25,40,0.05));}
+.feature .photo img{width:100%;height:100%;object-fit:cover;} /* dormant-by-design: armonia/sport photo set pending */
 .feature .photo .lab{position:absolute;top:15px;left:18px;}
 .feature .body{padding:18px 22px 20px;display:flex;flex-direction:column;flex:1;}
 .ruler{height:9px;width:56px;border-bottom:2px solid var(--red);background-image:repeating-linear-gradient(90deg,var(--red) 0 1px,transparent 1px 9px);}
 /* due badge on policy doc rows (render.js docs renderer emits .live for docs[].due) */
 .live{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);}
 .live .dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex:none;}
-.feature .foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:16px;}
 
 /* ---- note from leadership ---- */
 .note{grid-column:span 5;padding:22px 24px 20px;display:flex;flex-direction:column;}
@@ -302,11 +295,10 @@ nav{display:flex;align-items:center;gap:28px;}
 .story-figure figcaption{margin-top:8px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
 
 /* ============ RESPONSIVE ============ */
-/* issue 0026: desktop-only home layout fixes. Two-column bento exists only above
-   940px; mobile (<720) and the 721-940 stacked layout are untouched.
-   (1) feature tile stops stretching to the taller note, killing the dead band
-   under a short week; (2) the two headshots overlap into a cluster and the note
-   eyebrow stays on one line instead of wrapping one word per line. */
+/* Desktop-only tile fixes (issue 0026, re-commented at the 0050 sweep: the home
+   feature tile + joint note it described are gone; 0047 bands + Trevor-solo note).
+   .feature align-self still serves armonia/sport; the two-headshot cluster rule is
+   dormant standby for the joint/HoS note seam (issue 0007, still open). */
 @media(min-width:941px){
   .feature{align-self:start;}
   .note .who .headshot{width:52px;height:52px;}
@@ -406,14 +398,18 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 .cm-intro{margin-bottom:34px;}
 .page-hero{position:relative;height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;
   margin-bottom:24px;border-radius:10px;background:var(--aubergine);color:var(--text-on-dark);}
-.page-hero span{font-family:var(--serif);font-size:clamp(30px,8vw,52px);line-height:1;}
+/* 0050 sweep: retired the pre-photo text-hero variant (.page-hero span); its
+   line-height:1 moved onto .cap below, which it was silently styling. */
 .page-hero img{width:100%;height:100%;object-fit:cover;object-position:center 32%;}
 /* photo hero (0051 visual pass): a scrim for depth + a caption in the site's photo
    idiom (mirrors .feature .photo). token-driven, photo-agnostic so the consent-
    cleared Job 3 swap keeps the treatment. */
 .page-hero::after{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  /* fallback first: --aubergine (#33254A) as rgba, for engines without color-mix
+     (Safari <=16.1); the color-mix line below wins everywhere else (0050 F2). */
+  background:linear-gradient(180deg,rgba(51,37,74,0.30) 0%,transparent 34%,rgba(51,37,74,0.08) 62%,rgba(51,37,74,0.55) 100%);
   background:linear-gradient(180deg,color-mix(in srgb,var(--aubergine) 30%,transparent) 0%,transparent 34%,color-mix(in srgb,var(--aubergine) 8%,transparent) 62%,color-mix(in srgb,var(--aubergine) 55%,transparent) 100%);}
-.page-hero .cap{position:absolute;left:18px;bottom:14px;z-index:2;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper);}
+.page-hero .cap{position:absolute;left:18px;bottom:14px;z-index:2;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper);line-height:1;}
 @media(max-width:759px){.page-hero .cap{left:14px;bottom:12px;font-size:9.5px;}}
 .cm-jump{margin:16px 0 0;}
 .cm-jump .f{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;}
@@ -440,8 +436,8 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 .cm-action{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;color:var(--ink);font-weight:600;text-decoration:none;}
 .cm-inline-action{display:inline-flex;align-items:center;min-height:44px;}
 .cm-jump .f:focus-visible,.cm-slide:focus-visible,.cm-action:focus-visible,.cm-inline-action:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
-.cm-expect p,.cm-keep p{max-width:68ch;}
-.cm-mornings .sec-eyebrow h2,.cm-expect .sec-eyebrow h2,.cm-keep .sec-eyebrow h2{margin:0;}
+.cm-keep p{max-width:68ch;}
+.cm-mornings .sec-eyebrow h2,.cm-keep .sec-eyebrow h2{margin:0;}
 
 @media(min-width:760px){
   .page-hero{height:320px;}
@@ -562,3 +558,39 @@ a.doc-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;bord
 .hos-coming{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-2);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
 .cm-why{max-width:58ch;margin:-6px 0 30px;}
 .cm-why p{font-size:15px;line-height:1.6;color:var(--charcoal);margin-bottom:10px;}
+/* ============================================================
+   Doc-list rows aligned to the "Portal page" template rhythm
+   (Claude Design, 2026-07-18). Tokens only, no new hex.
+   Open editorial divider list (no white card frame) · sans
+   title · quiet mono icon + label · sage/amber status dot-chips.
+   SCOPING (corrected at integration, 0050): the handback said the
+   H&W team cards + bare status/rails/dsl rows were untouched, but
+   ALL generated rows live inside .doc-list. Utility rows joining
+   the treatment matches the handback's own glyph-swap NOTE; the
+   H&W team cards (parent-facing booking flow, launch window) are
+   excluded below with :not(.team-card) + the #team-cards frame
+   re-assert, honouring the handback's stated invariant. Seam
+   question filed back to Claude Design.
+   ============================================================ */
+.doc-list{background:none;border:none;border-radius:0;overflow:visible;border-top:1px solid var(--rule);}
+.doc-list .doc-row:not(.team-card){gap:14px;padding:15px 8px;border-bottom:1px solid var(--rule);border-radius:6px;}
+.doc-list .doc-row:not(.team-card):last-child{border-bottom:1px solid var(--rule);}
+.doc-list .doc-row:not(.team-card):hover{background:var(--white);}
+.doc-list .doc-row:not(.team-card) .nm{font-family:var(--sans);font-weight:500;font-size:15px;line-height:1.3;color:var(--ink);}
+.doc-list .doc-row:not(.team-card) .sub{font-size:13px;line-height:1.5;color:var(--muted);margin-top:3px;}
+/* .ic:not(.num): the 0051 handback pins date chips as content that KEEPS its box
+   ("dates are content, icons are icons"; the north-star template shows boxed date
+   chips); this realignment un-boxes text KINDS only. Second seam noted to CD. */
+.doc-list .doc-row:not(.team-card) .ic:not(.num){width:34px;height:auto;flex:none;border:none;background:none;border-radius:0;padding:2px 0 0;
+  align-items:flex-start;justify-content:flex-start;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:0.04em;color:var(--faint);}
+.doc-list .doc-row:not(.team-card) .icx{width:22px;}
+.doc-list .doc-row:not(.team-card) .rt{gap:12px;}
+.doc-list .doc-row:not(.team-card) .tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);}
+.doc-list .doc-row:not(.team-card) .status{display:inline-flex;align-items:center;gap:6px;padding:0;background:none;border:none;
+  font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.doc-list .doc-row:not(.team-card) .status::before{content:"";width:6px;height:6px;border-radius:999px;background:currentColor;flex:none;}
+.doc-list .doc-row:not(.team-card) .status.open{color:var(--sage);}
+.doc-list .doc-row:not(.team-card) .status.soon{color:var(--amber);}
+/* H&W team list keeps its framed card (the booking flow ships as reviewed) */
+#team-cards .doc-list{background:var(--white);border:1px solid var(--rule);border-radius:10px;overflow:hidden;}

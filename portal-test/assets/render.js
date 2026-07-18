@@ -44,6 +44,12 @@
     d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
     return d;
   }
+  // ISO date + n days (UTC-midnight anchored). The one add-days idiom (0050 sweep;
+  // was coined three times: here, the Coming-up window, the coffee slides due date).
+  function isoPlusDays(iso, n) {
+    var d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
   // Agenda bucket for an event date against today: 0 this week, 1 next week, 2 later.
   function agendaBucket(dateISO, todayISO) {
     var mon = weekStart(todayISO);
@@ -65,8 +71,7 @@
     for (var i = 0; i < evs.length; i++) {
       if (evs[i].date >= todayISO && re.test(evs[i].title)) return evs[i].date;
     }
-    var d = new Date(todayISO + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 120);
-    return d.toISOString().slice(0, 10);
+    return isoPlusDays(todayISO, 120);
   }
   // type:'gold' = key date / milestone; drives the key-dates .ics feed (issue 0032 F3).
   function goldOnly(evs) { return evs.filter(function (e) { return e.type === 'gold'; }); }
@@ -80,11 +85,22 @@
   }
   // Draft-chip membership (sprint 3 D5). Pure + assertable.
   function isDraftPage(key, list) { return !!key && !!list && list.indexOf(key) > -1; }
+  // Icon cell (0050 sweep, per the Claude Design realignment NOTE): generated doc
+  // rows use the same Lucide sprite as the static pages where a glyph fits; kinds
+  // with no honest glyph (HRS, AIR, ALERT, '...') stay as quiet mono text, which
+  // the .doc-list .ic treatment styles anyway. CAL/LINK ride i-go (nav rows).
+  var IC_SYM = { PDF: 'i-pdf', LINK: 'i-go', OK: 'i-do', NOTE: 'i-note', DSL: 'i-who', CAL: 'i-go' };
+  function ic(kind) {
+    return IC_SYM[kind]
+      ? '<span class="ic icx"><svg class="ig" aria-hidden="true"><use href="' + ROOT + 'assets/img/icons.svg#' + IC_SYM[kind] + '"/></svg></span>'
+      : '<span class="ic">' + kind + '</span>';
+  }
+  console.assert(ic('PDF').indexOf('#i-pdf') > -1 && ic('HRS').indexOf('>HRS<') > -1, 'ic: sprite when mapped, text otherwise');
   // Shared strip (sprint 3 D3): a doc-list of {nm, sub} rows under one mono icon.
-  // Used by the office-hours strip, the air tile and the refund ladder.
+  // Used by the office-hours strip and the air tile.
   function stripRows(items, iconText) {
     return '<div class="doc-list">' + items.map(function (it) {
-      return '<div class="doc-row"><span class="ic">' + iconText + '</span>' +
+      return '<div class="doc-row">' + ic(iconText) +
         '<div class="meta"><div class="nm">' + it.nm + '</div>' +
         (it.sub ? '<div class="sub">' + it.sub + '</div>' : '') + '</div></div>';
     }).join('') + '</div>';
@@ -122,9 +138,8 @@
     return icsWrap(evs.reduce(function (acc, ev) { return acc.concat(icsVevent(ev)); }, []));
   }
   function icsFilename(ev) {
-    var d = new Date(ev.date + 'T00:00:00Z');
     var clean = ev.title.replace(/[\/\\:*?"<>|]/g, '').replace(/\s+/g, ' ').trim();
-    return 'ELC - ' + clean + ' - ' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + ' ' + d.getUTCFullYear() + '.ics';
+    return 'ELC - ' + clean + ' - ' + fmtDMY(ev.date) + '.ics';
   }
   function icsDownload(text, filename) {
     var blob = new Blob([text], { type: 'text/calendar;charset=utf-8' });
@@ -147,19 +162,17 @@
   var A_MARK = '<svg viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>';
   function addBtns(date, title, sub) {
     var ev = { date: date, title: title, sub: sub || '' };
-    var esc = function (s) { return String(s).replace(/"/g, '&quot;'); };
     return '<span class="cal-add">' +
       '<a class="add-btn" target="_blank" rel="noopener" href="' + gcalUrl(ev) + '"' +
-      ' title="Add to Google Calendar" aria-label="Add ' + esc(title) + ' to Google Calendar">' + G_MARK + '</a>' +
-      '<button type="button" class="add-btn ics-btn" data-date="' + date + '" data-title="' + esc(title) + '" data-sub="' + esc(sub || '') + '"' +
-      ' title="Add to Apple Calendar (.ics file)" aria-label="Add ' + esc(title) + ' to Apple Calendar">' + A_MARK + '</button></span>';
+      ' title="Add to Google Calendar" aria-label="Add ' + escAttr(title) + ' to Google Calendar">' + G_MARK + '</a>' +
+      '<button type="button" class="add-btn ics-btn" data-date="' + date + '" data-title="' + escAttr(title) + '" data-sub="' + escAttr(sub || '') + '"' +
+      ' title="Add to Apple Calendar (.ics file)" aria-label="Add ' + escAttr(title) + ' to Apple Calendar">' + A_MARK + '</button></span>';
   }
   // Share mark (issue 0032 F10): native share where available, LINE fallback.
   var S_MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 12v8h16v-8M12 3v13M8 7l4-4 4 4"/></svg>';
   function shareBtn(url, title) {
-    var esc = function (s) { return String(s).replace(/"/g, '&quot;'); };
-    return '<button type="button" class="add-btn share-btn" data-url="' + esc(url) + '" data-title="' + esc(title) + '"' +
-      ' title="Share" aria-label="Share ' + esc(title) + '">' + S_MARK + '</button>';
+    return '<button type="button" class="add-btn share-btn" data-url="' + escAttr(url) + '" data-title="' + escAttr(title) + '"' +
+      ' title="Share" aria-label="Share ' + escAttr(title) + '">' + S_MARK + '</button>';
   }
   // Self-check (silent on pass): comma escaping, all-day start/end, multi-event, filename.
   console.assert(toICS({ date: '2026-08-03', title: 'Fest, Session 2', sub: 'to 7 Aug' }).indexOf('SUMMARY:Fest\\, Session 2\\, to 7 Aug') > -1, 'toICS: comma escape');
@@ -253,10 +266,10 @@
   var statusNow = document.getElementById('status-now');
   if (statusNow) {
     if (P.status && P.status.expires >= bkkToday) {
-      statusNow.innerHTML = '<div class="doc-row"><span class="ic">' + (P.status.level === 'alert' ? 'ALERT' : 'NOTE') + '</span>' +
+      statusNow.innerHTML = '<div class="doc-row">' + ic(P.status.level === 'alert' ? 'ALERT' : 'NOTE') +
         '<div class="meta"><div class="nm">' + P.status.title + '</div><div class="sub">' + P.status.body + '</div></div></div>';
     } else {
-      statusNow.innerHTML = '<div class="doc-row"><span class="ic">OK</span>' +
+      statusNow.innerHTML = '<div class="doc-row">' + ic('OK') +
         '<div class="meta"><div class="nm">Everything is running as normal.</div>' +
         '<div class="sub">All campuses are open on their usual hours today.</div></div></div>';
     }
@@ -331,8 +344,8 @@
       givingNext.className = 'section';
       givingNext.innerHTML =
         '<div class="sec-eyebrow"><span class="eyebrow">The next drive</span><span class="ln"></span></div>' +
-        '<div class="doc-list"><a class="doc-row" href="../../calendar/">' +
-        '<span class="ic">CAL</span><div class="meta"><div class="nm">' + drive.title + '</div>' +
+        '<div class="doc-list"><a class="doc-row" href="' + ROOT + 'calendar/">' +
+        ic('CAL') + '<div class="meta"><div class="nm">' + drive.title + '</div>' +
         '<div class="sub">' + fmtDMY(drive.date) + (drive.sub ? ' · ' + drive.sub : '') + '</div></div>' +
         '<div class="rt"><span class="tag">View calendar</span></div></a></div>';
     }
@@ -388,7 +401,7 @@
           if (!rails.length) throw 0;
           railsMount.innerHTML = rails.map(function (rl) {
             var ok = rl.ok || rl.reachable;
-            return '<div class="doc-row"><span class="ic">' + (ok ? 'OK' : '...') + '</span>' +
+            return '<div class="doc-row">' + ic(ok ? 'OK' : '...') +
               '<div class="meta"><div class="nm">' + rl.name + '</div>' +
               '<div class="sub">' + (ok ? 'Reachable, checked just now' : 'Could not reach just now. We are re-checking.') + '</div></div></div>';
           }).join('');
@@ -403,7 +416,7 @@
   if (dsl && !(P.safeguarding && P.safeguarding.length)) dsl.remove();
   else if (dsl) {
     dsl.innerHTML = P.safeguarding.map(function (s) {
-      return '<div class="doc-row"><span class="ic">DSL</span>' +
+      return '<div class="doc-row">' + ic('DSL') +
         '<div class="meta"><div class="nm">' + s.name + ' &middot; ' + s.campus + '</div>' +
         '<div class="sub">' + s.role + '</div></div>' +
         '<div class="rt"><a class="tag" href="mailto:' + s.email + '">Email</a></div></div>';
@@ -457,10 +470,6 @@
   var agenda = document.getElementById('agenda');
   if (agenda && P.calendarEvents && P.featuredEvents) {
     var CU_WINDOW_DAYS = 30, CU_CAP = 4;
-    function isoPlusDays(iso, n) {
-      var d = new Date(iso + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n);
-      return d.toISOString().slice(0, 10);
-    }
     // Exact window bounds from the grouped rows (sorted ISO dates): single day
     // "SAT 22 Aug"; range "MON 17 to TUE 18 Aug" ("to", never a dash: house
     // idiom); cross-month keeps both months. CSS uppercases the visible label.
@@ -577,8 +586,8 @@
   // Sport rows + status pills (home sport tile). status vocab: open | soon |
   // waitlist | full (sprint 3 F5). Each value maps straight to a .status.<value>
   // class + its label, so waitlist/full need no code branch here.
-  // NOTE for integrator (Lane D): app.css defines only .status.open and .status.soon.
-  // .status.waitlist and .status.full render unstyled until Lane D adds their rules.
+  // (app.css styles .status.open/.soon; waitlist/full would render as unstyled
+  // pills, visible and honest, if data ever ships them. No rules until then.)
   var grid = document.getElementById('sport-grid');
   if (grid && P.sports) {
     grid.innerHTML = P.sports.map(function (s) {
@@ -614,7 +623,7 @@
         // Freshness stamp (F6) rides the sub line; the operative rule (F7) is a
         // second sub line. Both are honest-only and set from real registry truth.
         var reviewed = d.reviewed ? ' <span class="mono">' + fmtReviewed(d.reviewed) + '</span>' : '';
-        var inner = '<span class="ic">' + d.kind + '</span>' +
+        var inner = ic(d.kind) +
           '<div class="meta"><div class="nm">' + d.name + '</div>' +
             '<div class="sub">' + d.sub + reviewed + '</div>' +
             (d.rule ? '<div class="sub">In short: ' + d.rule + '</div>' : '') +
@@ -757,18 +766,13 @@
         return cohorts.indexOf(cohort) > -1;
       });
     }
-    function dayAfter(date) {
-      var d = new Date(date + 'T00:00:00Z');
-      d.setUTCDate(d.getUTCDate() + 1);
-      return d.toISOString().slice(0, 10);
-    }
     function coffeeSlides(row, todayISO) {
       var state = coffeeState(row.date, todayISO);
       if (row.slides) {
         return '<a class="cm-slide" target="_blank" rel="noopener" href="' + escAttr(row.slides.href) + '">View ' + row.cohort + ' slides' + (row.slides.tag ? ' · ' + row.slides.tag : '') + '</a>';
       }
       if (state !== 'past') return '<p class="cm-slide-note">Slides will be added within 24 hours after the morning.</p>';
-      var due = dayAfter(row.date);
+      var due = isoPlusDays(row.date, 1);
       if (todayISO <= due) return '<p class="cm-slide-note">Slides are on their way. Expected by ' + fmtDMY(due) + '.</p>';
       var office = P.contacts && P.contacts.office && P.contacts.office.email;
       var helpHref = office ? 'mailto:' + office : ROOT + 'help/';

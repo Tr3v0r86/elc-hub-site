@@ -1,12 +1,14 @@
 /* ELC Portal: topographic contour field.
-   Warped concentric rings radiating from the logo mark (#mark), drawn into
-   #topo. Ink on cream, very low opacity. Robust to iframe/embedded loads:
-   a ResizeObserver on the document root fires on observe and on any size
-   change, rebuilding once the viewport reports a real size. Static (no
-   animation); drops out cleanly at print. */
+   Warped concentric rings radiating from the masthead mark, drawn into #topo.
+   Ink on cream, very low opacity. Anchor = #mark (the old dial) or the .brand
+   .lockup img that replaced it in 0051: the 0050 sweep found the field had
+   been silently dead since the dial was retired (#mark gone, early return).
+   Robust to iframe/embedded loads: a ResizeObserver on the document root
+   fires on observe and on any size change, rebuilding once the viewport
+   reports a real size. Static (no animation); drops out cleanly at print. */
 (function(){
   var svg = document.getElementById('topo');
-  var mark = document.getElementById('mark');
+  var mark = document.getElementById('mark') || document.querySelector('.brand .lockup');
   if(!svg || !mark) return;
   var NS = 'http://www.w3.org/2000/svg';
   function build(){

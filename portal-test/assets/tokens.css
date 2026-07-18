@@ -29,6 +29,7 @@
   --red:#A8443A; --red-lift:#C25A4E;
   --red-tint:#F2E2DF;                  /* status-banner alert wash (issue 0031); Claude Design may retune */
   --sage:#5B7A4A;                      /* success (HANDOFF token list; feedback widget) */
+  --amber:#B17B2E;                     /* caution / in-progress (doc-list status dot-chips; value = design-system tokens/colors.css) */
   --text-on-dark:#E4DDF0;
 
   /* --- fonts --- */
@@ -41,9 +42,6 @@
   /* --- shadows --- */
   --shadow-quiet:0 1px 0 rgba(0,0,0,0.02);
   --shadow-hard:3px 3px 0 rgba(31,31,33,0.10);
-
-  /* --- art layer (0051): children's line art; Claude Design tunes --- */
-  --art-ground-opacity:0.35;
 
   /* --- chrome --- */
   --nav-h:70px;

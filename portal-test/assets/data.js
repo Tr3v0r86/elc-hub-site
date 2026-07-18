@@ -2,7 +2,9 @@
    Pages render these islands via assets/render.js. Statuses are honest
    (rule 6): football live, the rest open 7 Sep. */
 window.PORTAL = {
-  version: 'v0.5',
+  // version: consumed by feedback.js payloads. The VISIBLE stamp (tape + footer
+  // fine print) is shell-owned, hardcoded in every page's HTML: bump both.
+  version: 'v0.6',
   term: 'Term 1',
 
   // Pages still being finalised (sprint 3 D5). render.js prepends a visible
@@ -157,9 +159,13 @@ window.PORTAL = {
       { date: '2026-08-17', groups: 'K2 to Y6' },
       { date: '2026-08-18', groups: 'K1' }
     ],
+    // NOT WIRED YET (0050 sweep truth pass): no renderer reads the three fields
+    // below; the H&W page copy is hardcoded in hopes-and-wishes/index.html. They
+    // are deliberate seams for the October/March PTC reuse (issue 0043): wire a
+    // render.js mount when that page goes data-driven, or cut them then.
     slotNote: 'Twenty minutes, one to one with your child\'s teacher.',   // hours TBC (Payal)
-    questionnaireUrl: null,   // Jotform; null renders an honest "coming" row
-    packUrl: null             // Nuts and Bolts PDF; same
+    questionnaireUrl: null,
+    packUrl: null
   },
 
   // Booking cards, class-keyed (a co-taught class carries two teachers on one card,
@@ -339,7 +345,11 @@ window.PORTAL = {
   // OTHER convention (page-relative from policies/), do not mix.
   // build-api.mjs strips href from the public calendar JSON.
   // The two Hopes and Wishes rows below carry href: 'hopes-and-wishes/' (plan §2c);
-  // build-api.mjs asserts they match ptc.dates.
+  // build-api.mjs asserts every ptc date has a matching calendar row (one-directional).
+  // Optional community:true surfaces the row on community/ + giving pages.
+  // Coffee-morning rows additionally carry: cohort (K1|K2|Y1|Y2|'Y3 to Y6'|Dove) ·
+  // time/venue (null = "To be confirmed") · slides (null until the deck lands, then
+  // { href:'https://…', tag:'PDF' }; HTTPS only or the build gate rejects).
   calendarEvents: [
     { date: '2026-08-03', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
     { date: '2026-08-12', type: 'purple', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
