@@ -109,29 +109,30 @@ window.PORTAL = {
   // This-week strip derives from calendarEvents in render.js (current week, else next up).
   // No separate week[]: one source of truth (issue 0018).
 
-  // Joint leadership note rotation (issue 0007; drafts docs/content/hos-notes-2026-08.md).
-  // render.js shows the latest note whose `from` <= today (Bangkok). Payal's read pending;
-  // the sample chip in index.html stays until she blesses the copy.
+  // Note rotation, single voice: Trevor (0051 parent-facing hard launch; Trevor cools
+  // each body before deploy). The HoS letter stays a live seam: index.html renders a
+  // "note from Payal coming" line and issue 0007 holds her real-copy path.
+  // render.js shows the latest note whose `from` <= today (Bangkok).
   notes: [
-    { from: '2026-07-01', eyebrow: 'A note from Payal and Trevor', when: 'This month · August',
+    { from: '2026-07-01', eyebrow: 'A note from Trevor', when: 'This month · August',
       title: 'Welcome to a new year.',
-      body: 'This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and it will grow. Tell us what is missing with the feedback button, and we will build it.',
-      sig: 'Payal, Head of School · Trevor, Head of Operations and Educational Experience' },
+      body: 'This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and I am building it in the open. Tell me what you need with the feedback button, and watch this page grow around your answers.',
+      sig: 'Trevor · Head of Operations and Educational Experience' },
     // Optional cta (plan 1.5): renders as one link after the body, gone after `until`.
-    { from: '2026-08-10', eyebrow: 'A note from Payal and Trevor', when: 'This week',
+    { from: '2026-08-10', eyebrow: 'A note from Trevor', when: 'This week',
       title: 'We start with your hopes.',
-      body: 'This week your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is our favourite way to begin. Everything else on this page can wait until you have booked your time.',
+      body: 'This week your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is my favourite way to begin the year. Everything else on this page can wait until you have booked your time.',
       cta: { href: 'hopes-and-wishes/', label: 'Book your time', until: '2026-08-18' },
-      sig: 'Payal and Trevor' },
-    { from: '2026-08-17', eyebrow: 'A note from Payal and Trevor', when: 'This week',
+      sig: 'Trevor · Head of Operations and Educational Experience' },
+    { from: '2026-08-17', eyebrow: 'A note from Trevor', when: 'This week',
       title: 'Come for coffee.',
-      body: 'Coffee mornings run this week, campus by campus. No agenda beyond meeting the people who will spend the year with your child, and the other families walking the same route. Times are on the calendar; just come.',
+      body: 'Coffee mornings run this week, campus by campus. No agenda beyond meeting the people who will spend the year with your child, and the other families walking the same route. Times are on the calendar; just come, and come find me while you are there.',
       cta: { href: 'coffee-mornings/', label: 'Find your coffee morning' },
-      sig: 'Payal and Trevor' },
-    { from: '2026-08-24', eyebrow: 'A note from Payal and Trevor', when: 'This week',
+      sig: 'Trevor · Head of Operations and Educational Experience' },
+    { from: '2026-08-24', eyebrow: 'A note from Trevor', when: 'This week',
       title: 'Everyone is in.',
-      body: 'From this week every child, every year group, every campus is in school. The rhythm of the year starts now: the week ahead lives on this page, and anything you need to sign up for is under Activities. We are glad you are here.',
-      sig: 'Payal and Trevor' }
+      body: 'From this week every child, every year group, every campus is in school. The rhythm of the year starts now: the week ahead lives on this page, and anything you need to sign up for is under Activities. Tell me what is missing; this page is built from what families ask for.',
+      sig: 'Trevor · Head of Operations and Educational Experience' }
   ],
 
   // ---- Hopes and Wishes / PTC booking (issue 0043, plan 2026-07-16) ----

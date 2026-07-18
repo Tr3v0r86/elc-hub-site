@@ -39,7 +39,7 @@ header{position:sticky;top:0;z-index:50;height:var(--nav-h);display:flex;align-i
 .dial line{stroke:var(--red);}
 .dial circle:last-of-type{fill:var(--purple);}
 .brand .wm{font-family:var(--wordmark);font-weight:600;font-size:22px;letter-spacing:-0.01em;line-height:1;color:var(--ink);}
-.brand .desc{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.brand .desc{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);align-self:center;padding-left:13px;border-left:1px solid var(--rule);}
 nav{display:flex;align-items:center;gap:28px;}
 .navlink{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--charcoal);padding:6px 2px;cursor:pointer;
   white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
@@ -404,10 +404,17 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
         owns the hero/photo and visual handback; these rules keep every state
         readable, targetable and responsive with the existing tokens. ---- */
 .cm-intro{margin-bottom:34px;}
-.page-hero{height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+.page-hero{position:relative;height:180px;display:flex;align-items:center;justify-content:center;overflow:hidden;
   margin-bottom:24px;border-radius:10px;background:var(--aubergine);color:var(--text-on-dark);}
 .page-hero span{font-family:var(--serif);font-size:clamp(30px,8vw,52px);line-height:1;}
-.page-hero img{width:100%;height:100%;object-fit:cover;}
+.page-hero img{width:100%;height:100%;object-fit:cover;object-position:center 32%;}
+/* photo hero (0051 visual pass): a scrim for depth + a caption in the site's photo
+   idiom (mirrors .feature .photo). token-driven, photo-agnostic so the consent-
+   cleared Job 3 swap keeps the treatment. */
+.page-hero::after{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--aubergine) 30%,transparent) 0%,transparent 34%,color-mix(in srgb,var(--aubergine) 8%,transparent) 62%,color-mix(in srgb,var(--aubergine) 55%,transparent) 100%);}
+.page-hero .cap{position:absolute;left:18px;bottom:14px;z-index:2;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper);}
+@media(max-width:759px){.page-hero .cap{left:14px;bottom:12px;font-size:9.5px;}}
 .cm-jump{margin:16px 0 0;}
 .cm-jump .f{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;}
 .cm-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-height:240px;}
@@ -504,8 +511,54 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 
 /* the leadership note reads as a letter when it spans full width */
 .note.home-note{max-width:none;}
-.note.home-note h2,.note.home-note p,.note.home-note .sig{max-width:72ch;}
+/* Home note = the letter moment (0051 visual pass): single voice from Trevor, treated
+   as correspondence, not a card. Softer chrome, letter type rhythm, a signed sign-off,
+   and the HoS-coming line as a quiet PS. Scoped to .home-note; shared .note untouched. */
+.note.home-note{padding:clamp(26px,3.2vw,38px) clamp(24px,3.2vw,38px);box-shadow:none;}
+.note.home-note .who{margin-bottom:20px;}
+.note.home-note h2{font-size:clamp(23px,2.3vw,27px);line-height:1.26;margin-bottom:15px;letter-spacing:-0.01em;}
+.note.home-note p{font-size:15.5px;line-height:1.72;color:var(--charcoal);}
+.note.home-note h2,.note.home-note p,.note.home-note .sig,.note.home-note .sig-sub{max-width:64ch;}
+.note.home-note .note-cta{margin-top:13px;}
+.note.home-note .sig{margin-top:22px;padding-top:0;border-top:none;font-size:15px;color:var(--ink);}
+.note.home-note .sig-sub{margin-top:6px;}
+.note.home-note .hos-coming{margin-top:26px;padding-top:15px;font-family:var(--serif);font-style:italic;font-size:13px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);}
 
 @media(max-width:940px){.ev-cards{grid-template-columns:1fr 1fr;}}
 @media(max-width:720px){.ev-cards{grid-template-columns:1fr;}.quick-cal{grid-column:span 12;}}
 @media print{.ev-card{break-inside:avoid;}.ev-card.ev-link h3{color:var(--ink)!important;text-decoration-color:var(--gold)!important;}}
+
+/* ---- 0051 design-language wiring: lockup, icon chips, art layer ----
+   Mechanical placement only; visual tuning = Claude Design (rule 7, handoff 0051). */
+/* masthead (0051 visual pass): the official lockup crops to a crisp ELC-only mark in
+   the chrome. its three sublines (INTERNATIONAL SCHOOLS BANGKOK) are illegible mush at
+   42px, so object-fit keeps only the top ELC band; the full lockup moves to the footer
+   where it has room to read. The mark stays confident and legible at any DPR. */
+.brand .lockup{width:76px;height:32px;object-fit:cover;object-position:center top;display:block;}
+/* footer sign-off: the full official lockup, given room to be legible. */
+/* ponytail: no align-self here. On desktop .foot-strip is a row (align-items:center),
+   so align-self:center was a no-op; below 720px it flips to column/flex-start and
+   align-self:center floated the crest dead-centre above flush-left text on all 31 pages. */
+.foot-lockup{height:58px;width:auto;flex:none;opacity:0.9;}
+/* icon cell (0051 visual pass): drop the box, keep the 38px gutter so icon rows
+   line up with the .num date chips. Quiet glyph in --muted, not a button. */
+.doc-row .icx{align-items:center;padding:0;border:none;background:none;border-radius:0;}
+.icx .ig{width:18px;height:18px;color:var(--muted);stroke-width:1.75;display:block;transition:color .15s;}
+.doc-row:hover .icx .ig{color:var(--ink);}
+a.doc-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;border-radius:6px;}
+.hero-art{margin:6px 0 22px;}
+.hero-art img{height:112px;width:auto;max-width:100%;}
+.greet.has-art{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;column-gap:34px;}
+.greet-art{width:min(40vw,440px);height:auto;justify-self:end;opacity:0.8;}
+@media(max-width:760px){.greet.has-art{grid-template-columns:1fr;}.greet-art{width:82%;max-width:300px;justify-self:start;margin-top:12px;}}
+.page-head.has-spiral{position:relative;}
+/* spiral (0051 visual pass): cropped to its rings' eye and bled off the top-right
+   corner. the clean-up notch lives at the drawing's right-center, so object-position
+   keeps the upper-left of the scan and crops the notch out entirely. rings of time
+   for the page that holds the year; subordinate, one mark. */
+.spiral-art{position:absolute;right:-28px;top:-46px;height:250px;width:215px;object-fit:cover;object-position:12% 38%;opacity:0.14;pointer-events:none;}
+@media(max-width:900px){.spiral-art{display:none;}}
+.sig-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.hos-coming{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-2);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+.cm-why{max-width:58ch;margin:-6px 0 30px;}
+.cm-why p{font-size:15px;line-height:1.6;color:var(--charcoal);margin-bottom:10px;}
