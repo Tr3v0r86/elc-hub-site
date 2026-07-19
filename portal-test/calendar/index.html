@@ -33,8 +33,6 @@
       <a class="navlink" href="../">This week</a>
       <a class="navlink" href="../activities/">Activities</a>
       <a class="navlink active" href="../calendar/">Calendar</a>
-      <a class="navlink" href="../hopes-and-wishes/">Hopes and Wishes</a>
-      <a class="navlink" href="../nuts-and-bolts/">Nuts and bolts</a>
       <a class="navlink" href="../policies/">Policies</a>
       <details class="nav-dd">
         <summary class="navlink">FAQ</summary>
@@ -42,6 +40,7 @@
           <a href="../help/">Quick answers</a>
           <a href="../new-families/">New families</a>
           <a href="../glossary/">Glossary</a>
+          <a href="../nuts-and-bolts/">Nuts and bolts</a>
         </div>
       </details>
       <div class="nav-search"><input type="search" id="q" data-root="../" placeholder="Search the portal" aria-label="Search the portal"><div id="q-results" hidden></div></div>
@@ -53,11 +52,13 @@
   <div class="wrap sub">
     <!-- Hero art (0051): Giovanni's infinity spiral, the drawing the site's contour
          motif grew from. A year as tree rings. Treatment = Claude Design lane. -->
-    <div class="page-head has-spiral">
-      <img class="spiral-art" src="../assets/img/art/spiral.png" alt="" aria-hidden="true" loading="lazy" width="1600" height="1174">
-      <span class="eyebrow">The year at ELC</span>
-      <h1>This term, week by week.</h1>
-      <p class="lead">One calendar for everything at ELC, updated as the term moves.</p>
+    <img class="spiral-art" src="../assets/img/art/spiral.png" alt="" aria-hidden="true" loading="lazy" width="1600" height="1174">
+    <div class="page-head">
+      <!-- Copy (P4 pass A): the year/month framing is applied; the subscribe line the CD
+           draft proposed is HELD with the subscribe UI (UC-1) and lands with it at v0.9/1.0. -->
+      <span class="eyebrow">The ELC calendar</span>
+      <h1>This academic year, month by month.</h1>
+      <p class="lead">Everything ELC, in one calendar: this week, every term, and the key dates for the year. This page is always the latest.</p>
     </div>
 
     <div class="cal-wrap">
@@ -68,21 +69,37 @@
           <div class="cal-nav"><button type="button" id="cal-prev" aria-label="Previous month">&larr;</button><button type="button" id="cal-next" aria-label="Next month">&rarr;</button></div>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
+        <!-- Grid + popover render from assets/render.js (#cal-grid): audience dots by
+             aud (parent/child/holiday), up to 3 + "+N", event days are buttons, a dialog
+             popover lists each day's events. Legend below matches the aud swatches. -->
         <div class="legend">
           <span><span class="d today"></span>Today</span>
-          <span><span class="d event"></span>Activity or event</span>
-          <span><span class="d opens"></span>Registration opens</span>
+          <span><span class="d parent"></span>Parent event</span>
+          <span><span class="d child"></span>Children only</span>
+          <span><span class="d holiday"></span>Holiday &middot; no school</span>
         </div>
       </div>
 
       <!-- AGENDA -->
       <div>
+        <!-- Agenda renders from assets/render.js (#cal-agenda): "On this month" then
+             "Later this term", today onward, per-row add-to-calendar + share. -->
         <div class="cal-agenda" id="cal-agenda"></div>
         <div class="cal-sub">
-          <button type="button" class="btn ghost sm" id="ics-all">Download the year (.ics) <span class="arw">&darr;</span></button>
-          <button type="button" class="btn ghost sm" id="ics-key">Key dates (.ics) <span class="arw">&darr;</span></button>
-          <p class="cal-note mono">Opens in Apple Calendar; imports into Google Calendar. A snapshot of today's dates: a live subscription that updates itself is coming.</p>
-          <p class="btn-row"><a class="btn ghost sm" href="print/?range=week">Print this week</a><a class="btn ghost sm" href="print/?range=term">Print the term</a></p>
+          <!-- Calendar sharing (P4 pass A, UC-1 resolved 2026-07-19): the subscribe UI is
+               HELD this pass. The two static snapshot buttons (Download year / Key dates)
+               are RETIRED (a downloaded .ics never updates: it is the confusing path). The
+               hosted feed itself IS built (build-api emits api/v1/elc-calendar.ics, deploy-
+               asserted) so v0.9/1.0 can turn the UI on behind a source-of-truth ADR (portal-
+               hosted vs the ELC Master Google Calendar, issue 0004) on the production host,
+               not the test host whose URL dies at the 0017 cutover. Per-event add-to-calendar
+               (the agenda rows above) stays and now carries the event-page URL. Until then,
+               the calendar page + event pages are the source of truth, stated honestly. -->
+          <p class="cal-note mono">One calendar for everything at ELC. A live subscription you can add to Apple or Google Calendar, always current, is coming for launch. For now, this page is always the latest.</p>
+          <!-- Print: week / month / term ranges render from render.js (#print-list). The
+               range=month view is new (P4 pass A); the full doc_page print rebuild for
+               paper-clean pagination is a Claude Design pass-C workstream. -->
+          <p class="btn-row"><a class="btn ghost sm" href="print/?range=week">Print this week</a><a class="btn ghost sm" href="print/?range=month">Print this month</a><a class="btn ghost sm" href="print/?range=term">Print the term</a></p>
         </div>
       </div>
     </div>
@@ -107,52 +124,9 @@
   <script src="../assets/render.js"></script>
   <script src="../assets/contour.js"></script>
   <script src="../assets/feedback.js"></script>
-  <script>
-  /* Calendar page: the month grid, computed from PORTAL.calendarEvents against
-     the real current date in Asia/Bangkok. Page-local by design: no other
-     surface renders a month grid. The agenda list beside it renders from
-     assets/render.js (#cal-agenda mount). */
-  (function () {
-    var P = window.PORTAL;
-    if (!P || !P.calendarEvents) return;
-
-    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var DOWS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-
-    var byDate = {};
-    P.calendarEvents.forEach(function (e) { (byDate[e.date] = byDate[e.date] || []).push(e); });
-
-    /* Today in Asia/Bangkok, anchored to UTC midnight so all math is DST/zone-safe. */
-    var todayIso = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date());
-    var today = new Date(todayIso + 'T00:00:00Z');
-    function iso(d) { return d.toISOString().slice(0, 10); }
-    function utc(y, m, day) { return new Date(Date.UTC(y, m, day)); }
-
-    /* MONTH GRID: renders any month, Mon-first, .mut fill, dots from events. */
-    var view = { y: today.getUTCFullYear(), m: today.getUTCMonth() };
-    function renderMonth() {
-      document.getElementById('cal-title').textContent = MONTHS[view.m] + ' ' + view.y;
-      var lead = (utc(view.y, view.m, 1).getUTCDay() + 6) % 7;
-      var days = utc(view.y, view.m + 1, 0).getUTCDate();
-      var total = Math.ceil((lead + days) / 7) * 7;
-      var html = DOWS.map(function (d) { return '<div class="cal-dow">' + d + '</div>'; }).join('');
-      for (var i = 0; i < total; i++) {
-        var d = utc(view.y, view.m, i - lead + 1);
-        var inMonth = d.getUTCMonth() === view.m;
-        var key = iso(d);
-        var evs = inMonth ? byDate[key] : null;
-        var isToday = inMonth && key === todayIso;
-        var cls = 'cal-cell' + (inMonth ? '' : ' mut') + (isToday ? ' today' : (evs ? ' has' : ''));
-        var dot = evs ? '<span class="ev' + (evs[0].type === 'gold' ? ' gold' : '') + '"></span>' : '';
-        html += '<div class="' + cls + '">' + d.getUTCDate() + dot + '</div>';
-      }
-      document.getElementById('cal-grid').innerHTML = html;
-    }
-    document.getElementById('cal-prev').onclick = function () { view.m--; if (view.m < 0) { view.m = 11; view.y--; } renderMonth(); };
-    document.getElementById('cal-next').onclick = function () { view.m++; if (view.m > 11) { view.m = 0; view.y++; } renderMonth(); };
-    renderMonth();
-  })();
-  </script>
+  <!-- The month grid + day popover now render from assets/render.js (#cal-grid mount),
+       moved out of an inline page script (P4 pass A) so it shares the Bangkok clock and
+       the evHref link guard, and rides the node --check + service-worker SHELL gates. -->
   <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register(new URL('sw.js', document.querySelector('link[rel="manifest"]').href).href);

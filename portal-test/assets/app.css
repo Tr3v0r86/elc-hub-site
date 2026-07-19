@@ -251,6 +251,43 @@ nav{display:flex;align-items:center;gap:28px;}
 .legend .d.event{background:var(--purple);}
 .legend .d.opens{background:var(--gold);}
 
+/* Calendar event taxonomy (P4 pass A, Trevor 2026-07-19): audience-based dots
+   replace the old activity/opens pair. Colours = semantic tokens; supports up to
+   3 dots/day via .evs. Type-class + multi-dot assignment = Claude Code lane. */
+.ev.parent{background:var(--ev-parent);}
+.ev.child{background:var(--ev-child);}
+.ev.holiday{background:var(--ev-holiday);}
+.legend .d.parent{background:var(--ev-parent);}
+.legend .d.child{background:var(--ev-child);}
+.legend .d.holiday{background:var(--ev-holiday);}
+.cal-cell .evs{position:absolute;left:8px;bottom:7px;display:flex;gap:3px;}
+.cal-cell .evs .ev{position:static;}
+.cal-cell.today .ev,.cal-cell.today .evs .ev{background:var(--white-pure);}
+.cal-cell.has{cursor:pointer;}
+/* P4 pass A integration (Claude Code mechanical a11y, flagged to Claude Design pass B):
+   event-day cells are real <button>s now, not tabindex divs. Reset the UA button look
+   back to the .cal-cell design, give a token focus ring, style the "+N" overflow, and
+   extend the 32px month-nav buttons to a 44px invisible tap target. */
+button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;font:inherit;color:inherit;text-align:inherit;}
+.cal-cell.has:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+.cal-cell .evs .more{font-family:var(--mono);font-size:9px;color:var(--muted);align-self:center;}
+.cal-cell.today .evs .more{color:var(--white-pure);}
+.cal-nav button{position:relative;}
+.cal-nav button::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;}
+
+/* Calendar day popover (P4 pass A): hover/tap reveals a day's events with detail,
+   each row a link to its event page. Visual = Claude Design lane; the hover/tap/
+   keyboard wiring, content from calendarEvents, positioning + multi-event
+   handling = Claude Code lane. */
+.cal-pop{position:absolute;z-index:40;min-width:230px;max-width:290px;background:var(--white-pure);border:1px solid var(--rule);border-top:2px solid var(--purple);border-radius:10px;box-shadow:var(--shadow-hard);padding:12px 14px;}
+.cal-pop .pop-d{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+.cal-pop .pev{display:flex;align-items:flex-start;gap:9px;padding:8px 0;text-decoration:none;color:var(--ink);border-top:1px solid var(--rule-2);}
+.cal-pop .pev:first-of-type{border-top:none;}
+.cal-pop .pev .ev{position:static;flex:none;width:7px;height:7px;border-radius:50%;margin-top:5px;}
+.cal-pop .pev .pt{font-size:13.5px;line-height:1.3;}
+.cal-pop .pev .ps{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.cal-pop .pev:hover .pt,.cal-pop .pev:focus-visible .pt{color:var(--purple);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:2px;}
+
 /* ---- bottom tab bar (mobile) ---- */
 .tabbar{display:none;}
 
@@ -274,6 +311,48 @@ nav{display:flex;align-items:center;gap:28px;}
 .win-main .wt{font-size:14.5px;color:var(--ink);}
 .win-main .ws{font-size:12px;color:var(--muted);margin-top:2px;}
 .win-count{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--red);flex:none;}
+
+/* THIS WEEK strip (P4 pass A): a lateral Mon–Sun row of day cards, replacing
+   the retired registration-windows countdown. Extends the .band / .sec-eyebrow
+   system; tokens only. render.js fills #week (Claude Code lane). */
+.weekstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
+.day{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:12px 12px 13px;min-height:120px;}
+.day-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-bottom:9px;margin-bottom:10px;border-bottom:1px solid var(--rule-2);}
+.day .dow{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+.day .dnum{font-family:var(--serif);font-weight:400;font-size:21px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;flex:none;}
+.day-evs{display:flex;flex-direction:column;gap:8px;flex:1;}
+.day-ev{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.28;color:var(--ink);text-decoration:none;}
+.day-ev .dot{width:6px;height:6px;border-radius:50%;background:var(--purple);flex:none;margin-top:5px;}
+.day-ev .dot.gold{background:var(--gold);}
+.day-ev .lbl{border-bottom:1px solid var(--gold);padding-bottom:1px;transition:color .15s,border-color .15s;}
+.day-ev:hover .lbl{color:var(--purple);border-bottom-color:var(--purple);}
+.day-ev:focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:2px;}
+.day-none{font-family:var(--mono);font-size:13px;color:var(--faint);}
+.day.today{border-top:2px solid var(--purple);background:var(--purple-tint);}
+.day.today .dow{color:var(--purple);}
+@media(max-width:820px){
+  .weekstrip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:10px;padding-bottom:4px;margin-right:-16px;padding-right:16px;}
+  .day{scroll-snap-align:start;flex:0 0 44vw;max-width:170px;}
+}
+
+/* Portal search results (P4 pass A, Trevor 2026-07-19): the #q-results dropdown
+   had NO styling, so hits flowed inline as one compressed run of words. Render
+   each page as its own row in an anchored dropdown column (Google-autocomplete
+   feel). render.js already emits one <a> per page into #q-results; this is
+   presentation only. Tokens only.
+   ---- FLAG · Claude Code lane (optional enrichment, not required) ----
+   Each row shows the page TITLE only. To make matches clearer, render.js could
+   add a per-row context line (section / breadcrumb from the search index) and
+   wrap the title in its own <span> so a two-line row can ellipsis cleanly. */
+.nav-search{position:relative;}
+#q-results{position:absolute;top:calc(100% + 6px);right:0;left:auto;width:min(320px,80vw);background:var(--white-pure);border:1px solid var(--rule);border-top:2px solid var(--purple);border-radius:10px;box-shadow:var(--shadow-hard);overflow-y:auto;max-height:min(60vh,340px);z-index:60;}
+#q-results[hidden]{display:none;}
+#q-results a{position:relative;display:block;padding:11px 16px 11px 32px;font-size:14px;line-height:1.3;color:var(--ink);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid var(--rule-2);}
+#q-results a:last-child{border-bottom:none;}
+#q-results a::before{content:"";position:absolute;left:15px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:var(--faint);}
+#q-results a:hover,#q-results a:focus-visible{background:var(--purple-tint);color:var(--purple);outline:none;}
+#q-results a:hover::before,#q-results a:focus-visible::before{background:var(--purple);}
+.q-none{padding:11px 16px;font-size:13.5px;color:var(--muted);}
 
 /* quiet footer links row, all pages */
 .foot-links{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px 18px;padding-top:4px;}
@@ -493,11 +572,25 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 .ev-card h3{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.12;margin-bottom:8px;color:var(--ink);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;transition:color .15s,text-decoration-color .15s;}
 .ev-card p{font-size:13.5px;line-height:1.55;color:var(--charcoal);flex:1;margin:0;}
 .ev-card .go{margin-top:15px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--purple);display:inline-flex;align-items:center;gap:7px;}
+/* Coming-soon flag (P4 pass A, Trevor 2026-07-19): honest state for an auto-populated
+   Coming up card whose event page is not built yet: shown instead of a live CTA
+   (no dead link, rule 6). Amber = the in-progress token. render.js applies it and
+   fires the build-alert to trevorc@elc.ac.th (Claude Code lane). */
+.ev-card .soon{margin-top:15px;align-self:flex-start;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.11em;text-transform:uppercase;color:var(--amber);border:1px solid var(--amber);border-radius:999px;padding:4px 11px;}
+.ev-card .soon::before{content:"";width:6px;height:6px;border-radius:999px;background:currentColor;flex:none;}
 .ev-card.ev-link:hover{box-shadow:var(--shadow-hard);border-color:var(--purple);transform:translateY(-1px);}
 .ev-card.ev-link:hover h3{color:var(--purple);text-decoration-color:var(--purple);}
 .ev-card.ev-link:visited h3{color:var(--muted);text-decoration-color:var(--rule);}
 .ev-card.ev-link:active h3{color:var(--aubergine);}
 .ev-card.ev-link:focus-visible{outline:2px solid var(--purple);outline-offset:2px;}
+/* P4 pass A integration (Claude Code mechanical, flagged to Claude Design pass B):
+   an inert Coming-up card (nopage / holiday / page-owed) is a <div>, not an anchor.
+   Strip the link affordance so it does not read as clickable. Full visual treatment
+   of the inert state is a CD seam. */
+.ev-card.ev-inert h3{text-decoration:none;}
+/* JS-off fallback for the This-week strip: one link spanning the strip until render.js
+   fills the day cards (plan 1.9 precedent). */
+.week-fallback{grid-column:1 / -1;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:0.04em;color:var(--purple);text-decoration:none;padding:8px 0;display:inline-flex;align-items:center;gap:8px;}
 .ev-empty{padding:16px 20px;font-weight:300;font-size:14px;color:var(--muted);}
 .ev-empty a{color:var(--purple);text-decoration:underline;text-underline-offset:3px;}
 
@@ -544,15 +637,28 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 a.doc-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;border-radius:6px;}
 .hero-art{margin:6px 0 22px;}
 .hero-art img{height:112px;width:auto;max-width:100%;}
-.greet.has-art{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;column-gap:34px;}
-.greet-art{width:min(40vw,440px);height:auto;justify-self:end;opacity:0.8;}
-@media(max-width:760px){.greet.has-art{grid-template-columns:1fr;}.greet-art{width:82%;max-width:300px;justify-self:start;margin-top:12px;}}
-.page-head.has-spiral{position:relative;}
-/* spiral (0051 visual pass): cropped to its rings' eye and bled off the top-right
-   corner. the clean-up notch lives at the drawing's right-center, so object-position
-   keeps the upper-left of the scan and crops the notch out entirely. rings of time
-   for the page that holds the year; subordinate, one mark. */
-.spiral-art{position:absolute;right:-28px;top:-46px;height:250px;width:215px;object-fit:cover;object-position:12% 38%;opacity:0.14;pointer-events:none;}
+/* Note-from-Trevor art (P4 pass A, Trevor 2026-07-19): the Thai-houses drawing
+   moved OUT of the hero to sit IN LINE with the note: centred beside the note
+   text on desktop, reordered ABOVE it as a header on mobile. The note text stays
+   render.js's textContent surface (#note-* ids intact inside .note-main).
+   Composition = Claude Design lane. */
+.note.home-note{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,440px);align-items:center;gap:clamp(24px,3.2vw,38px);margin-bottom:42px;}
+.note-main{display:flex;flex-direction:column;min-width:0;}
+.note-art{width:100%;height:auto;justify-self:end;align-self:center;opacity:0.85;}
+@media(max-width:760px){.note.home-note{grid-template-columns:1fr;gap:16px;}.note-art{order:-1;max-width:190px;justify-self:start;}}
+/* Calendar hero (P4 pass A, Trevor 2026-07-19): Giovanni's ring spiral becomes a
+   large, rotated, hero-esque background header. It is bled off the right edge and
+   clipped by the band so only a clean semicircle of rings shows: the white text
+   notch (right side of the source art) falls off-canvas. Composition = Claude
+   Design lane; tokens only. */
+.wrap.sub{position:relative;}
+.wrap.sub > :not(.spiral-art){position:relative;z-index:1;}
+.spiral-art{position:absolute;z-index:0;pointer-events:none;opacity:0.1;width:1400px;height:auto;max-width:none;left:6%;top:-600px;}
+/* Responsive (P4 pass A integration, Claude Code lane per the handback flag): the
+   spiral placement above is desktop-tuned px. Below 900px the 1400px art overflows
+   and the -600px top pulls it off the visible band, so hide it and let the hero
+   stand alone. Full responsive composition = a Claude Design pass-B seam. */
+@media(max-width:900px){.spiral-art{display:none;}}
 @media(max-width:900px){.spiral-art{display:none;}}
 .sig-sub{font-size:12px;color:var(--muted);margin-top:4px;}
 .hos-coming{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-2);font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}

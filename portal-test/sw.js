@@ -7,7 +7,7 @@
    contract changes DO need one (stale HTML + fresh JS is a real mixed-version risk
    under SWR).
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v19";
+const CACHE = "elc-portal-shell-v20";
 
 const SHELL = [
   "./",
@@ -96,6 +96,12 @@ self.addEventListener("fetch", (e) => {
   const req = e.request;
   const url = new URL(req.url);
   if (req.method !== "GET" || url.origin !== self.location.origin) return;
+
+  /* Tier 0: the calendar feed (api/v1/*.ics + api/v1/*.json) is a live-data path:
+     network-only, never cached. A subscribing calendar client polls it server-side
+     and bypasses the SW entirely; this guard is for a browser-opened feed URL, so a
+     stale cached snapshot is never served in place of the current dates (P4 pass A). */
+  if (url.pathname.indexOf("/api/") !== -1) return;
 
   /* Tier 1: content-hashed fonts never change: cache first, no revalidation. */
   if (url.pathname.indexOf("/assets/fonts/") !== -1) {

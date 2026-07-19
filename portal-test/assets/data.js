@@ -58,14 +58,11 @@ window.PORTAL = {
   officeHours: null,
   // END SHEET-OWNED: officeHours
 
-  // Registration windows (issue 0031 item 4): dated strip with countdowns on
-  // home + activities. Rows disappear the day after `date`. Honest dates only.
-  // BEGIN SHEET-OWNED: regWindows
-  regWindows: [
-    { date: '2026-08-20', label: 'Sport parent info evening', sub: 'Basketball, cricket and swimming explained' },
-    { date: '2026-09-07', label: 'Sport sign-up opens', sub: 'Basketball, cricket and swimming' }
-  ],
-  // END SHEET-OWNED: regWindows
+  // Registration windows RETIRED (P4 pass A, 2026-07-19): the two sport rows moved
+  // into calendarEvents (2026-08-20 info evening, 2026-09-07 sign-up opens, both
+  // aud:'parent', href:'activities/') so the week strip and Coming up own them from
+  // one source. The legacy countdown renderer + the SHEET-OWNED regWindows fence are
+  // gone; pull-sheet.py tolerates-and-warns on any leftover regWindows sheet rows.
 
   // Booking windows (plan 2026-07-16 item 1.4): bounded "book now" rows in the same
   // strip, rendered BEFORE the countdown rows. Whole row is one link; no add-to-
@@ -336,6 +333,18 @@ window.PORTAL = {
   // 2026-07-09; Dec 5 Saturday performance confirmed). Review trail:
   // docs/sources/events-review-2026-27.md. Future live feed (0004) swaps in behind this.
   // type:'gold' MEANS key date / milestone (drives the key-dates .ics feed); 'purple' = everything else.
+  // REQUIRED aud (P4 pass A, 2026-07-19): audience taxonomy driving dot colour on the
+  // calendar grid + agenda: 'parent' (involves parents: coffee mornings, H&W, info
+  // evenings, workshops, PTCs, performances), 'child' (children-only school days: first/
+  // last day, athletics/field day, cultural celebrations), 'holiday' (no school / closed).
+  // "Registration/booking opens" folds into 'parent'. Presentation metadata, retune freely.
+  // Optional until:'YYYY-MM-DD' (inclusive last day) on multi-day rows: drives ICS DTEND
+  // (exclusive until+1) in render.js AND build-api's feed; visual surfaces stay start-anchored.
+  // Optional nopage:true = deliberately page-less (a portal page is never owed): exempts the
+  // row from the Coming-up "coming soon" pill AND the check-coming-up coverage gate. Set on
+  // children-only school days and programme rows (summer festivals). aud:'holiday' is exempt
+  // without nopage. The gate alerts on any pageless, non-holiday, non-nopage row inside its
+  // window: that alert means "build this page or flag it nopage" (deliberate, per plan §9).
   // Optional href (plan 2026-07-16 item 1.1): SITE-ROOT-relative page path
   // ('hopes-and-wishes/') renders the title as a link wherever the event appears
   // and becomes the share target. CLICK-ONLY: href never promotes an event visually
@@ -351,89 +360,91 @@ window.PORTAL = {
   // time/venue (null = "To be confirmed") · slides (null until the deck lands, then
   // { href:'https://…', tag:'PDF' }; HTTPS only or the build gate rejects).
   calendarEvents: [
-    { date: '2026-08-03', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
-    { date: '2026-08-12', type: 'purple', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
-    { date: '2026-08-14', type: 'gold',   title: 'New Family Orientation', sub: '' },
-    { date: '2026-08-17', type: 'purple', title: 'K2 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
-    { date: '2026-08-17', type: 'purple', title: 'K1 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'K1', time: null, venue: null, slides: null },
-    { date: '2026-08-18', type: 'gold',   title: 'K2 to Y6 first day of school', sub: '' },
-    { date: '2026-08-18', type: 'purple', title: 'K1 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
-    { date: '2026-08-18', type: 'purple', title: 'Y1 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'Y1', time: null, venue: null, slides: null },
-    { date: '2026-08-19', type: 'gold',   title: 'K1 first day of school', sub: '' },
-    { date: '2026-08-20', type: 'purple', title: 'Y3 to Y6 Coffee Morning for parents', sub: '', href: 'coffee-mornings/', cohort: 'Y3 to Y6', time: null, venue: null, slides: null },
-    { date: '2026-08-21', type: 'purple', title: 'Y2 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'Y2', time: null, venue: null, slides: null },
-    { date: '2026-08-24', type: 'purple', title: 'K2 Coffee Morning for parents', sub: '', href: 'coffee-mornings/', cohort: 'K2', time: null, venue: null, slides: null },
-    { date: '2026-08-25', type: 'purple', title: 'Dove Coffee Morning', sub: 'Dove Centre', href: 'coffee-mornings/', cohort: 'Dove', time: null, venue: null, slides: null },
-    { date: '2026-09-07', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2026-09-17', type: 'purple', title: 'Safeguarding parent info session', sub: '' },
-    { date: '2026-09-18', type: 'purple', title: 'International Schools Holiday', sub: '' },
-    { date: '2026-09-24', type: 'purple', title: 'Open Evening', sub: '' },
-    { date: '2026-10-01', type: 'purple', title: 'ISB parent info session', sub: '' },
-    { date: '2026-10-02', type: 'purple', title: 'Parent Teacher Conferences (Progress)', sub: 'No school for children' },
-    { date: '2026-10-05', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2026-10-08', type: 'purple', title: 'Digital Safety parent info session', sub: '' },
-    { date: '2026-10-12', type: 'purple', title: 'Holiday: ELC October mid-term break', sub: 'to 16 Oct' },
-    { date: '2026-10-23', type: 'purple', title: 'King Chulalongkorn Memorial Day', sub: 'No school for children' },
-    { date: '2026-10-29', type: 'purple', title: 'Parent Workshop: Emotional Regulation', sub: '', community: true },
-    { date: '2026-11-02', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2026-11-04', type: 'purple', title: 'ELC celebrates Loy Krathong', sub: '' },
-    { date: '2026-11-23', type: 'purple', title: 'Y1 and Y2 Holiday Pageant', sub: '' },
-    { date: '2026-11-26', type: 'purple', title: 'K1 Holiday Pageant', sub: '' },
-    { date: '2026-11-27', type: 'purple', title: 'K2 Holiday Pageant', sub: '' },
-    { date: '2026-12-05', type: 'purple', title: 'King Rama IX Birthday and National Day Performance', sub: 'Saturday' },
-    { date: '2026-12-07', type: 'purple', title: 'King Rama IX Birthday Substitution Holiday', sub: '' },
-    { date: '2026-12-11', type: 'purple', title: 'Y3 to Y6 Holiday Choir Concert', sub: '' },
-    { date: '2026-12-14', type: 'purple', title: 'Parent Teacher Conferences (Report Card)', sub: 'No school for children' },
-    { date: '2026-12-16', type: 'purple', title: 'K2 to Y6 Fun Field Day', sub: '', community: true },
-    { date: '2026-12-17', type: 'purple', title: 'K1 and Dove Centre Fun Field Day', sub: '', community: true },
-    { date: '2026-12-18', type: 'gold',   title: 'Last day of Term 1', sub: '11:30 hometime K1 and K2, 12:00 hometime Y1 to Y6' },
-    { date: '2026-12-21', type: 'purple', title: 'Holiday: Christmas and New Year', sub: 'to 9 Jan' },
-    { date: '2027-01-11', type: 'purple', title: 'No school for children (staff training day)', sub: '' },
-    { date: '2027-01-12', type: 'gold',   title: 'School resumes for Term 2', sub: '' },
-    { date: '2027-01-14', type: 'purple', title: 'Puberty Workshop', sub: 'Y5 and Y6' },
-    { date: '2027-01-18', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2027-01-28', type: 'purple', title: 'Parent Workshop: Supporting Behaviours', sub: '', community: true },
-    { date: '2027-02-01', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2027-02-08', type: 'purple', title: 'Parent Workshop: Making Learning Visible', sub: '', community: true },
-    { date: '2027-02-11', type: 'purple', title: 'Project Through the Years at ELC', sub: '' },
-    { date: '2027-02-12', type: 'purple', title: 'Project Through the Years at ELC', sub: '' },
-    { date: '2027-02-12', type: 'purple', title: 'Project in Kindergarten', sub: '' },
-    { date: '2027-02-19', type: 'purple', title: 'Parent Workshop: An Author\'s Workshop', sub: '', community: true },
-    { date: '2027-02-19', type: 'purple', title: 'Athletics Day', sub: '' },
-    { date: '2027-02-22', type: 'purple', title: 'Holiday: ELC February mid-term break', sub: 'to 26 Feb' },
-    { date: '2027-03-01', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2027-03-04', type: 'purple', title: 'Atelier explorations and learning', sub: '' },
-    { date: '2027-03-09', type: 'purple', title: 'Wycombe Abbey Head of School info session', sub: '' },
-    { date: '2027-03-11', type: 'purple', title: 'Emergent reading skill development', sub: '' },
-    { date: '2027-03-17', type: 'purple', title: 'Philosophy Circle with Y6', sub: '' },
-    { date: '2027-03-19', type: 'purple', title: 'Parent Teacher Conference (Progress)', sub: 'No school for children' },
-    { date: '2027-03-22', type: 'purple', title: 'Compass Initiatives: transitions to K1', sub: 'Morning, Atrium' },
-    { date: '2027-03-22', type: 'purple', title: 'Y3 to Y6 Drama and Music Evening', sub: '' },
-    { date: '2027-03-25', type: 'purple', title: 'Y3 to Y6 Drama and Music Evening', sub: '' },
-    { date: '2027-04-01', type: 'purple', title: 'ELC Songkran celebrations', sub: '' },
-    { date: '2027-04-01', type: 'purple', title: 'The Wonder of Y6', sub: '' },
-    { date: '2027-04-05', type: 'purple', title: 'Songkran Holiday', sub: 'to 16 Apr' },
-    { date: '2027-04-06', type: 'purple', title: 'Chakri Day Holiday', sub: '' },
-    { date: '2027-04-13', type: 'purple', title: 'Thai New Year: Songkran', sub: 'to 15 Apr' },
-    { date: '2027-04-22', type: 'purple', title: 'Math at ELC', sub: '' },
-    { date: '2027-04-26', type: 'purple', title: 'Art From The Heart exhibition and fundraising week', sub: 'to 29 Apr', community: true },
-    { date: '2027-04-26', type: 'purple', title: 'New Families and PE Families to ELC', sub: '' },
-    { date: '2027-05-03', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2027-05-04', type: 'purple', title: 'Coronation Day Holiday', sub: '' },
-    { date: '2027-05-05', type: 'purple', title: 'Little Steps, Big Futures: charting your child\'s K to 6 journey', sub: '' },
-    { date: '2027-05-06', type: 'purple', title: 'Little Steps, Big Futures: charting your child\'s K to 6 journey', sub: '' },
-    { date: '2027-05-10', type: 'purple', title: 'New Families and PE Families to ELC', sub: 'Afternoon K1 session' },
-    { date: '2027-05-13', type: 'purple', title: 'Navigating the AI Terrain', sub: '' },
-    { date: '2027-05-20', type: 'purple', title: 'Visakha Bucha Holiday', sub: '' },
-    { date: '2027-06-03', type: 'purple', title: 'The Queen\'s Birthday: normal school day', sub: '' },
-    { date: '2027-06-07', type: 'purple', title: 'Parent Social Morning', sub: '', community: true },
-    { date: '2027-06-09', type: 'purple', title: 'Wan Wai Khru: Teacher\'s Appreciation Day', sub: '' },
-    { date: '2027-06-17', type: 'gold',   title: 'Last day of the school year', sub: '' },
-    { date: '2027-06-18', type: 'purple', title: 'No school for children (staff training day)', sub: '' },
-    { date: '2027-06-22', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 1', sub: 'to 2 Jul' },
-    { date: '2027-07-06', type: 'purple', title: 'School holiday: office open', sub: 'to 23 Jul' },
-    { date: '2027-07-26', type: 'purple', title: 'ELC Summer Festival of the Arts, Session 2', sub: '26 to 27 and 29 to 30 Jul' },
-    { date: '2027-07-28', type: 'purple', title: 'King Vajiralongkorn\'s Birthday Holiday', sub: '' }
+    { date: '2026-08-03', type: 'purple', aud: 'parent', until: '2026-08-07', nopage: true, title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
+    { date: '2026-08-12', type: 'purple', aud: 'holiday', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
+    { date: '2026-08-14', type: 'gold', aud: 'parent', nopage: true,   title: 'New Family Orientation', sub: '' },
+    { date: '2026-08-17', type: 'purple', aud: 'parent', title: 'K2 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
+    { date: '2026-08-17', type: 'purple', aud: 'parent', title: 'K1 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'K1', time: null, venue: null, slides: null },
+    { date: '2026-08-18', type: 'gold', aud: 'child', nopage: true,   title: 'K2 to Y6 first day of school', sub: '' },
+    { date: '2026-08-18', type: 'purple', aud: 'parent', title: 'K1 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
+    { date: '2026-08-18', type: 'purple', aud: 'parent', title: 'Y1 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'Y1', time: null, venue: null, slides: null },
+    { date: '2026-08-19', type: 'gold', aud: 'child', nopage: true,   title: 'K1 first day of school', sub: '' },
+    { date: '2026-08-20', type: 'purple', aud: 'parent', title: 'Y3 to Y6 Coffee Morning for parents', sub: '', href: 'coffee-mornings/', cohort: 'Y3 to Y6', time: null, venue: null, slides: null },
+    { date: '2026-08-20', type: 'purple', aud: 'parent', title: 'Sport parent info evening', sub: 'Basketball, cricket and swimming explained', href: 'activities/' },
+    { date: '2026-08-21', type: 'purple', aud: 'parent', title: 'Y2 Coffee Morning', sub: '', href: 'coffee-mornings/', cohort: 'Y2', time: null, venue: null, slides: null },
+    { date: '2026-08-24', type: 'purple', aud: 'parent', title: 'K2 Coffee Morning for parents', sub: '', href: 'coffee-mornings/', cohort: 'K2', time: null, venue: null, slides: null },
+    { date: '2026-08-25', type: 'purple', aud: 'parent', title: 'Dove Coffee Morning', sub: 'Dove Centre', href: 'coffee-mornings/', cohort: 'Dove', time: null, venue: null, slides: null },
+    { date: '2026-09-07', type: 'purple', aud: 'parent', title: 'Sport sign-up opens', sub: 'Basketball, cricket and swimming', href: 'activities/' },
+    { date: '2026-09-07', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2026-09-17', type: 'purple', aud: 'parent', title: 'Safeguarding parent info session', sub: '' },
+    { date: '2026-09-18', type: 'purple', aud: 'holiday', title: 'International Schools Holiday', sub: '' },
+    { date: '2026-09-24', type: 'purple', aud: 'parent', title: 'Open Evening', sub: '' },
+    { date: '2026-10-01', type: 'purple', aud: 'parent', title: 'ISB parent info session', sub: '' },
+    { date: '2026-10-02', type: 'purple', aud: 'parent', title: 'Parent Teacher Conferences (Progress)', sub: 'No school for children' },
+    { date: '2026-10-05', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2026-10-08', type: 'purple', aud: 'parent', title: 'Digital Safety parent info session', sub: '' },
+    { date: '2026-10-12', type: 'purple', aud: 'holiday', until: '2026-10-16', title: 'Holiday: ELC October mid-term break', sub: 'to 16 Oct' },
+    { date: '2026-10-23', type: 'purple', aud: 'holiday', title: 'King Chulalongkorn Memorial Day', sub: 'No school for children' },
+    { date: '2026-10-29', type: 'purple', aud: 'parent', title: 'Parent Workshop: Emotional Regulation', sub: '', community: true },
+    { date: '2026-11-02', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2026-11-04', type: 'purple', aud: 'child', nopage: true, title: 'ELC celebrates Loy Krathong', sub: '' },
+    { date: '2026-11-23', type: 'purple', aud: 'parent', title: 'Y1 and Y2 Holiday Pageant', sub: '' },
+    { date: '2026-11-26', type: 'purple', aud: 'parent', title: 'K1 Holiday Pageant', sub: '' },
+    { date: '2026-11-27', type: 'purple', aud: 'parent', title: 'K2 Holiday Pageant', sub: '' },
+    { date: '2026-12-05', type: 'purple', aud: 'parent', title: 'King Rama IX Birthday and National Day Performance', sub: 'Saturday' },
+    { date: '2026-12-07', type: 'purple', aud: 'holiday', title: 'King Rama IX Birthday Substitution Holiday', sub: '' },
+    { date: '2026-12-11', type: 'purple', aud: 'parent', title: 'Y3 to Y6 Holiday Choir Concert', sub: '' },
+    { date: '2026-12-14', type: 'purple', aud: 'parent', title: 'Parent Teacher Conferences (Report Card)', sub: 'No school for children' },
+    { date: '2026-12-16', type: 'purple', aud: 'child', nopage: true, title: 'K2 to Y6 Fun Field Day', sub: '', community: true },
+    { date: '2026-12-17', type: 'purple', aud: 'child', nopage: true, title: 'K1 and Dove Centre Fun Field Day', sub: '', community: true },
+    { date: '2026-12-18', type: 'gold', aud: 'child', nopage: true,   title: 'Last day of Term 1', sub: '11:30 hometime K1 and K2, 12:00 hometime Y1 to Y6' },
+    { date: '2026-12-21', type: 'purple', aud: 'holiday', until: '2027-01-09', title: 'Holiday: Christmas and New Year', sub: 'to 9 Jan' },
+    { date: '2027-01-11', type: 'purple', aud: 'holiday', title: 'No school for children (staff training day)', sub: '' },
+    { date: '2027-01-12', type: 'gold', aud: 'child', nopage: true,   title: 'School resumes for Term 2', sub: '' },
+    { date: '2027-01-14', type: 'purple', aud: 'child', nopage: true, title: 'Puberty Workshop', sub: 'Y5 and Y6' },
+    { date: '2027-01-18', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-01-28', type: 'purple', aud: 'parent', title: 'Parent Workshop: Supporting Behaviours', sub: '', community: true },
+    { date: '2027-02-01', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-02-08', type: 'purple', aud: 'parent', title: 'Parent Workshop: Making Learning Visible', sub: '', community: true },
+    { date: '2027-02-11', type: 'purple', aud: 'parent', title: 'Project Through the Years at ELC', sub: '' },
+    { date: '2027-02-12', type: 'purple', aud: 'parent', title: 'Project Through the Years at ELC', sub: '' },
+    { date: '2027-02-12', type: 'purple', aud: 'parent', title: 'Project in Kindergarten', sub: '' },
+    { date: '2027-02-19', type: 'purple', aud: 'parent', title: 'Parent Workshop: An Author\'s Workshop', sub: '', community: true },
+    { date: '2027-02-19', type: 'purple', aud: 'child', nopage: true, title: 'Athletics Day', sub: '' },
+    { date: '2027-02-22', type: 'purple', aud: 'holiday', until: '2027-02-26', title: 'Holiday: ELC February mid-term break', sub: 'to 26 Feb' },
+    { date: '2027-03-01', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-03-04', type: 'purple', aud: 'parent', title: 'Atelier explorations and learning', sub: '' },
+    { date: '2027-03-09', type: 'purple', aud: 'parent', title: 'Wycombe Abbey Head of School info session', sub: '' },
+    { date: '2027-03-11', type: 'purple', aud: 'parent', title: 'Emergent reading skill development', sub: '' },
+    { date: '2027-03-17', type: 'purple', aud: 'parent', title: 'Philosophy Circle with Y6', sub: '' },
+    { date: '2027-03-19', type: 'purple', aud: 'parent', title: 'Parent Teacher Conference (Progress)', sub: 'No school for children' },
+    { date: '2027-03-22', type: 'purple', aud: 'parent', title: 'Compass Initiatives: transitions to K1', sub: 'Morning, Atrium' },
+    { date: '2027-03-22', type: 'purple', aud: 'parent', title: 'Y3 to Y6 Drama and Music Evening', sub: '' },
+    { date: '2027-03-25', type: 'purple', aud: 'parent', title: 'Y3 to Y6 Drama and Music Evening', sub: '' },
+    { date: '2027-04-01', type: 'purple', aud: 'child', nopage: true, title: 'ELC Songkran celebrations', sub: '' },
+    { date: '2027-04-01', type: 'purple', aud: 'parent', title: 'The Wonder of Y6', sub: '' },
+    { date: '2027-04-05', type: 'purple', aud: 'holiday', until: '2027-04-16', title: 'Songkran Holiday', sub: 'to 16 Apr' },
+    { date: '2027-04-06', type: 'purple', aud: 'holiday', title: 'Chakri Day Holiday', sub: '' },
+    { date: '2027-04-13', type: 'purple', aud: 'holiday', until: '2027-04-15', title: 'Thai New Year: Songkran', sub: 'to 15 Apr' },
+    { date: '2027-04-22', type: 'purple', aud: 'parent', title: 'Math at ELC', sub: '' },
+    { date: '2027-04-26', type: 'purple', aud: 'parent', until: '2027-04-29', title: 'Art From The Heart exhibition and fundraising week', sub: 'to 29 Apr', community: true },
+    { date: '2027-04-26', type: 'purple', aud: 'parent', title: 'New Families and PE Families to ELC', sub: '' },
+    { date: '2027-05-03', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-05-04', type: 'purple', aud: 'holiday', title: 'Coronation Day Holiday', sub: '' },
+    { date: '2027-05-05', type: 'purple', aud: 'parent', title: 'Little Steps, Big Futures: charting your child\'s K to 6 journey', sub: '' },
+    { date: '2027-05-06', type: 'purple', aud: 'parent', title: 'Little Steps, Big Futures: charting your child\'s K to 6 journey', sub: '' },
+    { date: '2027-05-10', type: 'purple', aud: 'parent', title: 'New Families and PE Families to ELC', sub: 'Afternoon K1 session' },
+    { date: '2027-05-13', type: 'purple', aud: 'parent', title: 'Navigating the AI Terrain', sub: '' },
+    { date: '2027-05-20', type: 'purple', aud: 'holiday', title: 'Visakha Bucha Holiday', sub: '' },
+    { date: '2027-06-03', type: 'purple', aud: 'child', nopage: true, title: 'The Queen\'s Birthday: normal school day', sub: '' },
+    { date: '2027-06-07', type: 'purple', aud: 'parent', title: 'Parent Social Morning', sub: '', community: true },
+    { date: '2027-06-09', type: 'purple', aud: 'child', nopage: true, title: 'Wan Wai Khru: Teacher\'s Appreciation Day', sub: '' },
+    { date: '2027-06-17', type: 'gold', aud: 'child', nopage: true,   title: 'Last day of the school year', sub: '' },
+    { date: '2027-06-18', type: 'purple', aud: 'holiday', title: 'No school for children (staff training day)', sub: '' },
+    { date: '2027-06-22', type: 'purple', aud: 'parent', until: '2027-07-02', nopage: true, title: 'ELC Summer Festival of the Arts, Session 1', sub: 'to 2 Jul' },
+    { date: '2027-07-06', type: 'purple', aud: 'holiday', until: '2027-07-23', title: 'School holiday: office open', sub: 'to 23 Jul' },
+    { date: '2027-07-26', type: 'purple', aud: 'parent', until: '2027-07-30', nopage: true, title: 'ELC Summer Festival of the Arts, Session 2', sub: '26 to 27 and 29 to 30 Jul' },
+    { date: '2027-07-28', type: 'purple', aud: 'holiday', title: 'King Vajiralongkorn\'s Birthday Holiday', sub: '' }
   ],
 
   // Real documents from the policies registry (docs/sources/policies-registry.md,
