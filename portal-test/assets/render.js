@@ -536,7 +536,7 @@
     var cuMap = {}, cuOrder = [];
     P.calendarEvents.forEach(function (e) {
       if (!e.date || e.date < bkkToday || e.date > cuHorizon) return;
-      var key = e.href || (' row:' + e.date + ':' + e.title);   // pageless rows never collide with an href group
+      var key = e.href || ('row:' + e.date + ':' + e.title);   // pageless rows never collide with an href group
       if (!cuMap[key]) { cuMap[key] = { rows: [], href: e.href || null }; cuOrder.push(key); }
       cuMap[key].rows.push(e);
     });
