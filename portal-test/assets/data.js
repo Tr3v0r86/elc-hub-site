@@ -96,7 +96,7 @@ window.PORTAL = {
       blurb: 'Twenty minutes with your child\'s teacher to start the year, in your words.',
       go: 'Find your class' },
     { href: 'coffee-mornings/', title: 'Coffee mornings',
-      blurb: 'Meet your year group\'s teachers and see how the year will run, over coffee.',
+      blurb: 'Meet your year group\'s coordinators and administrators, and get to know the community, over coffee.',
       go: 'Find your coffee morning' }
   ],
 
@@ -125,7 +125,7 @@ window.PORTAL = {
       sig: 'Trevor · Head of Operations and Educational Experience' },
     { from: '2026-08-17', eyebrow: 'A note from Trevor', when: 'This week',
       title: 'Come for coffee.',
-      body: 'Coffee mornings run this week, campus by campus. No agenda beyond meeting the people who will spend the year with your child, and the other families walking the same route. Times are on the calendar; just come, and come find me while you are there.',
+      body: 'Coffee mornings run this week, campus by campus. No agenda beyond meeting your year group\'s coordinators and administrators, and the other families walking the same route. Times are on the calendar; just come, and come find me while you are there.',
       cta: { href: 'coffee-mornings/', label: 'Find your coffee morning' },
       sig: 'Trevor · Head of Operations and Educational Experience' },
     { from: '2026-08-24', eyebrow: 'A note from Trevor', when: 'This week',

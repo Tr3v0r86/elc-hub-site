@@ -54,11 +54,15 @@
          motif grew from. A year as tree rings. Treatment = Claude Design lane. -->
     <img class="spiral-art" src="../assets/img/art/spiral.png" alt="" aria-hidden="true" loading="lazy" width="1600" height="1174">
     <div class="page-head">
-      <!-- Copy (P4 pass A): the year/month framing is applied; the subscribe line the CD
-           draft proposed is HELD with the subscribe UI (UC-1) and lands with it at v0.9/1.0. -->
+      <!-- Copy (round 2, Trevor): the subscription messaging is lifted up from the old closing
+           .cal-sub note. The subscribe button is a MOCK (UI held, UC-1) so the v0.8 review can
+           see the intended control; the "Coming for launch" pill keeps it honest (rule 6). It
+           turns on at v0.9/1.0 behind the source-of-truth ADR (issue 0004). CD to style the
+           coming/disabled state. -->
       <span class="eyebrow">The ELC calendar</span>
       <h1>This academic year, month by month.</h1>
-      <p class="lead">Everything ELC, in one calendar: this week, every term, and the key dates for the year. This page is always the latest.</p>
+      <p class="lead">One calendar for everything at ELC: this week, every term, and the key dates for the year. This page is always the latest, and a live subscription you can add to Apple or Google Calendar is coming for launch.</p>
+      <p class="btn-row"><button type="button" class="btn purple sm" disabled aria-disabled="true">Subscribe in Apple or Google Calendar</button> <span class="status soon">Coming for launch</span></p>
     </div>
 
     <div class="cal-wrap">
@@ -86,19 +90,14 @@
              "Later this term", today onward, per-row add-to-calendar + share. -->
         <div class="cal-agenda" id="cal-agenda"></div>
         <div class="cal-sub">
-          <!-- Calendar sharing (P4 pass A, UC-1 resolved 2026-07-19): the subscribe UI is
-               HELD this pass. The two static snapshot buttons (Download year / Key dates)
-               are RETIRED (a downloaded .ics never updates: it is the confusing path). The
-               hosted feed itself IS built (build-api emits api/v1/elc-calendar.ics, deploy-
-               asserted) so v0.9/1.0 can turn the UI on behind a source-of-truth ADR (portal-
-               hosted vs the ELC Master Google Calendar, issue 0004) on the production host,
-               not the test host whose URL dies at the 0017 cutover. Per-event add-to-calendar
-               (the agenda rows above) stays and now carries the event-page URL. Until then,
-               the calendar page + event pages are the source of truth, stated honestly. -->
-          <p class="cal-note mono">One calendar for everything at ELC. A live subscription you can add to Apple or Google Calendar, always current, is coming for launch. For now, this page is always the latest.</p>
-          <!-- Print: week / month / term ranges render from render.js (#print-list). The
-               range=month view is new (P4 pass A); the full doc_page print rebuild for
-               paper-clean pagination is a Claude Design pass-C workstream. -->
+          <!-- Calendar sharing (round 2): the subscribe messaging + MOCK button moved to the
+               page hero. The hosted feed IS built (build-api emits api/v1/elc-calendar.ics,
+               deploy-asserted); it turns on at v0.9/1.0 behind the source-of-truth ADR (portal-
+               hosted vs the ELC Master Google Calendar, issue 0004) on the production host, not
+               the test host whose URL dies at the 0017 cutover. Per-event add-to-calendar (the
+               agenda rows above) stays and carries the event-page URL. -->
+          <!-- Print: week / month / term ranges render from render.js (#print-list); the fridge
+               print is rebuilt on <doc-page> (pass C). -->
           <p class="btn-row"><a class="btn ghost sm" href="print/?range=week">Print this week</a><a class="btn ghost sm" href="print/?range=month">Print this month</a><a class="btn ghost sm" href="print/?range=term">Print the term</a></p>
         </div>
       </div>

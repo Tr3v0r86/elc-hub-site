@@ -522,7 +522,7 @@
   // Coming up band (P4 pass A, supersedes the curated featuredEvents model): AUTOMATIC
   // next-30-days feed derived from calendarEvents. Rows sharing an href are one card
   // (dates merged); a pageless row is its own card. featuredEvents survives as an
-  // editorial PRIORITY OVERLAY: a featured href sorts first and supplies title/blurb/go.
+  // editorial OVERLAY supplying title/blurb/go for a featured href (chronological sort, round 2: no reorder).
   // Card state (plan §4): linked (has a real page) -> anchor + "see details"; pageless
   // and page-owed (not holiday, not nopage) -> inert card + "coming soon" pill; holiday
   // or nopage -> inert card, no pill. Cap 4; overflow keeps the label "Full calendar +N
@@ -550,11 +550,11 @@
       var owed = !linkHref && ev.aud !== 'holiday' && !ev.nopage;   // pageless + page owed -> pill + gate
       return { dates: dates, next: dates[0], ev: ev, feat: feat, href: linkHref, owed: owed, featured: !!feat };
     }).filter(function (c) { return c.next; });
-    // Priority overlay: featured first, then most imminent.
-    cuCards.sort(function (a, b) {
-      if (a.featured !== b.featured) return a.featured ? -1 : 1;
-      return a.next < b.next ? -1 : 1;
-    });
+    // Chronological by next date (Trevor 2026-07-19, workshopping round 2): the Coming-up
+    // band reads in date order. featuredEvents still supplies title/blurb/go via the overlay,
+    // but no longer reorders the feed. ponytail: if a high-consequence event ever sinks below
+    // the cap, the pin flag (TODOS) is the fix, not a return to featured-first.
+    cuCards.sort(function (a, b) { return a.next < b.next ? -1 : 1; });
 
     var cuMore = document.getElementById('cu-more');
     if (cuMore && cuCards.length > CU_CAP) {
