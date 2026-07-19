@@ -4,7 +4,7 @@
 window.PORTAL = {
   // version: consumed by feedback.js payloads. The VISIBLE stamp (tape + footer
   // fine print) is shell-owned, hardcoded in every page's HTML: bump both.
-  version: 'v0.6',
+  version: 'v0.7',
   term: 'Term 1',
 
   // Pages still being finalised (sprint 3 D5). render.js prepends a visible
