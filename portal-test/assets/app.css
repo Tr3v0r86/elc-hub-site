@@ -221,7 +221,7 @@ nav{display:flex;align-items:center;gap:28px;}
 .cal-cell.mut{color:var(--faint);}
 .cal-cell.has{border-color:var(--rule);background:var(--paper);}
 .cal-cell.today{background:var(--red);color:var(--white-pure);font-weight:700;border-color:var(--red);}
-.cal-cell .ev{position:absolute;left:8px;bottom:7px;width:6px;height:6px;border-radius:50%;background:var(--purple);}
+.cal-cell .ev{position:absolute;left:8px;bottom:7px;width:7px;height:7px;border-radius:50%;background:var(--purple);}
 .cal-cell .ev.gold{background:var(--gold);}
 .cal-cell.today .ev{background:var(--white-pure);}
 .cal-agenda .wk{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--red);margin:2px 0 8px;}
@@ -254,16 +254,33 @@ nav{display:flex;align-items:center;gap:28px;}
 /* Calendar event taxonomy (P4 pass A, Trevor 2026-07-19): audience-based dots
    replace the old activity/opens pair. Colours = semantic tokens; supports up to
    3 dots/day via .evs. Type-class + multi-dot assignment = Claude Code lane. */
+/* Audience taxonomy = COLOUR + SHAPE (WCAG 1.4.1: never colour alone, so it holds for
+   colour-blind parents). parent ● filled circle · child ◆ diamond · holiday ○ ring
+   ("school closed" reads as empty). Shapes list every surface a dot appears on (grid,
+   popover, home week-strip, legend swatches), so the shape is taught everywhere. The
+   home strip's aud class comes from render.js (Claude Code seam, flagged); .dot / .gold
+   stay as the mono fallback until then. */
 .ev.parent{background:var(--ev-parent);}
 .ev.child{background:var(--ev-child);}
-.ev.holiday{background:var(--ev-holiday);}
+.ev.child,.legend .d.child,.day-ev .dot.child{clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);}
+.ev.holiday,.legend .d.holiday,.day-ev .dot.holiday{background:transparent;border:1.5px solid var(--ev-holiday);}
 .legend .d.parent{background:var(--ev-parent);}
 .legend .d.child{background:var(--ev-child);}
-.legend .d.holiday{background:var(--ev-holiday);}
+.day-ev .dot.parent{background:var(--ev-parent);}
+.day-ev .dot.child{background:var(--ev-child);}
+.legend.wk{margin-top:13px;gap:14px;font-size:11px;}
+.legend.wk span{white-space:nowrap;}
 .cal-cell .evs{position:absolute;left:8px;bottom:7px;display:flex;gap:3px;}
 .cal-cell .evs .ev{position:static;}
 .cal-cell.today .ev,.cal-cell.today .evs .ev{background:var(--white-pure);}
-.cal-cell.has{cursor:pointer;}
+.cal-cell.today .ev.holiday,.cal-cell.today .evs .ev.holiday{background:transparent;border-color:var(--white-pure);}
+/* Event-day button states (pass B, seam 5): the cells are real <button>s now, so give
+   them the pressed/hover treatment on top of the existing token focus ring. */
+.cal-cell.has{cursor:pointer;transition:background .12s,border-color .12s,transform .06s;}
+.cal-cell.has:hover{background:var(--purple-tint);border-color:var(--purple);}
+.cal-cell.has:active{transform:translateY(1px);background:color-mix(in srgb,var(--purple-tint) 55%,var(--purple));}
+.cal-cell.today.has:hover{background:var(--red-lift);border-color:var(--red-lift);}
+.cal-cell.today.has:active{transform:translateY(1px);background:var(--red);}
 /* P4 pass A integration (Claude Code mechanical a11y, flagged to Claude Design pass B):
    event-day cells are real <button>s now, not tabindex divs. Reset the UA button look
    back to the .cal-cell design, give a token focus ring, style the "+N" overflow, and
@@ -287,6 +304,18 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
 .cal-pop .pev .pt{font-size:13.5px;line-height:1.3;}
 .cal-pop .pev .ps{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 .cal-pop .pev:hover .pt,.cal-pop .pev:focus-visible .pt{color:var(--purple);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:2px;}
+
+/* Mobile calendar (pass B, seam 3): on a phone the 7-col grid is cramped and buries the
+   actionable agenda, so agenda comes FIRST and the day popover becomes a bottom sheet
+   (thumb-reachable, full-width) instead of the desktop anchored card. The JS still
+   positions the desktop card with inline top/left; !important flips it to a fixed sheet
+   on phones. Optional scrim + body-scroll-lock = a small Claude Code seam. */
+@media(max-width:720px){
+  .cal-col-agenda{order:-1;}
+  .cal-pop{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:auto!important;min-width:0!important;max-width:none!important;border-radius:16px 16px 0 0;border:none;border-top:3px solid var(--purple);box-shadow:var(--shadow-sheet);padding:16px 18px calc(18px + env(safe-area-inset-bottom));animation:sheet-up .22s ease;}
+  .cal-pop::before{content:"";display:block;width:38px;height:4px;border-radius:999px;background:var(--rule);margin:0 auto 12px;}
+}
+@keyframes sheet-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
 
 /* ---- bottom tab bar (mobile) ---- */
 .tabbar{display:none;}
@@ -322,7 +351,7 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
 .day .dnum{font-family:var(--serif);font-weight:400;font-size:21px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;flex:none;}
 .day-evs{display:flex;flex-direction:column;gap:8px;flex:1;}
 .day-ev{display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.28;color:var(--ink);text-decoration:none;}
-.day-ev .dot{width:6px;height:6px;border-radius:50%;background:var(--purple);flex:none;margin-top:5px;}
+.day-ev .dot{width:7px;height:7px;border-radius:50%;background:var(--purple);flex:none;margin-top:4px;}
 .day-ev .dot.gold{background:var(--gold);}
 .day-ev .lbl{border-bottom:1px solid var(--gold);padding-bottom:1px;transition:color .15s,border-color .15s;}
 .day-ev:hover .lbl{color:var(--purple);border-bottom-color:var(--purple);}

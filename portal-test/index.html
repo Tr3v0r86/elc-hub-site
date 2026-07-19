@@ -92,10 +92,40 @@
       <div class="weekstrip" id="week">
         <a class="week-fallback" href="calendar/">See this week on the calendar <span class="arw">&rarr;</span></a>
       </div>
+      <!-- Week-strip key (pass B, seam 1): the strip shares the calendar's audience
+           taxonomy so a dot means the same on both surfaces, in colour AND shape (WCAG
+           1.4.1). render.js must emit the aud class on #week dots (Code seam, flagged). -->
+      <div class="legend wk">
+        <span><span class="d parent"></span>Parents</span>
+        <span><span class="d child"></span>Children</span>
+        <span><span class="d holiday"></span>No school</span>
+      </div>
     </section>
 
     <!-- outdoor-air decision tile (sprint 3 F4); render.js removes it when PORTAL.air is null -->
     <div class="windows" id="air-tile"></div>
+
+    <!-- COMING UP band (P4 pass A): render.js fills #agenda from PORTAL.calendarEvents,
+         AUTOMATIC over the next 30 days, featured groups first then most imminent, cap 4
+         with "Full calendar +N more" on overflow. Each card auto-fills from its row; a
+         page-owed row shows a "coming soon" pill (.ev-card .soon), a nopage/holiday row
+         is inert with no pill. The coverage gate (tools/check-coming-up) fails loud when a
+         non-exempt in-window row has no page. Add-to-calendar carries the event-page URL.
+         The static card below is the JS-off anchor: timeless copy, the page owns its state. -->
+    <section class="section band" aria-labelledby="cu-h">
+      <div class="sec-eyebrow">
+        <span class="eyebrow" id="cu-h">Coming up</span>
+        <span class="ln"></span>
+        <a class="more" href="calendar/" id="cu-more">Full calendar <span class="arw">&rarr;</span></a>
+      </div>
+      <div class="ev-cards" id="agenda">
+        <a class="tile ev-card ev-link" href="hopes-and-wishes/" aria-label="Hopes and Wishes &middot; booking page">
+          <h3>Hopes and Wishes</h3>
+          <p>Twenty minutes with your child's teacher to start the year, in your words.</p>
+          <span class="go">Find your class <span class="arw">&rarr;</span></span>
+        </a>
+      </div>
+    </section>
 
     <!-- NOTE FROM TREVOR (0051: single voice for the parent-facing hard launch;
          the joint/HoS letter seam stays alive below and in issue 0007. Copy rotates
@@ -119,28 +149,6 @@
       </div>
       <img class="note-art" src="assets/img/art/thai-houses.svg" alt="" aria-hidden="true" loading="lazy" width="520" height="277">
     </div>
-
-    <!-- COMING UP band (P4 pass A): render.js fills #agenda from PORTAL.calendarEvents,
-         AUTOMATIC over the next 30 days, featured groups first then most imminent, cap 4
-         with "Full calendar +N more" on overflow. Each card auto-fills from its row; a
-         page-owed row shows a "coming soon" pill (.ev-card .soon), a nopage/holiday row
-         is inert with no pill. The coverage gate (tools/check-coming-up) fails loud when a
-         non-exempt in-window row has no page. Add-to-calendar carries the event-page URL.
-         The static card below is the JS-off anchor: timeless copy, the page owns its state. -->
-    <section class="section band" aria-labelledby="cu-h">
-      <div class="sec-eyebrow">
-        <span class="eyebrow" id="cu-h">Coming up</span>
-        <span class="ln"></span>
-        <a class="more" href="calendar/" id="cu-more">Full calendar <span class="arw">&rarr;</span></a>
-      </div>
-      <div class="ev-cards" id="agenda">
-        <a class="tile ev-card ev-link" href="hopes-and-wishes/" aria-label="Hopes and Wishes &middot; booking page">
-          <h3>Hopes and Wishes</h3>
-          <p>Twenty minutes with your child's teacher to start the year, in your words.</p>
-          <span class="go">Find your class <span class="arw">&rarr;</span></span>
-        </a>
-      </div>
-    </section>
 
     <!-- ONGOING band (slice 2). Persistent quick-links, not time-bound: ASA,
          Armonia, Sport, Policies regrouped under one heading. The slice-1 Events
@@ -206,14 +214,14 @@
       </div>
     </section>
 
-    <p class="page-note">There is more to school life than the schedule. <a href="community/">Get to know the ELC community</a>.</p>
+    <p class="page-note">The practical everyday (parking, the school day, lunches and what to send) lives in <a href="nuts-and-bolts/">the nuts and bolts</a>. And there is more to school life than the schedule: <a href="community/">get to know the ELC community</a>.</p>
   </div>
 
   <div class="foot-strip">
     <img class="foot-lockup" src="assets/img/elc-logo.svg" alt="ELC International Schools Bangkok" width="63" height="58">
     <span class="l">portal.elc.ac.th · ELC International Schools, Thong Lor</span>
     <span class="r">No login needed. Your child's learning lives in the Parent App.</span>
-    <span class="foot-links"><a class="m-only" href="help/">Quick answers</a><a class="m-only" href="new-families/">New families</a><a href="status/">Status</a><a href="privacy/">Privacy</a><a href="safeguarding/">Safeguarding</a><a href="verify/">Is it really us</a></span>
+    <span class="foot-links"><a class="m-only" href="help/">Quick answers</a><a class="m-only" href="new-families/">New families</a><a href="nuts-and-bolts/">Nuts and bolts</a><a href="status/">Status</a><a href="privacy/">Privacy</a><a href="safeguarding/">Safeguarding</a><a href="verify/">Is it really us</a></span>
     <span class="fine">v0.6 · for internal feedback, not a live school page</span>
   </div>
 

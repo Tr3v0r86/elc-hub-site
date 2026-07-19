@@ -50,6 +50,7 @@
   /* --- shadows --- */
   --shadow-quiet:0 1px 0 rgba(0,0,0,0.02);
   --shadow-hard:3px 3px 0 rgba(31,31,33,0.10);
+  --shadow-sheet:0 -10px 30px rgba(31,31,33,0.16);   /* upward soft shadow for the mobile calendar bottom-sheet (pass B) */
 
   /* --- chrome --- */
   --nav-h:70px;

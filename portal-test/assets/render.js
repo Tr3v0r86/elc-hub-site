@@ -463,9 +463,10 @@
 
   // This-week strip (#week, home; P4 pass A): the current Asia/Bangkok Mon-Sun as a
   // row of day cards, each event linking into the calendar. Replaces the retired
-  // registration-windows countdown and the JS-off fallback link. Dots are MONO here
-  // (.dot, + .gold for a key date), mirroring the calendar's key-date mark: audience
-  // colour + a home legend are a Claude Design pass-B seam, not wired this pass.
+  // registration-windows countdown and the JS-off fallback link. Dots carry the
+  // audience taxonomy (P4 pass B): the aud value IS the class (.dot.parent/.child/
+  // .holiday: colour + shape via app.css), falling back to .gold for a key date, then
+  // mono. Same 1:1 aud->class the grid uses; the home key (.legend.wk) teaches it.
   var week = document.getElementById('week');
   if (week && P.calendarEvents) {
     var wkb = weekBounds(bkkToday);
@@ -485,7 +486,7 @@
       var wEvsHtml = wEvs.length
         ? wEvs.map(function (e) {
             var h = evHref(e.href) || (ROOT + 'calendar/');
-            return '<a class="day-ev" href="' + h + '"><span class="dot' + (e.type === 'gold' ? ' gold' : '') + '"></span>' +
+            return '<a class="day-ev" href="' + h + '"><span class="dot' + (e.aud ? ' ' + e.aud : (e.type === 'gold' ? ' gold' : '')) + '"></span>' +
               '<span class="lbl">' + e.title + '</span></a>';
           }).join('')
         : '<span class="day-none">&mdash;</span>';
