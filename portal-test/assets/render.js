@@ -26,6 +26,11 @@
   var ROOT = (qRoot && qRoot.getAttribute('data-root')) || '';
   var HREF_RE = /^[a-z0-9-]+(\/[a-z0-9-]+)*\/$/;
   function evHref(h) { return (typeof h === 'string' && HREF_RE.test(h)) ? ROOT + h : null; }
+  // Escape hatch for events that live on the main school site (e.g. summer school):
+  // a validated https URL on e.ext, opened in a new tab. evHref stays internal-only
+  // (its grammar rejects schemes), so this is the only path to an off-portal link.
+  var EXT_RE = /^https:\/\/[a-z0-9.-]+(\/[^\s"'<>]*)?$/i;
+  function extUrl(e) { return (e && typeof e.ext === 'string' && EXT_RE.test(e.ext)) ? e.ext : null; }
   // Absolute form for share targets: the LINE fallback embeds the URL verbatim,
   // so a relative path there would be a dead share (plan 1.3).
   function absHref(h) { var r = evHref(h); return r ? new URL(r, location.href).href : null; }
@@ -215,6 +220,7 @@
   // href grammar (plan 1.2/1.8): bare site-relative directory paths only.
   console.assert(HREF_RE.test('hopes-and-wishes/') && HREF_RE.test('events/sports-day/'), 'href grammar: accepts dir paths');
   console.assert(!HREF_RE.test('/abs/') && !HREF_RE.test('../up/') && !HREF_RE.test('https://x.test/') && !HREF_RE.test('no-slash'), 'href grammar: rejects abs, dot-segments, schemes, non-dir');
+  console.assert(extUrl({ ext: 'https://www.elc.ac.th/summer-school/' }) && !extUrl({ ext: '/local/' }) && !extUrl({ ext: 'javascript:alert(1)' }) && !extUrl({ ext: 'https://x/" onmouseover="y' }) && !extUrl({ href: 'x/' }), 'extUrl: https only, rejects relative / js-scheme / attribute-breakout / missing');
 
   // Delegated: any .ics-btn downloads its event, named after it (issue 0032).
   document.addEventListener('click', function (e) {
@@ -326,10 +332,11 @@
         commRows.map(function (e) {
           var d = new Date(e.date + 'T00:00:00Z');
           var mHref = evHref(e.href);   // plan 1.2: same linked-title rule as the agendas
+          var mExt = mHref ? null : extUrl(e);   // else, a school-site link (round 4)
           var mInner = '<div class="et">' + e.title + '</div>' +
             (e.sub ? '<div class="es">' + e.sub + '</div>' : '');
           return '<div class="ev-row"><span class="dte">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
-            '<div class="ev-main">' + (mHref ? '<a class="ev-link" href="' + mHref + '" aria-label="' + escAttr(e.title) + ' · event page">' + mInner + '</a>' : mInner) + '</div>' +
+            '<div class="ev-main">' + ((mHref || mExt) ? '<a class="ev-link" href="' + (mHref || mExt) + '"' + (mExt ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' + escAttr(e.title) + (mExt ? ' · on the school site' : ' · event page') + '">' + mInner + '</a>' : mInner) + '</div>' +
             addBtns(e.date, e.title, e.sub, e.href, e.until) + '</div>';
         }).join('');
     }
@@ -485,8 +492,9 @@
       var wDow = WK_DOW[wi] + (wIsToday ? ' &middot; Today' : '');
       var wEvsHtml = wEvs.length
         ? wEvs.map(function (e) {
-            var h = evHref(e.href) || (ROOT + 'calendar/');
-            return '<a class="day-ev" href="' + h + '"><span class="dot' + (e.aud ? ' ' + e.aud : (e.type === 'gold' ? ' gold' : '')) + '"></span>' +
+            var wxt = evHref(e.href) ? null : extUrl(e);
+            var h = evHref(e.href) || wxt || (ROOT + 'calendar/');
+            return '<a class="day-ev" href="' + h + '"' + (wxt ? ' target="_blank" rel="noopener"' : '') + '><span class="dot' + (e.aud ? ' ' + e.aud : (e.type === 'gold' ? ' gold' : '')) + '"></span>' +
               '<span class="lbl">' + e.title + '</span></a>';
           }).join('')
         : '<span class="day-none"></span>';
@@ -547,8 +555,9 @@
       var ev = g.rows[0];
       var feat = g.href ? featBy[g.href] : null;
       var linkHref = g.href ? evHref(g.href) : null;   // valid, on-disk internal page?
-      var owed = !linkHref && ev.aud !== 'holiday' && !ev.nopage;   // pageless + page owed -> pill + gate
-      return { dates: dates, next: dates[0], ev: ev, feat: feat, href: linkHref, owed: owed, featured: !!feat };
+      var extLink = linkHref ? null : extUrl(ev);       // else, an external school-site link (round 4)
+      var owed = !linkHref && !extLink && ev.aud !== 'holiday' && !ev.nopage;   // pageless + page owed -> pill + gate
+      return { dates: dates, next: dates[0], ev: ev, feat: feat, href: linkHref || extLink, ext: !!extLink, owed: owed, featured: !!feat };
     }).filter(function (c) { return c.next; });
     // Chronological by next date (Trevor 2026-07-19, workshopping round 2): the Coming-up
     // band reads in date order. featuredEvents still supplies title/blurb/go via the overlay,
@@ -571,9 +580,9 @@
         var when = '<span class="when">' + cuLabel(c.dates, true) + '</span>';
         var body = blurb ? '<p>' + blurb + '</p>' : '';
         if (c.href) {
-          var go = c.feat ? c.feat.go : 'See details';
-          return '<a class="tile ev-card ev-link" href="' + c.href + '" aria-label="' +
-            escAttr(title) + ', ' + cuLabel(c.dates, false) + ' · event page">' +
+          var go = c.feat ? c.feat.go : (c.ext ? 'On the school site' : 'See details');
+          return '<a class="tile ev-card ev-link" href="' + c.href + '"' + (c.ext ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' +
+            escAttr(title) + ', ' + cuLabel(c.dates, false) + (c.ext ? ' · on the school site' : ' · event page') + '">' +
             when + '<h3>' + title + '</h3>' + body +
             '<span class="go">' + go + ' <span class="arw">&rarr;</span></span></a>';
         }
@@ -606,12 +615,13 @@
       if (d < today0) return;          /* past events drop off the agenda */
       if (e.date > tEnd) { beyondTerm++; return; }   /* next term and beyond: counted, not listed here */
       var cHref = evHref(e.href);   // plan 1.2/1.3: linked title + the event page becomes the share target
+      var cExt = cHref ? null : extUrl(e);   // events that live on the main school site (round 4)
       var inner = '<div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div>';
       buckets[agendaBucket(e.date, bkkToday)].rows.push(
         '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
         DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
-        '<div class="ev-main">' + (cHref ? '<a class="ev-link" href="' + cHref + '" aria-label="' + escAttr(e.title) + ' · event page">' + inner + '</a>' : inner) + '</div>' +
-        addBtns(e.date, e.title, e.sub, e.href, e.until) + shareBtn(cHref ? absHref(e.href) : shareUrl, e.title) + '</div>'
+        '<div class="ev-main">' + ((cHref || cExt) ? '<a class="ev-link" href="' + (cHref || cExt) + '"' + (cExt ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' + escAttr(e.title) + (cExt ? ' · on the school site' : ' · event page') + '">' + inner + '</a>' : inner) + '</div>' +
+        addBtns(e.date, e.title, e.sub, e.href, e.until) + shareBtn(cHref ? absHref(e.href) : (cExt || shareUrl), e.title) + '</div>'
       );
     });
     /* Keep the agenda column readable: cap "Later this term" at 12 rows; fold the cap

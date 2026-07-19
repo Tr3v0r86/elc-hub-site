@@ -9,7 +9,7 @@ UID:20260803-elc-summer-festival-of-the-arts-session-2@portal.elc.ac.th
 DTSTAMP:20260803T000000Z
 DTSTART;VALUE=DATE:20260803
 DTEND;VALUE=DATE:20260808
-SUMMARY:ELC Summer Festival of the Arts\, Session 2\, to 7 Aug
+SUMMARY:ELC Summer Festival of the Arts\, Session 2\, A week of making and performing\, to 7 Aug.
 URL:https://elc-hub.com/portal-test/calendar/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/calendar/
 END:VEVENT
@@ -27,9 +27,9 @@ UID:20260814-new-family-orientation@portal.elc.ac.th
 DTSTAMP:20260814T000000Z
 DTSTART;VALUE=DATE:20260814
 DTEND;VALUE=DATE:20260815
-SUMMARY:New Family Orientation
-URL:https://elc-hub.com/portal-test/calendar/
-DESCRIPTION:Details: https://elc-hub.com/portal-test/calendar/
+SUMMARY:New Family Orientation\, A warm welcome for families new to ELC.
+URL:https://elc-hub.com/portal-test/new-family-orientation/
+DESCRIPTION:Details: https://elc-hub.com/portal-test/new-family-orientation/
 END:VEVENT
 BEGIN:VEVENT
 UID:20260817-k2-to-y6-hopes-and-wishes-meetings@portal.elc.ac.th

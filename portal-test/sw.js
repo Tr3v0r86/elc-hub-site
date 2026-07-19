@@ -19,6 +19,7 @@ const SHELL = [
   "community/giving/",
   "help/",
   "new-families/",
+  "new-family-orientation/",
   "what-happens-next/",
   "status/",
   "privacy/",

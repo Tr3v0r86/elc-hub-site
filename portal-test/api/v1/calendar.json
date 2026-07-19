@@ -1,6 +1,6 @@
 {
   "term": "Term 1",
-  "generated": "2026-07-19T22:35:55.874Z",
+  "generated": "2026-07-19T22:46:55.228Z",
   "events": [
     {
       "date": "2026-08-03",
@@ -8,8 +8,9 @@
       "aud": "parent",
       "until": "2026-08-07",
       "nopage": true,
+      "ext": "https://www.elc.ac.th/summer-school/",
       "title": "ELC Summer Festival of the Arts, Session 2",
-      "sub": "to 7 Aug"
+      "sub": "A week of making and performing, to 7 Aug."
     },
     {
       "date": "2026-08-12",
@@ -22,9 +23,8 @@
       "date": "2026-08-14",
       "type": "gold",
       "aud": "parent",
-      "nopage": true,
       "title": "New Family Orientation",
-      "sub": ""
+      "sub": "A warm welcome for families new to ELC."
     },
     {
       "date": "2026-08-17",
@@ -636,6 +636,7 @@
       "aud": "parent",
       "until": "2027-07-02",
       "nopage": true,
+      "ext": "https://www.elc.ac.th/summer-school/",
       "title": "ELC Summer Festival of the Arts, Session 1",
       "sub": "to 2 Jul"
     },
@@ -653,6 +654,7 @@
       "aud": "parent",
       "until": "2027-07-30",
       "nopage": true,
+      "ext": "https://www.elc.ac.th/summer-school/",
       "title": "ELC Summer Festival of the Arts, Session 2",
       "sub": "26 to 27 and 29 to 30 Jul"
     },

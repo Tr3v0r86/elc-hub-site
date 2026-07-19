@@ -360,9 +360,9 @@ window.PORTAL = {
   // time/venue (null = "To be confirmed") · slides (null until the deck lands, then
   // { href:'https://…', tag:'PDF' }; HTTPS only or the build gate rejects).
   calendarEvents: [
-    { date: '2026-08-03', type: 'purple', aud: 'parent', until: '2026-08-07', nopage: true, title: 'ELC Summer Festival of the Arts, Session 2', sub: 'to 7 Aug' },
+    { date: '2026-08-03', type: 'purple', aud: 'parent', until: '2026-08-07', nopage: true, ext: 'https://www.elc.ac.th/summer-school/', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'A week of making and performing, to 7 Aug.' },
     { date: '2026-08-12', type: 'purple', aud: 'holiday', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
-    { date: '2026-08-14', type: 'gold', aud: 'parent', nopage: true,   title: 'New Family Orientation', sub: '' },
+    { date: '2026-08-14', type: 'gold', aud: 'parent', href: 'new-family-orientation/', title: 'New Family Orientation', sub: 'A warm welcome for families new to ELC.' },
     { date: '2026-08-17', type: 'purple', aud: 'parent', title: 'K2 to Y6 Hopes and Wishes meetings', sub: '', href: 'hopes-and-wishes/' },
     { date: '2026-08-17', type: 'purple', aud: 'parent', title: 'K1 Information Session', sub: '', href: 'coffee-mornings/', cohort: 'K1', time: null, venue: null, slides: null },
     { date: '2026-08-18', type: 'gold', aud: 'child', nopage: true,   title: 'K2 to Y6 first day of school', sub: '' },
@@ -441,9 +441,9 @@ window.PORTAL = {
     { date: '2027-06-09', type: 'purple', aud: 'child', nopage: true, title: 'Wan Wai Khru: Teacher\'s Appreciation Day', sub: '' },
     { date: '2027-06-17', type: 'gold', aud: 'child', nopage: true,   title: 'Last day of the school year', sub: '' },
     { date: '2027-06-18', type: 'purple', aud: 'holiday', title: 'No school for children (staff training day)', sub: '' },
-    { date: '2027-06-22', type: 'purple', aud: 'parent', until: '2027-07-02', nopage: true, title: 'ELC Summer Festival of the Arts, Session 1', sub: 'to 2 Jul' },
+    { date: '2027-06-22', type: 'purple', aud: 'parent', until: '2027-07-02', nopage: true, ext: 'https://www.elc.ac.th/summer-school/', title: 'ELC Summer Festival of the Arts, Session 1', sub: 'to 2 Jul' },
     { date: '2027-07-06', type: 'purple', aud: 'holiday', until: '2027-07-23', title: 'School holiday: office open', sub: 'to 23 Jul' },
-    { date: '2027-07-26', type: 'purple', aud: 'parent', until: '2027-07-30', nopage: true, title: 'ELC Summer Festival of the Arts, Session 2', sub: '26 to 27 and 29 to 30 Jul' },
+    { date: '2027-07-26', type: 'purple', aud: 'parent', until: '2027-07-30', nopage: true, ext: 'https://www.elc.ac.th/summer-school/', title: 'ELC Summer Festival of the Arts, Session 2', sub: '26 to 27 and 29 to 30 Jul' },
     { date: '2027-07-28', type: 'purple', aud: 'holiday', title: 'King Vajiralongkorn\'s Birthday Holiday', sub: '' }
   ],
 
