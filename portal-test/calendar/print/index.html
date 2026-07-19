@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="../../assets/tokens.css">
 <link rel="stylesheet" href="../../assets/app.css">
 <link rel="stylesheet" href="../../assets/print.css" media="print">
+<style>doc-page:not(:defined){visibility:hidden}</style>
 </head>
 <body>
   <div class="topline"></div>
@@ -50,24 +51,43 @@
 
   <div class="crumb"><a href="../../">This week</a> &nbsp;/&nbsp; <a href="../">Calendar</a> &nbsp;/&nbsp; Print</div>
 
-  <main data-page="calendar-print" class="wrap sub">
-    <noscript><p>This page fills itself from the live calendar and needs JavaScript. The calendar page has the same dates.</p></noscript>
-    <div class="page-head">
-      <span class="eyebrow">The calendar on paper</span>
-      <h1>ELC on the fridge</h1>
-      <p class="lead">Every date for the range you pick, on one dense sheet. Print it and stick it where the family plans its week.</p>
+  <main data-page="calendar-print">
+    <div class="wrap sub no-print">
+      <div class="page-head">
+        <span class="eyebrow">The calendar on paper</span>
+        <h1>ELC on the fridge</h1>
+        <p class="lead">Every date for the range you pick, on one dense sheet. Print it and stick it where the family plans its week.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn ghost sm" href="?range=week">This week</a>
+        <a class="btn ghost sm" href="?range=term">The whole term</a>
+        <button type="button" class="btn purple sm" onclick="window.print()">Print this <span class="arw">&darr;</span></button>
+      </div>
     </div>
 
-    <div class="btn-row">
-      <a class="btn ghost sm" href="?range=week">This week</a>
-      <a class="btn ghost sm" href="?range=term">The whole term</a>
-      <button type="button" class="btn purple sm" onclick="window.print()">Print this <span class="arw">&darr;</span></button>
+    <!-- The printable sheet (pass C, opt A): <doc-page> (assets/doc-page.js) owns A4 paper
+         geometry and REPEATS the masthead + footer on every printed page. render.js fills
+         #print-list and #print-range-label; the component's MutationObserver re-measures
+         the slots when they change. .fridge-stage confines the sheet width to a contained
+         horizontal scroll on small screens (screen only, never in print, where an
+         overflow ancestor would clip pagination). -->
+    <div class="fridge-stage">
+      <doc-page size="a4" margin="12mm" class="fridge-doc">
+        <div slot="header" class="fridge-head">
+          <img class="fridge-mark" src="../../assets/img/elc-logo.svg" alt="" width="150" height="139">
+          <div>
+            <div class="fridge-kicker">The ELC calendar</div>
+            <div class="fridge-range" id="print-range-label"></div>
+          </div>
+        </div>
+        <div slot="footer" class="fridge-foot">portal.elc.ac.th/calendar &middot; the live calendar is always current online &middot; printed from ELC Portal</div>
+        <div id="print-list"><p class="fridge-empty">This sheet fills itself from the live calendar and needs JavaScript. The <a href="../">calendar page</a> has the same dates.</p></div>
+      </doc-page>
     </div>
 
-    <p id="print-range-label" class="page-note"></p>
-    <div id="print-list"></div>
-
-    <p class="page-note">This sheet is a snapshot of today's dates. When the calendar changes, print a fresh one: the live list is always on the <a href="../">calendar page</a>.</p>
+    <div class="wrap sub no-print">
+      <p class="page-note">This sheet is a snapshot of today's dates. When the calendar changes, print a fresh one: the live list is always on the <a href="../">calendar page</a>.</p>
+    </div>
   </main>
 
   <div class="foot-strip">
@@ -86,6 +106,7 @@
   </div>
 
   <script src="../../assets/data.js"></script>
+  <script src="../../assets/doc-page.js"></script>
   <script src="../../assets/render.js"></script>
   <script src="../../assets/contour.js"></script>
   <script src="../../assets/feedback.js"></script>

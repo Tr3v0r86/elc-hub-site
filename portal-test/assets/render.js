@@ -489,7 +489,7 @@
             return '<a class="day-ev" href="' + h + '"><span class="dot' + (e.aud ? ' ' + e.aud : (e.type === 'gold' ? ' gold' : '')) + '"></span>' +
               '<span class="lbl">' + e.title + '</span></a>';
           }).join('')
-        : '<span class="day-none">&mdash;</span>';
+        : '<span class="day-none"></span>';
       wkCells.push('<div class="day' + (wIsToday ? ' today' : '') + '"><div class="day-top">' +
         '<span class="dow">' + wDow + '</span><span class="dnum">' + wd.getUTCDate() + '</span></div>' +
         '<div class="day-evs">' + wEvsHtml + '</div></div>');

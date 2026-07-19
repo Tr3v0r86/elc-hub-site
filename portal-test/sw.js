@@ -47,6 +47,7 @@ const SHELL = [
   "assets/print.css",
   "assets/fonts.css",
   "assets/data.js",
+  "assets/doc-page.js",
   "assets/render.js",
   "assets/contour.js",
   "assets/feedback.js",

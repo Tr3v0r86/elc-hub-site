@@ -1,51 +1,29 @@
-/* Shared print stylesheet (sprint 3 D3/F2). Linked media="print" on the gate
-   card (gate-card/) and the fridge calendar (calendar/print/), so it only ever
-   applies on paper: there are no screen rules in this file.
-
-   Print is deliberately plain black on white. This is physical ink on a sheet a
-   family sticks on the fridge or hands to a driver at the gate, not a brand
-   surface, so the ground is literal white and the ink is literal black rather
-   than the paper/ink tokens. Tokens are used only where a face still matters on
-   paper (the mono date column). */
+/* Shared print stylesheet (sprint 3 D3/F2; fridge = <doc-page> as of pass C opt A). Linked
+   media="print" on the gate card (gate-card/) and the fridge calendar (calendar/print/).
+   The fridge sheet's paper geometry + per-page repeating masthead/footer are owned by
+   <doc-page> (assets/doc-page.js); this file only clears the portal chrome around it so the
+   sheet prints alone, and keeps the gate-card's cut-out card rules. Plain black ink on
+   white: a fridge sheet, a card at the gate, not a brand surface. */
 @media print {
-  /* Drop screen chrome and anything interactive: none of it belongs on paper
-     and the background art just wastes ink. */
+  /* Drop screen chrome and anything interactive; the background art just wastes ink. */
   header, nav, .tabbar, .foot-strip, .crumb, .topline, #topo,
-  button, .btn, .btn-row,
+  button, .btn, .btn-row, .no-print,
   #pw-pill, #fb-pill, .status-banner, .draft-chip {
     display: none !important;
   }
-
-  @page { margin: 12mm; }
+  [data-page="calendar-print"] .page-head,
+  [data-page="calendar-print"] .page-note,
+  noscript { display: none !important; }
 
   html, body { background: white; color: black; }
 
-  /* The gate card (#pocket-card on gate-card/) prints as one pocket-sized card,
-     A6 landscape-ish, bordered so it can be cut out and carried. Keep it whole
-     on a single page. */
+  /* Gate card (#pocket-card on gate-card/): one pocket-sized card kept whole on a single
+     page, bordered so it can be cut out and carried. Unchanged from D3. */
   #pocket-card {
-    width: 148mm;
-    max-width: 100%;
-    border: 1pt solid black;
-    border-radius: 0;
-    padding: 8mm;
-    margin: 0;
-    background: white;
-    color: black;
-    box-shadow: none;
+    width: 148mm; max-width: 100%;
+    border: 1pt solid black; border-radius: 0;
+    padding: 8mm; margin: 0;
+    background: white; color: black; box-shadow: none;
     page-break-inside: avoid;
   }
-
-  /* The fridge list (#print-list on calendar/print/) prints dense: tight rows,
-     a hairline rule between them, no decoration. */
-  #print-list .ev-row {
-    display: flex;
-    gap: 4mm;
-    padding: 1.4mm 0;
-    border-bottom: 0.3pt solid black;
-    page-break-inside: avoid;
-  }
-  #print-list .dte { font-family: var(--mono, monospace); white-space: nowrap; }
-  #print-list .et { font-weight: 600; }
-  #print-list .es { font-size: 0.85em; }
 }

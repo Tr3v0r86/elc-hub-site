@@ -357,6 +357,12 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
 .day-ev:hover .lbl{color:var(--purple);border-bottom-color:var(--purple);}
 .day-ev:focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:2px;}
 .day-none{font-family:var(--mono);font-size:13px;color:var(--faint);}
+/* Empty-day marker (pass C, CD call): keep the em-dash, but own it in CSS as a
+   :empty::before so there is no text entity in the JS for the redact gate to miss.
+   :empty bridges safely: it stays inert while render.js still emits the &mdash; text,
+   and lights up the instant render.js emits an empty <span class="day-none"></span>
+   (Code seam, flagged). House-clean, gate-proof, design-owned. */
+.day-none:empty::before{content:"\2014";}
 .day.today{border-top:2px solid var(--purple);background:var(--purple-tint);}
 .day.today .dow{color:var(--purple);}
 @media(max-width:820px){
@@ -565,6 +571,44 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 }
 
 /* ---- content visible by default (no blank-on-load); motion kept out for calm ---- */
+
+/* Critical-info callout (pass C sweep 1): a scannable block for the few moments a parent
+   is rushed or scared, the emergency hotlines on safeguarding/, the decisive "stop" on
+   verify/. Reuses the card language with the red alert accent; numbers are tel: links so a
+   phone taps to call. Tokens only. */
+.keys{background:var(--white);border:1px solid var(--rule);border-top:2px solid var(--red);border-radius:10px;padding:4px 20px;margin:20px 0;}
+.key-row{display:flex;align-items:baseline;gap:16px;padding:13px 2px;border-bottom:1px solid var(--rule-2);}
+.key-row:last-child{border-bottom:none;}
+.keys .key-num{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;font-size:23px;color:var(--red);flex:none;min-width:66px;text-decoration:none;}
+a.key-num:hover,a.key-num:focus-visible{text-decoration:underline;text-underline-offset:3px;}
+.key-lbl{font-size:14px;line-height:1.4;color:var(--charcoal);}
+.keys.stop{background:var(--red-tint);padding:16px 20px;}
+.keys.stop p{margin:0;font-size:15px;line-height:1.5;color:var(--ink);}
+.keys.stop strong{color:var(--red);}
+
+/* Fridge sheet (calendar/print, pass C opt A): <doc-page> (assets/doc-page.js) owns A4
+   pagination and repeats the masthead/footer on every printed page; these rules style the
+   slots + the dated list and apply to the on-screen preview and the paper alike. The host
+   is dialled back from the starter's full-viewport desk to a contained preview band. */
+.fridge-stage{margin:22px 0 8px;}
+@media screen{.fridge-stage{overflow-x:auto;-webkit-overflow-scrolling:touch;}}
+.fridge-doc{min-height:auto;padding:30px 24px;}
+.fridge-head{display:flex;align-items:center;gap:14px;padding-bottom:11px;border-bottom:1.5px solid var(--ink);}
+.fridge-mark{width:44px;height:auto;flex:none;}
+.fridge-kicker{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.02;color:var(--ink);}
+.fridge-range{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-top:4px;white-space:nowrap;}
+.fridge-foot{font-family:var(--mono);font-size:10px;letter-spacing:0.03em;color:var(--muted);padding-top:9px;border-top:1.5px solid var(--ink);}
+.fridge-doc #print-list{padding-top:4px;}
+.fridge-doc .ev-row{display:flex;gap:14px;padding:7px 2px;border-bottom:1px solid var(--rule);align-items:baseline;}
+.fridge-doc .ev-row:last-child{border-bottom:none;}
+.fridge-doc .dte{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700;font-size:12px;color:var(--ink);min-width:96px;flex:none;}
+.fridge-doc .dte.today{color:var(--red);}
+.fridge-doc .ev-main{flex:1;min-width:0;}
+.fridge-doc .et{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;}
+.fridge-doc .es{font-family:var(--mono);font-size:11px;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.fridge-doc .fridge-empty{font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 2px;}
+
+.print-only{display:none;}
 
 /* ---- print / PDF: clean flow, drop the fixed contour field, keep colours ---- */
 @media print{
