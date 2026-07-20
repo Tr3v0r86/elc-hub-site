@@ -2,10 +2,24 @@
    Pages render these islands via assets/render.js. Statuses are honest
    (rule 6): football live, the rest open 7 Sep. */
 window.PORTAL = {
-  // version: consumed by feedback.js payloads. The VISIBLE stamp (tape + footer
-  // fine print) is shell-owned, hardcoded in every page's HTML: bump both.
+  // version + build: render.js stamps these into the footer fine print (.fine) on
+  // every page, so the stamp refreshes the instant this network-first file lands
+  // (0061): one edit here restamps the whole site, the reviewer's tell that
+  // update-propagation worked. feedback.js payloads also read version. The MASTHEAD
+  // tape (.tape) stays shell-owned, hardcoded per page: bump it in the v0.8 stamp
+  // pass. build = deploy date of the current shell (honest, not the viewer's clock).
   version: 'v0.7',
+  build: '20 Jul',
   term: 'Term 1',
+
+  // Academic-year bounds for the calendar print "academic year" range (0058). A full
+  // span that brackets the school year's dated events (first 3 Aug 2026, last 28 Jul
+  // 2027), NOT a claim about the exact first/last school day: those live in
+  // calendarEvents ("K2 to Y6 first day of school" 18 Aug, "Last day of the school
+  // year" 17 Jun). Date authority = the City School calendar SSOT
+  // (docs/sources/calendars.md); widen if events ever fall outside. Used full-span,
+  // never today-anchored.
+  academicYear: { start: '2026-08-01', end: '2027-07-31' },
 
   // Pages still being finalised (sprint 3 D5). render.js prepends a visible
   // "We are finalising this page" chip on any page whose <main data-page> key is
@@ -115,7 +129,7 @@ window.PORTAL = {
   notes: [
     { from: '2026-07-01', eyebrow: 'A note from Trevor', when: 'This month · August',
       title: 'Welcome to a new year.',
-      body: 'This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and I am building it in the open. Tell me what you need with the feedback button, and watch this page grow around your answers.',
+      body: 'ELC Portal is new this year: one place for everything your family does with us beyond the classroom. We are building it not just for our community, but with you. Just as we shape the children\'s learning around relationships and listening, this page grows from what families tell us they need. So tell us, with the feedback button, and together we will make something that fits our school and our community.',
       sig: 'Trevor · Head of Operations and Educational Experience' },
     // Optional cta (plan 1.5): renders as one link after the body, gone after `until`.
     { from: '2026-08-10', eyebrow: 'A note from Trevor', when: 'This week',

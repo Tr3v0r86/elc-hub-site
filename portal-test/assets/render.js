@@ -193,6 +193,17 @@
     return '<button type="button" class="add-btn share-btn" data-url="' + escAttr(url) + '" data-title="' + escAttr(title) + '"' +
       ' title="Share" aria-label="Share ' + escAttr(title) + '">' + S_MARK + '</button>';
   }
+  // Add/share cluster (0055): on a phone the three squares (Google, Apple, share) are
+  // one control that taps open to reveal them; desktop shows all three inline (toggle
+  // hidden). CC wires the toggle + a first-pass look; CD refines the expanded control
+  // (rule 7). The inner addBtns()/shareBtn() wiring + .ics filenames are unchanged.
+  var PLUS_MARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 5v14M5 12h14"/></svg>';
+  function calActions(date, title, sub, href, until, shareTarget) {
+    return '<span class="cal-actions">' +
+      '<button type="button" class="cal-actions-toggle" aria-expanded="false" aria-label="Add or share ' + escAttr(title) + '">' +
+      PLUS_MARK + '<span class="lbl">Add / share</span></button>' +
+      '<span class="cal-actions-menu">' + addBtns(date, title, sub, href, until) + shareBtn(shareTarget, title) + '</span></span>';
+  }
   // Self-check (silent on pass): comma escaping, all-day start/end, multi-event, filename.
   console.assert(toICS({ date: '2026-08-03', title: 'Fest, Session 2', sub: 'to 7 Aug' }).indexOf('SUMMARY:Fest\\, Session 2\\, to 7 Aug') > -1, 'toICS: comma escape');
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DTSTART;VALUE=DATE:20260803') > -1, 'toICS: all-day start');
@@ -251,6 +262,17 @@
     var title = btn.getAttribute('data-title') || document.title;
     if (navigator.share) { navigator.share({ title: title, url: url }).catch(function () {}); }
     else { window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(url), '_blank', 'noopener'); }
+  });
+
+  // Add/share cluster toggle (0055): reveal the three controls on mobile. Delegated so it
+  // covers every agenda row; the inner add/share buttons keep their own handlers above.
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('.cal-actions-toggle');
+    if (!t) return;
+    var wrap = t.closest('.cal-actions');
+    if (!wrap) return;
+    var open = wrap.classList.toggle('open');
+    t.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 
   // Draft chip (sprint 3 D5): a page still being finalised gets a visible marker at
@@ -621,7 +643,7 @@
         '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
         DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
         '<div class="ev-main">' + ((cHref || cExt) ? '<a class="ev-link" href="' + (cHref || cExt) + '"' + (cExt ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' + escAttr(e.title) + (cExt ? ' · on the school site' : ' · event page') + '">' + inner + '</a>' : inner) + '</div>' +
-        addBtns(e.date, e.title, e.sub, e.href, e.until) + shareBtn(cHref ? absHref(e.href) : (cExt || shareUrl), e.title) + '</div>'
+        calActions(e.date, e.title, e.sub, e.href, e.until, cHref ? absHref(e.href) : (cExt || shareUrl)) + '</div>'
       );
     });
     /* Keep the agenda column readable: cap "Later this term" at 12 rows; fold the cap
@@ -662,6 +684,7 @@
 
     function closePop(returnFocus) {
       if (pop) { pop.remove(); pop = null; }
+      document.body.classList.remove('sheet-open');   // 0057: restore the floating controls
       if (returnFocus && popCell) popCell.focus();
       popCell = null;
     }
@@ -691,6 +714,11 @@
       pop.style.left = left + 'px';
       pop.style.top = (cell.offsetTop + cell.offsetHeight + 4) + 'px';
       popCell = cell;
+      // 0057: on mobile the popover is a bottom sheet, and the fixed feedback FAB +
+      // project-window pill float over it (z-index). Flag the open sheet so app.css
+      // hides those controls under 720px; desktop (anchored card) is unaffected because
+      // the hide rule is mobile-scoped.
+      document.body.classList.add('sheet-open');
       // Move focus into the dialog (tabindex -1): a screen reader announces the date
       // label, and the user tabs through the event links, then Esc returns to the cell.
       // Focusing the container (not the first row) is robust when a row is a pageless
@@ -718,10 +746,19 @@
         }
         var dots = evs.slice(0, 3).map(function (e) { return '<span class="' + dotClass(e) + '"></span>'; }).join('');
         var more = evs.length > 3 ? '<span class="more">+' + (evs.length - 3) + '</span>' : '';
+        // Mobile presence marker (0056): a multi-event day collapses in the grid to one
+        // neutral dot + a count, because the shaped-dot taxonomy is too fine to read in a
+        // phone-width cell. Emitted for every viewport; app.css shows the taxonomy on
+        // desktop and swaps to this marker under 720px (a CSS :has() gate, so desktop
+        // markup is untouched). Single-event days keep their one shaped dot on both. Both
+        // nodes are aria-hidden: the button aria-label already states the event count.
+        var presence = evs.length > 1
+          ? '<span class="pdot" aria-hidden="true"></span><span class="pcount" aria-hidden="true">·' + evs.length + '</span>'
+          : '';
         var label = num + ' ' + CAL_MONTHS[view.m] + ', ' + evs.length + (evs.length === 1 ? ' event' : ' events');
         html += '<button type="button" class="cal-cell has' + (isToday ? ' today' : '') +
           '" data-iso="' + key + '" aria-haspopup="dialog" aria-label="' + escAttr(label) + '">' +
-          num + '<span class="evs">' + dots + more + '</span></button>';
+          num + '<span class="evs">' + dots + more + presence + '</span></button>';
       }
       calGrid.innerHTML = html;
     }
@@ -767,22 +804,35 @@
     renderMonth();
   }
 
-  // Fridge print (calendar/print/, sprint 3 F2): #print-list. ?range=week|month|term
-  // (default week). week = this Bangkok Mon-Sun; month = today through month-end (P4
-  // pass A); term = today through the next term close (else 120 days). Dense date rows;
-  // an empty range says so plainly. Print page rebuild (doc_page) = pass C.
+  // Fridge print (calendar/print/, sprint 3 F2; ranges reworked 0058): #print-list.
+  // ?range=month|term|year|custom (default month; week retired). month = today through
+  // month-end; term = today through the next term close (else 120 days); year = the
+  // FULL academic year from PORTAL.academicYear (NOT today-anchored); custom = the
+  // ?from/?to date pair. Dense date rows; an empty range says so plainly. Print page
+  // rebuild (doc_page) = pass C.
   var printList = document.getElementById('print-list');
   if (printList && P.calendarEvents) {
-    var pParam = new URLSearchParams(location.search).get('range');
-    var pRange = (pParam === 'term' || pParam === 'month') ? pParam : 'week';
+    var pq = new URLSearchParams(location.search);
+    var pParam = pq.get('range');
+    var pRange = (pParam === 'term' || pParam === 'year' || pParam === 'custom') ? pParam : 'month';
     var pAsc = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
-    var pw = weekBounds(bkkToday);
+    // Custom range reads two ISO date params; a valid ordered pair drives the range,
+    // otherwise the picker is revealed and the sheet stays empty until the reader picks.
+    var cFrom = pq.get('from'), cTo = pq.get('to');
+    var ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+    var customOk = pRange === 'custom' && ISO_RE.test(cFrom || '') && ISO_RE.test(cTo || '') && cFrom <= cTo;
+    var AY = P.academicYear || {};
     var pBounds = pRange === 'term'
       ? { start: bkkToday, end: termEnd(pAsc, bkkToday), label: 'This term' }
-      : pRange === 'month'
-      ? { start: bkkToday, end: monthEndISO(bkkToday), label: 'This month' }
-      : { start: pw.start, end: pw.end, label: 'This week' };
-    var pRows = pAsc.filter(function (e) { return e.date >= pBounds.start && e.date <= pBounds.end; });
+      : pRange === 'year'
+      ? { start: AY.start || '', end: AY.end || '', label: 'The academic year' }
+      : pRange === 'custom'
+      ? (customOk ? { start: cFrom, end: cTo, label: fmtDMY(cFrom) + ' to ' + fmtDMY(cTo) }
+                  : { start: '', end: '', label: 'Custom range' })
+      : { start: bkkToday, end: monthEndISO(bkkToday), label: 'This month' };
+    var pRows = (pBounds.start && pBounds.end)
+      ? pAsc.filter(function (e) { return e.date >= pBounds.start && e.date <= pBounds.end; })
+      : [];
     printList.innerHTML = pRows.length
       ? pRows.map(function (e) {
           var d = new Date(e.date + 'T00:00:00Z');
@@ -791,9 +841,37 @@
             '<div class="ev-main"><div class="et">' + e.title + '</div>' +
             (e.sub ? '<div class="es">' + e.sub + '</div>' : '') + '</div></div>';
         }).join('')
-      : '<div class="ev-row"><div class="ev-main"><div class="et">No dated events in this range.</div></div></div>';
+      : '<div class="ev-row"><div class="ev-main"><div class="et">' +
+        (pRange === 'custom' && !customOk ? 'Pick a from and to date above.' : 'No dated events in this range.') +
+        '</div></div></div>';
     var pLabel = document.getElementById('print-range-label');
     if (pLabel) pLabel.textContent = pBounds.label + ' · printed ' + fmtDMY(bkkToday);
+
+    // Range controls (0058): mark the active button; wire the custom-range picker.
+    // Native <input type="date"> (no picker library, ponytail); the ?range=custom URL
+    // is built here (gated render.js), not an inline script.
+    var pRanges = document.getElementById('print-ranges');
+    if (pRanges) [].forEach.call(pRanges.querySelectorAll('a[href*="range="]'), function (a) {
+      if (new URLSearchParams(a.search).get('range') === pRange) a.setAttribute('aria-current', 'true');
+    });
+    var pcWrap = document.getElementById('print-custom');
+    var pcToggle = document.getElementById('print-custom-toggle');
+    if (pcWrap && pcToggle) {
+      var pcFrom = document.getElementById('pc-from'), pcTo = document.getElementById('pc-to'), pcGo = document.getElementById('pc-go');
+      if (pRange === 'custom') { pcWrap.hidden = false; pcToggle.setAttribute('aria-expanded', 'true'); }
+      if (customOk) { if (pcFrom) pcFrom.value = cFrom; if (pcTo) pcTo.value = cTo; }
+      pcToggle.addEventListener('click', function () {
+        var willOpen = pcWrap.hidden;
+        pcWrap.hidden = !willOpen;
+        pcToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      });
+      if (pcGo) pcGo.addEventListener('click', function () {
+        var f = pcFrom && pcFrom.value, t = pcTo && pcTo.value;
+        if (!f || !t) return;
+        if (f > t) { var s = f; f = t; t = s; }   // tolerate a reversed pick
+        location.search = '?range=custom&from=' + f + '&to=' + t;
+      });
+    }
   }
 
   // Sport rows + status pills (home sport tile). status vocab: open | soon |
@@ -1121,14 +1199,31 @@
     }
   }
 
+  // Version stamp (0061): rewrite the footer fine print from PORTAL.version + build.
+  // data.js is network-first, so a new deploy restamps every page the moment fresh
+  // data lands, the visible signal that the update propagated. The message text is
+  // unchanged; JS just prefixes the live version + build date. Static HTML keeps the
+  // hardcoded "v0.7 ..." as the no-JS fallback.
+  var fineStamp = document.querySelector('.fine');
+  if (fineStamp && P.version) {
+    fineStamp.textContent = P.version + (P.build ? ' · ' + P.build : '') +
+      ' · for internal feedback, not a live school page';
+  }
+
   // Page-open beacon (issue 0028 / W1): one anonymous datapoint per view, to the
   // ops worker. DNT '1' opts out. Fire-and-forget: no cookies, no IP/UA stored, and
   // it never blocks or errors the page (wrapped, sendBeacon returns immediately).
+  // 0054: a ?ref= campaign tag (naming a send we mailed, never a person) rides along;
+  // the fixed vocabulary is enforced at the worker's store boundary, so an off-list
+  // tag is dropped there and the readout never sprawls.
   try {
     if (!navigator.doNotTrack || navigator.doNotTrack !== '1') {
+      var beacon = { path: location.pathname.replace(/^.*portal-test/, '') || location.pathname };
+      var beaconRef = new URLSearchParams(location.search).get('ref');
+      if (beaconRef) beacon.ref = beaconRef;
       navigator.sendBeacon && navigator.sendBeacon(
         'https://elc-ops.elcportal.workers.dev/hit',
-        JSON.stringify({ path: location.pathname.replace(/^.*portal-test/, '') || location.pathname })
+        JSON.stringify(beacon)
       );
     }
   } catch (e) {}
@@ -1203,4 +1298,37 @@
   input.addEventListener('input', run);
   input.addEventListener('blur', function () { setTimeout(hide, 150); });  // let a result click land first
   input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { hide(); input.blur(); } });
+})();
+
+/* PWA update flow (0061). A new service worker taking control means a fresh build
+   shipped (sw.js skipWaiting + clients.claim make that immediate). Reload ONCE to
+   adopt it, but never yank a reader mid-page: if the tab is backgrounded, reload
+   now; if it is in the foreground, hold until the reader leaves and returns. Skip
+   the very first controller acquisition: a first-ever visit installs the SW with
+   no prior version to replace, so that controllerchange must not reload. Guarded by
+   a one-shot flag so it can never loop. Self-contained IIFE, no PORTAL dependency. */
+(function () {
+  if (!('serviceWorker' in navigator)) return;
+  var hadController = !!navigator.serviceWorker.controller;  // captured before any update
+  var reloaded = false;
+  function go() {
+    if (reloaded) return;
+    reloaded = true;
+    location.reload();
+  }
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (!hadController) return;              // first SW claim on a fresh visit: nothing to refresh
+    if (document.visibilityState === 'visible') {
+      // reader is looking: wait until the tab is hidden then shown again, so the
+      // refresh lands on their return, not mid-sentence.
+      document.addEventListener('visibilitychange', function onVis() {
+        if (document.visibilityState === 'visible') {
+          document.removeEventListener('visibilitychange', onVis);
+          go();
+        }
+      });
+    } else {
+      go();                                  // tab backgrounded: safe to reload now
+    }
+  });
 })();

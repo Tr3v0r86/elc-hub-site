@@ -241,6 +241,24 @@ nav{display:flex;align-items:center;gap:28px;}
   text-decoration:none;transition:border-color .15s,color .15s;}
 .add-btn:hover{border-color:var(--purple);color:var(--aubergine);}
 .add-btn svg{width:12px;height:12px;display:block;}
+/* Add/share cluster (0055): desktop shows the three inline (toggle hidden); mobile
+   collapses them behind a single toggle (see @720). First-pass CC scaffolding, Claude
+   Design refines the expanded control look (rule 7). */
+.cal-actions{display:inline-flex;align-items:center;gap:6px;align-self:center;flex:none;}
+.cal-actions-menu{display:inline-flex;align-items:center;gap:6px;}
+.cal-actions-toggle{display:none;align-items:center;gap:6px;height:26px;padding:0 10px;
+  color:var(--purple);background:transparent;border:1px solid var(--rule);border-radius:5px;cursor:pointer;
+  font-family:var(--mono);font-size:11px;letter-spacing:0.03em;}
+.cal-actions-toggle svg{width:12px;height:12px;flex:none;}
+.cal-actions-toggle:hover{border-color:var(--purple);color:var(--aubergine);}
+/* Print range controls (0058): active-range button + the native custom-range picker
+   (screen only; the .btn-row is .no-print). Tokens-only scaffolding. */
+.btn-row a[aria-current="true"]{border-color:var(--purple);color:var(--aubergine);background:var(--purple-tint);}
+.custom-range{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:14px;}
+.custom-range[hidden]{display:none;}   /* the flex rule above would otherwise defeat [hidden] */
+.custom-range label{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted);}
+.custom-range input[type="date"]{font-family:var(--sans);font-size:14px;color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:7px 9px;background:var(--white);}
+.custom-range input[type="date"]:focus-visible{outline:2px solid var(--purple);outline-offset:1px;border-color:var(--purple);}
 .cal-sub{margin-top:20px;}
 .cal-note{font-weight:300;font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center;}
 .cal-note.mono{font-family:var(--mono);} /* quiet caption where the subscribe button will live (issue 0004) */
@@ -274,6 +292,14 @@ nav{display:flex;align-items:center;gap:28px;}
 .cal-cell .evs .ev{position:static;}
 .cal-cell.today .ev,.cal-cell.today .evs .ev{background:var(--white-pure);}
 .cal-cell.today .ev.holiday,.cal-cell.today .evs .ev.holiday{background:transparent;border-color:var(--white-pure);}
+/* Mobile presence marker (0056): neutral dot + count that stands in for the shaped
+   taxonomy in a cramped phone cell. Hidden on desktop; the @720 block swaps it in.
+   Scaffolding tokens only, Claude Design refines the dot polish (rule 7 CD seam). */
+.cal-cell .evs .pdot,.cal-cell .evs .pcount{display:none;}
+.cal-cell .evs .pdot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none;align-self:center;}
+.cal-cell .evs .pcount{font-family:var(--mono);font-size:9px;color:var(--muted);align-self:center;}
+.cal-cell.today .evs .pdot{background:var(--white-pure);}
+.cal-cell.today .evs .pcount{color:var(--white-pure);}
 /* Event-day button states (pass B, seam 5): the cells are real <button>s now, so give
    them the pressed/hover treatment on top of the existing token focus ring. */
 .cal-cell.has{cursor:pointer;transition:background .12s,border-color .12s,transform .06s;}
@@ -305,13 +331,30 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
 .cal-pop .pev .ps{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:0.04em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
 .cal-pop .pev:hover .pt,.cal-pop .pev:focus-visible .pt{color:var(--purple);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:2px;}
 
-/* Mobile calendar (pass B, seam 3): on a phone the 7-col grid is cramped and buries the
-   actionable agenda, so agenda comes FIRST and the day popover becomes a bottom sheet
-   (thumb-reachable, full-width) instead of the desktop anchored card. The JS still
-   positions the desktop card with inline top/left; !important flips it to a fixed sheet
-   on phones. Optional scrim + body-scroll-lock = a small Claude Code seam. */
+/* Mobile calendar: on a phone the day popover becomes a bottom sheet (thumb-reachable,
+   full-width) instead of the desktop anchored card. The JS still positions the desktop
+   card with inline top/left; !important flips it to a fixed sheet on phones.
+   0056 (2026-07-20): the grid now LEADS on mobile (agenda below). Pass-B had put the
+   agenda first because the 7-col grid was too cramped to read; the presence marker (one
+   neutral dot + a count per multi-event day, above) removes that reason, so grid-first is
+   restored and .cal-col-agenda{order:-1} was dropped. */
 @media(max-width:720px){
-  .cal-col-agenda{order:-1;}
+  /* Swap the fine taxonomy dots for the single presence marker on multi-event days only
+     (:has(.pdot) => a marker was emitted, i.e. >1 event). Single-event days have no
+     .pdot, so their one shaped dot stays visible. */
+  .cal-cell .evs:has(.pdot) .ev,.cal-cell .evs:has(.pdot) .more{display:none;}
+  .cal-cell .evs .pdot,.cal-cell .evs .pcount{display:inline-flex;}
+  /* 0057: the bottom sheet (z-index 40) sits under the fixed feedback FAB + project-
+     window pill (z-index 9998), so hide those while a day sheet is open (body.sheet-open
+     is toggled by render.js on sheet open/close). #pw-pill is deploy-injected chrome. */
+  body.sheet-open #fb-pill,body.sheet-open #pw-pill{display:none;}
+  /* 0055: one add/share toggle per agenda row on mobile; tapping reveals the three.
+     Row wraps so the revealed controls sit under the event without crushing it. */
+  .cal-actions-toggle{display:inline-flex;}
+  .cal-actions .cal-actions-menu{display:none;}
+  .cal-actions.open .cal-actions-menu{display:inline-flex;}
+  .ev-row:has(.cal-actions.open){flex-wrap:wrap;}
+  .cal-actions.open{margin-left:auto;}
   .cal-pop{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:auto!important;min-width:0!important;max-width:none!important;border-radius:16px 16px 0 0;border:none;border-top:3px solid var(--purple);box-shadow:var(--shadow-sheet);padding:16px 18px calc(18px + env(safe-area-inset-bottom));animation:sheet-up .22s ease;}
   .cal-pop::before{content:"";display:block;width:38px;height:4px;border-radius:999px;background:var(--rule);margin:0 auto 12px;}
 }
@@ -502,8 +545,12 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 #team-jump{margin:20px 0 28px;}
 #team-jump .f{display:inline-flex;align-items:center;min-height:44px;}   /* >=44px tap, .cm-jump precedent */
 @media(max-width:560px){
-  .team-card{flex-wrap:wrap;}
-  .team-card .rt{align-self:flex-start;margin-left:60px;margin-top:2px;}
+  /* 0059: stack the card (photo · name · role · bio · booking) so the bio gets the full
+     card width. In a row, .meta{min-width:0} let the booking button crush it to ~58px =
+     a one-word-per-line tower; a column hands the bio the whole width. CD refines the
+     card visual (rule 7). */
+  .team-card{flex-direction:column;align-items:stretch;gap:12px;}
+  .team-card .rt{align-self:flex-start;margin-left:0;margin-top:0;}
 }
 
 /* ---- Coffee Mornings (issue 0049): structural scaffold only. Claude Design

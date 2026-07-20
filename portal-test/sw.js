@@ -1,4 +1,7 @@
-/* ELC Portal service worker: offline shell, three-tier fetch policy.
+/* ELC Portal service worker: offline shell, fetch policy by request class.
+   0) navigation (HTML docs) : network-first, cached shell as offline fallback. A
+      returning viewer online never opens a stale shell (0061); the cache is the
+      offline safety net only.
    1) assets/fonts/  : cache-first, no revalidation (content-hashed URLs, immutable).
    2) assets/data.js : network-first, cache fallback (the freshness point).
    3) other same-origin GET : stale-while-revalidate (cached copy answers now, a
@@ -7,7 +10,7 @@
    contract changes DO need one (stale HTML + fresh JS is a real mixed-version risk
    under SWR).
    All URLs are relative to this script, so the site works at / or /portal-test/. */
-const CACHE = "elc-portal-shell-v20";
+const CACHE = "elc-portal-shell-v21";
 
 const SHELL = [
   "./",
@@ -104,6 +107,27 @@ self.addEventListener("fetch", (e) => {
      and bypasses the SW entirely; this guard is for a browser-opened feed URL, so a
      stale cached snapshot is never served in place of the current dates (P4 pass A). */
   if (url.pathname.indexOf("/api/") !== -1) return;
+
+  /* Tier 0: navigation (HTML documents): network-first. This kills first-open-stale
+     online (0061): every navigation serves fresh HTML, and the cached shell answers
+     only when the network is gone. Refresh the cache on each successful nav so the
+     offline fallback stays current. */
+  if (req.mode === "navigate") {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() =>
+          caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match("./"))
+        )
+    );
+    return;
+  }
 
   /* Tier 1: content-hashed fonts never change: cache first, no revalidation. */
   if (url.pathname.indexOf("/assets/fonts/") !== -1) {
