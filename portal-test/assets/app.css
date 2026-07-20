@@ -34,7 +34,15 @@ header .tape{margin-left:14px;margin-right:auto;flex:none;}
 header{position:sticky;top:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;
   padding:0 clamp(20px,4vw,44px);background:rgba(244,242,234,0.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
-.brand .desc{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);align-self:center;padding-left:13px;border-left:1px solid var(--rule);}
+.brand .desc{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);align-self:center;padding-left:13px;border-left:1px solid var(--rule);display:inline-flex;align-items:center;gap:7px;}
+/* Portal ring mark (0063): the product's own mark beside the "Portal" wordmark, kept
+   beside the ELC lockup (rule 3, do not remove ELC). CSS mask so one file recolours by
+   token; 4-ring favicon variant at this small size (7-ring smudges under 40px per the
+   0063 audit). Path is relative to THIS stylesheet at site/assets/ (img/...), NOT the
+   page. Subordinate purple tint per CD handover; CD refines size/weight (rule 7). */
+.brand .portal-mark{width:20px;height:20px;flex:none;background:var(--purple);
+  -webkit-mask:url(img/portal-mark-favicon.svg) center/contain no-repeat;
+          mask:url(img/portal-mark-favicon.svg) center/contain no-repeat;}
 nav{display:flex;align-items:center;gap:28px;}
 .navlink{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--charcoal);padding:6px 2px;cursor:pointer;
   white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
@@ -749,6 +757,13 @@ a.key-num:hover,a.key-num:focus-visible{text-decoration:underline;text-underline
    so align-self:center was a no-op; below 720px it flips to column/flex-start and
    align-self:center floated the crest dead-centre above flush-left text on all 31 pages. */
 .foot-lockup{height:58px;width:auto;flex:none;opacity:0.9;}
+/* Portal ring mark in the footer (0063): the product mark anchoring the bottom of the
+   page, beside the ELC lockup (kept, rule 3). Aubergine on the cream footer ground per
+   the CD handover reversed-surface guidance; 7-ring at 40px clears the audit min-size
+   floor. First-pass CC placement, CD refines footer composition (rule 7). */
+.foot-strip .foot-mark{width:40px;height:40px;flex:none;align-self:center;background:var(--aubergine);
+  -webkit-mask:url(img/portal-mark.svg) center/contain no-repeat;
+          mask:url(img/portal-mark.svg) center/contain no-repeat;}
 /* icon cell (0051 visual pass): drop the box, keep the 38px gutter so icon rows
    line up with the .num date chips. Quiet glyph in --muted, not a button. */
 .doc-row .icx{align-items:center;padding:0;border:none;background:none;border-radius:0;}
