@@ -34,14 +34,17 @@ header .tape{margin-left:14px;margin-right:auto;flex:none;}
 header{position:sticky;top:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;
   padding:0 clamp(20px,4vw,44px);background:rgba(244,242,234,0.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
-.brand .desc{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);align-self:center;display:inline-flex;align-items:center;gap:9px;}
-/* Portal ring mark (0063): the Portal's OWN logo, leading the masthead (Trevor
-   2026-07-20: "it is the logo for the portal", bigger + leading, not subordinate here;
-   the design language still defers to the ELC parent brand, which trails, below). CSS
-   mask so the one file recolours by token; 7-ring at 40px clears the audit min-size
-   floor. Path is relative to THIS stylesheet at site/assets/ (img/...), NOT the page.
-   id="mark" anchors contour.js (the contour field grows from the ring). First-pass CC
-   size/composition, CD refines the polish (rule 7). */
+/* Masthead wordmark = the CD branded lockup "ELC Portal" (Trevor 2026-07-20: "ELC
+   Portal is the canonical name"). Hanken Grotesk 600 per the CD handover appendix; the
+   "ELC" now lives in the wordmark, so the separate ELC crest crop was dropped (the CD
+   lockup carries no crop). The CD specimen's "//" accent sub-line is deliberately
+   omitted: that phrasing is hard-banned in outward copy. CD refines type polish (rule 7). */
+.brand .desc{font-family:'Hanken Grotesk',var(--sans);font-size:24px;font-weight:600;letter-spacing:-0.01em;color:var(--aubergine);align-self:center;display:inline-flex;align-items:center;gap:11px;}
+/* Portal ring mark (0063): the Portal's OWN logo, leading the "ELC Portal" lockup
+   (Trevor 2026-07-20: "it is the logo for the portal", bigger + leading). CSS mask so
+   the one file recolours by token; 7-ring at 40px clears the audit min-size floor. Path
+   is relative to THIS stylesheet at site/assets/ (img/...), NOT the page. id="mark"
+   anchors contour.js (the contour field grows from the ring). CD refines polish. */
 .brand .portal-mark{width:40px;height:40px;flex:none;background:var(--aubergine);
   -webkit-mask:url(img/portal-mark.svg) center/contain no-repeat;
           mask:url(img/portal-mark.svg) center/contain no-repeat;}
@@ -753,7 +756,8 @@ a.key-num:hover,a.key-num:focus-visible{text-decoration:underline;text-underline
    the chrome. its three sublines (INTERNATIONAL SCHOOLS BANGKOK) are illegible mush at
    42px, so object-fit keeps only the top ELC band; the full lockup moves to the footer
    where it has room to read. The mark stays confident and legible at any DPR. */
-.brand .lockup{width:76px;height:32px;object-fit:cover;object-position:center top;display:block;padding-left:14px;border-left:1px solid var(--rule);}   /* trails the Portal logo now as the ELC parent-brand endorsement (0063) */
+/* .brand .lockup (the ELC crest crop) was retired from the masthead 2026-07-20: the CD
+   branded lockup is ring + "ELC Portal" wordmark, no crop (the wordmark carries "ELC"). */
 /* footer sign-off: the full official lockup, given room to be legible. */
 /* ponytail: no align-self here. On desktop .foot-strip is a row (align-items:center),
    so align-self:center was a no-op; below 720px it flips to column/flex-start and
