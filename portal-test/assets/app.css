@@ -358,9 +358,11 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
   .cal-cell .evs:has(.pdot) .ev,.cal-cell .evs:has(.pdot) .more{display:none;}
   .cal-cell .evs .pdot,.cal-cell .evs .pcount{display:inline-flex;}
   /* 0057: the bottom sheet (z-index 40) sits under the fixed feedback FAB + project-
-     window pill (z-index 9998), so hide those while a day sheet is open (body.sheet-open
-     is toggled by render.js on sheet open/close). #pw-pill is deploy-injected chrome. */
-  body.sheet-open #fb-pill,body.sheet-open #pw-pill{display:none;}
+     window pill (z-index 9998) AND the fixed tabbar (z-index 55), so hide all three
+     while a day sheet is open (body.sheet-open is toggled by render.js on sheet
+     open/close). #pw-pill is deploy-injected chrome. Without hiding .tabbar the tabbar
+     paints over the bottom of the sheet (issue 0064 QA). */
+  body.sheet-open #fb-pill,body.sheet-open #pw-pill,body.sheet-open .tabbar{display:none;}
   /* 0055: one add/share toggle per agenda row on mobile; tapping reveals the three.
      Row wraps so the revealed controls sit under the event without crushing it. */
   .cal-actions-toggle{display:inline-flex;}
@@ -368,7 +370,9 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
   .cal-actions.open .cal-actions-menu{display:inline-flex;}
   .ev-row:has(.cal-actions.open){flex-wrap:wrap;}
   .cal-actions.open{margin-left:auto;}
-  .cal-pop{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:auto!important;min-width:0!important;max-width:none!important;border-radius:16px 16px 0 0;border:none;border-top:3px solid var(--purple);box-shadow:var(--shadow-sheet);padding:16px 18px calc(18px + env(safe-area-inset-bottom));animation:sheet-up .22s ease;}
+  /* ponytail: 85dvh cap + scroll so a busy day's sheet never runs off the top unreachable;
+     leaves a top strip of page showing for tap-outside-to-close. vh fallback for old engines. */
+  .cal-pop{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;width:auto!important;min-width:0!important;max-width:none!important;max-height:85vh;max-height:85dvh;overflow-y:auto;border-radius:16px 16px 0 0;border:none;border-top:3px solid var(--purple);box-shadow:var(--shadow-sheet);padding:16px 18px calc(18px + env(safe-area-inset-bottom));animation:sheet-up .22s ease;}
   .cal-pop::before{content:"";display:block;width:38px;height:4px;border-radius:999px;background:var(--rule);margin:0 auto 12px;}
 }
 @keyframes sheet-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -840,3 +844,45 @@ a.doc-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;bord
 .doc-list .doc-row:not(.team-card) .status.soon{color:var(--amber);}
 /* H&W team list keeps its framed card (the booking flow ships as reviewed) */
 #team-cards .doc-list{background:var(--white);border:1px solid var(--rule);border-radius:10px;overflow:hidden;}
+
+/* ============================================================
+   Purple Elephant section skin: issue 0064 (Claude Design).
+   Scoped under .pe (the PE <main class="wrap sub pe">). The calendar is
+   deliberately NOT restyled: one system; warmth lives in the frame.
+   ============================================================ */
+.pe .eyebrow::before{color:var(--pe-accent);}
+
+.pe .pe-hero{display:grid;grid-template-columns:1fr auto;gap:clamp(20px,3vw,40px);align-items:center;margin-bottom:36px;}
+.pe .pe-hero .page-head{margin-bottom:0;}
+.pe .pe-hero .lead{max-width:52ch;}
+
+/* Reserved hero-art seam: the curated child's purple-elephant drawing lands here via
+   the art pipeline (potrace SVG, fill = --pe-art-ink, consent-gated), same class of
+   seam as the snail/coffee heroes. Until then a faint concentric-contour motif (the
+   site's own ground vocabulary) holds the space; decoration, aria-hidden, claims
+   nothing (rule 6). */
+.pe .pe-hero-art{position:relative;flex:none;width:clamp(116px,15vw,188px);aspect-ratio:1;border-radius:50%;background:var(--pe-tint);overflow:hidden;}
+.pe .pe-hero-art::before{content:"";position:absolute;inset:0;background-image:repeating-radial-gradient(circle at 50% 52%,transparent 0 12px,color-mix(in srgb,var(--pe-accent) var(--pe-ground),transparent) 12px 14.5px);-webkit-mask:radial-gradient(circle at 50% 52%,#000 58%,transparent 76%);mask:radial-gradient(circle at 50% 52%,#000 58%,transparent 76%);}
+
+/* Thong Lor: one identity, three houses named quietly (locator chips). */
+.pe .pe-houses{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.pe .pe-houses .chip{white-space:nowrap;color:var(--pe-accent-deep);border-color:color-mix(in srgb,var(--pe-accent) 32%,var(--rule));}
+
+/* "In the making" state: warm, honest, PE-attributed. Replaces the grey page-note lines. */
+.pe .pe-coming{position:relative;background:color-mix(in srgb,var(--pe-tint) 52%,var(--white));border:1px solid color-mix(in srgb,var(--pe-accent) 20%,var(--rule));border-radius:12px;padding:22px 24px;}
+.pe .pe-coming .txt{margin:0;max-width:60ch;color:var(--charcoal);font-size:14px;line-height:1.55;font-weight:300;}
+.pe .pe-coming-note{display:inline-flex;align-items:center;gap:10px;margin-top:15px;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--pe-accent-deep);}
+.pe .pe-coming-dot{position:relative;width:9px;height:9px;flex:none;border-radius:50%;background:var(--pe-accent);}
+.pe .pe-coming-dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--pe-accent);animation:pe-pulse 2.6s ease-out infinite;}
+@keyframes pe-pulse{0%{transform:scale(1);opacity:0.55;}70%,100%{transform:scale(2.8);opacity:0;}}
+@media(prefers-reduced-motion:reduce){.pe .pe-coming-dot::after{animation:none;}}
+
+.pe .pe-closing{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.pe .pe-closing .pe-coming-dot{width:7px;height:7px;}
+
+.pe .cal-sub a,.pe .pe-coming a{color:var(--pe-accent);text-decoration-color:var(--gold);}
+
+@media(max-width:720px){
+  .pe .pe-hero{grid-template-columns:1fr;gap:16px;}
+  .pe .pe-hero-art{order:-1;width:92px;}
+}

@@ -54,4 +54,14 @@
 
   /* --- chrome --- */
   --nav-h:70px;
+
+  /* --- Purple Elephant (early years) sub-brand seam (issue 0064). PE pages are
+         ELC Portal pages (masthead stays, rule 3) fronting the early years. The
+         lead accent aliases --purple so a bespoke PE colour later swaps at ONE
+         line without touching page CSS (ADR-0002). No new hex. --- */
+  --pe-accent:var(--purple);              /* PE lead accent (early-years purple) */
+  --pe-accent-deep:var(--aubergine-2);    /* pressed state / heading ink on the tint */
+  --pe-tint:var(--purple-tint);           /* soft wash for the "in the making" panels */
+  --pe-art-ink:var(--purple);             /* hero-art seam inherits the accent (art layer) */
+  --pe-ground:34%;                        /* strength of the faint contour motif behind the hero */
 }

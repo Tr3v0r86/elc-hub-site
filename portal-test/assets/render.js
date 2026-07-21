@@ -624,7 +624,11 @@
   var calAgenda = document.getElementById('cal-agenda');
   if (calAgenda && P.calendarEvents) {
     var shareUrl = location.origin + location.pathname;   // the calendar page itself (F10)
-    var evs = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    // 0064: a Purple Elephant page carries data-pe on the mount, so the agenda reads the
+    // filtered peEvents; the main calendar (no data-pe) reads calendarEvents unchanged.
+    var agPe = calAgenda.getAttribute('data-pe');
+    var agSrc = agPe ? (P.peEvents || []).filter(function (e) { return e.pe === agPe; }) : P.calendarEvents;
+    var evs = agSrc.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
     var today0 = new Date(bkkToday + 'T00:00:00Z');
     var tEnd = termEnd(evs, bkkToday);   // next term close (else +120d); bounds "later this term"
     var buckets = [
@@ -671,7 +675,10 @@
     var CAL_DOWS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     var AUD_CLASS = { parent: 'parent', child: 'child', holiday: 'holiday' };
     var calByDate = {};
-    P.calendarEvents.forEach(function (e) { if (e.date) (calByDate[e.date] = calByDate[e.date] || []).push(e); });
+    // 0064: PE page filters peEvents via data-pe on the grid mount; main calendar unchanged.
+    var gridPe = calGrid.getAttribute('data-pe');
+    var gridSrc = gridPe ? (P.peEvents || []).filter(function (e) { return e.pe === gridPe; }) : P.calendarEvents;
+    gridSrc.forEach(function (e) { if (e.date) (calByDate[e.date] = calByDate[e.date] || []).push(e); });
     var calToday = new Date(bkkToday + 'T00:00:00Z');
     function calUtc(y, m, d) { return new Date(Date.UTC(y, m, d)); }
     function calIso(d) { return d.toISOString().slice(0, 10); }

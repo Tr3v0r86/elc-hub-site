@@ -1,9 +1,10 @@
 {
   "term": "Term 1",
-  "generated": "2026-07-20T16:34:58.828Z",
+  "generated": "2026-07-21T03:03:03.122Z",
   "events": [
     {
       "date": "2026-08-03",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "until": "2026-08-07",
@@ -14,6 +15,7 @@
     },
     {
       "date": "2026-08-12",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "The Queen Mother's Birthday Holiday",
@@ -21,6 +23,7 @@
     },
     {
       "date": "2026-08-14",
+      "cat": "event",
       "type": "gold",
       "aud": "parent",
       "title": "New Family Orientation",
@@ -28,24 +31,32 @@
     },
     {
       "date": "2026-08-17",
+      "cat": "event",
+      "type": "purple",
+      "aud": "parent",
+      "cohort": "K1",
+      "title": "K1 Information Session",
+      "sub": ""
+    },
+    {
+      "date": "2026-08-17",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "K2 to Y6 Hopes and Wishes meetings",
       "sub": ""
     },
     {
-      "date": "2026-08-17",
+      "date": "2026-08-18",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
-      "title": "K1 Information Session",
-      "sub": "",
-      "cohort": "K1",
-      "time": null,
-      "venue": null,
-      "slides": null
+      "title": "K1 Hopes and Wishes meetings",
+      "sub": ""
     },
     {
       "date": "2026-08-18",
+      "cat": "event",
       "type": "gold",
       "aud": "child",
       "nopage": true,
@@ -54,24 +65,16 @@
     },
     {
       "date": "2026-08-18",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
-      "title": "K1 Hopes and Wishes meetings",
+      "cohort": "Y1",
+      "title": "Y1 Information Session",
       "sub": ""
     },
     {
-      "date": "2026-08-18",
-      "type": "purple",
-      "aud": "parent",
-      "title": "Y1 Information Session",
-      "sub": "",
-      "cohort": "Y1",
-      "time": null,
-      "venue": null,
-      "slides": null
-    },
-    {
       "date": "2026-08-19",
+      "cat": "event",
       "type": "gold",
       "aud": "child",
       "nopage": true,
@@ -80,72 +83,68 @@
     },
     {
       "date": "2026-08-20",
-      "type": "purple",
-      "aud": "parent",
-      "title": "Y3 to Y6 Information Session",
-      "sub": "",
-      "cohort": "Y3 to Y6",
-      "time": null,
-      "venue": null,
-      "slides": null
-    },
-    {
-      "date": "2026-08-20",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Sport parent info evening",
       "sub": "Basketball, cricket and swimming explained"
     },
     {
-      "date": "2026-08-21",
+      "date": "2026-08-20",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
-      "title": "Y2 Information Session",
-      "sub": "",
+      "cohort": "Y3 to Y6",
+      "title": "Y3 to Y6 Information Session",
+      "sub": ""
+    },
+    {
+      "date": "2026-08-21",
+      "cat": "event",
+      "type": "purple",
+      "aud": "parent",
       "cohort": "Y2",
-      "time": null,
-      "venue": null,
-      "slides": null
+      "title": "Y2 Information Session",
+      "sub": ""
     },
     {
       "date": "2026-08-24",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
-      "title": "K2 Information Session",
-      "sub": "",
       "cohort": "K2",
-      "time": null,
-      "venue": null,
-      "slides": null
+      "title": "K2 Information Session",
+      "sub": ""
     },
     {
       "date": "2026-08-25",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
-      "title": "Dove Information Session",
-      "sub": "Dove Centre",
       "cohort": "Dove",
-      "time": null,
-      "venue": null,
-      "slides": null
+      "title": "Dove Information Session",
+      "sub": "Dove Centre"
     },
     {
       "date": "2026-09-07",
+      "cat": "social",
+      "type": "purple",
+      "aud": "parent",
+      "community": true,
+      "title": "Parent Social Morning",
+      "sub": ""
+    },
+    {
+      "date": "2026-09-07",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Sport sign-up opens",
       "sub": "Basketball, cricket and swimming"
     },
     {
-      "date": "2026-09-07",
-      "type": "purple",
-      "aud": "parent",
-      "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
-    },
-    {
       "date": "2026-09-17",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Safeguarding parent info session",
@@ -153,6 +152,7 @@
     },
     {
       "date": "2026-09-18",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "International Schools Holiday",
@@ -160,6 +160,7 @@
     },
     {
       "date": "2026-09-24",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Open Evening",
@@ -167,6 +168,7 @@
     },
     {
       "date": "2026-10-01",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "ISB parent info session",
@@ -174,6 +176,7 @@
     },
     {
       "date": "2026-10-02",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Parent Teacher Conferences (Progress)",
@@ -181,14 +184,16 @@
     },
     {
       "date": "2026-10-05",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2026-10-08",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Digital Safety parent info session",
@@ -196,6 +201,7 @@
     },
     {
       "date": "2026-10-12",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "until": "2026-10-16",
@@ -204,6 +210,7 @@
     },
     {
       "date": "2026-10-23",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "King Chulalongkorn Memorial Day",
@@ -211,22 +218,25 @@
     },
     {
       "date": "2026-10-29",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Workshop: Emotional Regulation",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2026-11-02",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2026-11-04",
+      "cat": "event",
       "type": "purple",
       "aud": "child",
       "nopage": true,
@@ -235,6 +245,7 @@
     },
     {
       "date": "2026-11-23",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Y1 and Y2 Holiday Pageant",
@@ -242,6 +253,7 @@
     },
     {
       "date": "2026-11-26",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "K1 Holiday Pageant",
@@ -249,6 +261,7 @@
     },
     {
       "date": "2026-11-27",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "K2 Holiday Pageant",
@@ -256,6 +269,7 @@
     },
     {
       "date": "2026-12-05",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "King Rama IX Birthday and National Day Performance",
@@ -263,6 +277,7 @@
     },
     {
       "date": "2026-12-07",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "King Rama IX Birthday Substitution Holiday",
@@ -270,6 +285,7 @@
     },
     {
       "date": "2026-12-11",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Y3 to Y6 Holiday Choir Concert",
@@ -277,6 +293,7 @@
     },
     {
       "date": "2026-12-14",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Parent Teacher Conferences (Report Card)",
@@ -284,24 +301,27 @@
     },
     {
       "date": "2026-12-16",
+      "cat": "athletics",
       "type": "purple",
       "aud": "child",
       "nopage": true,
+      "community": true,
       "title": "K2 to Y6 Fun Field Day",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2026-12-17",
+      "cat": "athletics",
       "type": "purple",
       "aud": "child",
       "nopage": true,
+      "community": true,
       "title": "K1 and Dove Centre Fun Field Day",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2026-12-18",
+      "cat": "event",
       "type": "gold",
       "aud": "child",
       "nopage": true,
@@ -310,6 +330,7 @@
     },
     {
       "date": "2026-12-21",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "until": "2027-01-09",
@@ -318,6 +339,7 @@
     },
     {
       "date": "2027-01-11",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "No school for children (staff training day)",
@@ -325,6 +347,7 @@
     },
     {
       "date": "2027-01-12",
+      "cat": "event",
       "type": "gold",
       "aud": "child",
       "nopage": true,
@@ -333,6 +356,7 @@
     },
     {
       "date": "2027-01-14",
+      "cat": "workshop",
       "type": "purple",
       "aud": "child",
       "nopage": true,
@@ -341,38 +365,43 @@
     },
     {
       "date": "2027-01-18",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-01-28",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Workshop: Supporting Behaviours",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-02-01",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-02-08",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Workshop: Making Learning Visible",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-02-11",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Project Through the Years at ELC",
@@ -380,6 +409,7 @@
     },
     {
       "date": "2027-02-12",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Project Through the Years at ELC",
@@ -387,6 +417,7 @@
     },
     {
       "date": "2027-02-12",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Project in Kindergarten",
@@ -394,14 +425,7 @@
     },
     {
       "date": "2027-02-19",
-      "type": "purple",
-      "aud": "parent",
-      "title": "Parent Workshop: An Author's Workshop",
-      "sub": "",
-      "community": true
-    },
-    {
-      "date": "2027-02-19",
+      "cat": "athletics",
       "type": "purple",
       "aud": "child",
       "nopage": true,
@@ -409,7 +433,17 @@
       "sub": ""
     },
     {
+      "date": "2027-02-19",
+      "cat": "workshop",
+      "type": "purple",
+      "aud": "parent",
+      "community": true,
+      "title": "Parent Workshop: An Author's Workshop",
+      "sub": ""
+    },
+    {
       "date": "2027-02-22",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "until": "2027-02-26",
@@ -418,14 +452,16 @@
     },
     {
       "date": "2027-03-01",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-03-04",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Atelier explorations and learning",
@@ -433,6 +469,7 @@
     },
     {
       "date": "2027-03-09",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Wycombe Abbey Head of School info session",
@@ -440,6 +477,7 @@
     },
     {
       "date": "2027-03-11",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Emergent reading skill development",
@@ -447,6 +485,7 @@
     },
     {
       "date": "2027-03-17",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Philosophy Circle with Y6",
@@ -454,6 +493,7 @@
     },
     {
       "date": "2027-03-19",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Parent Teacher Conference (Progress)",
@@ -461,6 +501,7 @@
     },
     {
       "date": "2027-03-22",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Compass Initiatives: transitions to K1",
@@ -468,6 +509,7 @@
     },
     {
       "date": "2027-03-22",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Y3 to Y6 Drama and Music Evening",
@@ -475,6 +517,7 @@
     },
     {
       "date": "2027-03-25",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Y3 to Y6 Drama and Music Evening",
@@ -482,6 +525,7 @@
     },
     {
       "date": "2027-04-01",
+      "cat": "event",
       "type": "purple",
       "aud": "child",
       "nopage": true,
@@ -490,6 +534,7 @@
     },
     {
       "date": "2027-04-01",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "The Wonder of Y6",
@@ -497,6 +542,7 @@
     },
     {
       "date": "2027-04-05",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "until": "2027-04-16",
@@ -505,6 +551,7 @@
     },
     {
       "date": "2027-04-06",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "Chakri Day Holiday",
@@ -512,6 +559,7 @@
     },
     {
       "date": "2027-04-13",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "until": "2027-04-15",
@@ -520,6 +568,7 @@
     },
     {
       "date": "2027-04-22",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Math at ELC",
@@ -527,15 +576,17 @@
     },
     {
       "date": "2027-04-26",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "until": "2027-04-29",
+      "community": true,
       "title": "Art From The Heart exhibition and fundraising week",
-      "sub": "to 29 Apr",
-      "community": true
+      "sub": "to 29 Apr"
     },
     {
       "date": "2027-04-26",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "New Families and PE Families to ELC",
@@ -543,14 +594,16 @@
     },
     {
       "date": "2027-05-03",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-05-04",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "Coronation Day Holiday",
@@ -558,6 +611,7 @@
     },
     {
       "date": "2027-05-05",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Little Steps, Big Futures: charting your child's K to 6 journey",
@@ -565,6 +619,7 @@
     },
     {
       "date": "2027-05-06",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Little Steps, Big Futures: charting your child's K to 6 journey",
@@ -572,6 +627,7 @@
     },
     {
       "date": "2027-05-10",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "New Families and PE Families to ELC",
@@ -579,6 +635,7 @@
     },
     {
       "date": "2027-05-13",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "title": "Navigating the AI Terrain",
@@ -586,6 +643,7 @@
     },
     {
       "date": "2027-05-20",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "Visakha Bucha Holiday",
@@ -593,6 +651,7 @@
     },
     {
       "date": "2027-06-03",
+      "cat": "event",
       "type": "purple",
       "aud": "child",
       "nopage": true,
@@ -601,14 +660,16 @@
     },
     {
       "date": "2027-06-07",
+      "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "community": true,
       "title": "Parent Social Morning",
-      "sub": "",
-      "community": true
+      "sub": ""
     },
     {
       "date": "2027-06-09",
+      "cat": "event",
       "type": "purple",
       "aud": "child",
       "nopage": true,
@@ -617,6 +678,7 @@
     },
     {
       "date": "2027-06-17",
+      "cat": "event",
       "type": "gold",
       "aud": "child",
       "nopage": true,
@@ -625,6 +687,7 @@
     },
     {
       "date": "2027-06-18",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "No school for children (staff training day)",
@@ -632,6 +695,7 @@
     },
     {
       "date": "2027-06-22",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "until": "2027-07-02",
@@ -642,6 +706,7 @@
     },
     {
       "date": "2027-07-06",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "until": "2027-07-23",
@@ -650,6 +715,7 @@
     },
     {
       "date": "2027-07-26",
+      "cat": "event",
       "type": "purple",
       "aud": "parent",
       "until": "2027-07-30",
@@ -660,6 +726,7 @@
     },
     {
       "date": "2027-07-28",
+      "cat": "holiday",
       "type": "purple",
       "aud": "holiday",
       "title": "King Vajiralongkorn's Birthday Holiday",
