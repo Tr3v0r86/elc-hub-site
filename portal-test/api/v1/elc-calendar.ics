@@ -86,15 +86,6 @@ URL:https://elc-hub.com/portal-test/calendar/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/calendar/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260820-sport-parent-info-evening@portal.elc.ac.th
-DTSTAMP:20260820T000000Z
-DTSTART;VALUE=DATE:20260820
-DTEND;VALUE=DATE:20260821
-SUMMARY:Sport parent info evening\, Basketball\, cricket and swimming explained
-URL:https://elc-hub.com/portal-test/activities/
-DESCRIPTION:Details: https://elc-hub.com/portal-test/activities/
-END:VEVENT
-BEGIN:VEVENT
 UID:20260820-y3-to-y6-information-session@portal.elc.ac.th
 DTSTAMP:20260820T000000Z
 DTSTART;VALUE=DATE:20260820
@@ -138,15 +129,6 @@ DTEND;VALUE=DATE:20260908
 SUMMARY:Parent Social Morning
 URL:https://elc-hub.com/portal-test/calendar/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/calendar/
-END:VEVENT
-BEGIN:VEVENT
-UID:20260907-sport-sign-up-opens@portal.elc.ac.th
-DTSTAMP:20260907T000000Z
-DTSTART;VALUE=DATE:20260907
-DTEND;VALUE=DATE:20260908
-SUMMARY:Sport sign-up opens\, Basketball\, cricket and swimming
-URL:https://elc-hub.com/portal-test/activities/
-DESCRIPTION:Details: https://elc-hub.com/portal-test/activities/
 END:VEVENT
 BEGIN:VEVENT
 UID:20260917-safeguarding-parent-info-session@portal.elc.ac.th

@@ -264,14 +264,6 @@ nav{display:flex;align-items:center;gap:28px;}
   font-family:var(--mono);font-size:11px;letter-spacing:0.03em;}
 .cal-actions-toggle svg{width:12px;height:12px;flex:none;}
 .cal-actions-toggle:hover{border-color:var(--purple);color:var(--aubergine);}
-/* Print range controls (0058): active-range button + the native custom-range picker
-   (screen only; the .btn-row is .no-print). Tokens-only scaffolding. */
-.btn-row a[aria-current="true"]{border-color:var(--purple);color:var(--aubergine);background:var(--purple-tint);}
-.custom-range{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:14px;}
-.custom-range[hidden]{display:none;}   /* the flex rule above would otherwise defeat [hidden] */
-.custom-range label{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted);}
-.custom-range input[type="date"]{font-family:var(--sans);font-size:14px;color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:7px 9px;background:var(--white);}
-.custom-range input[type="date"]:focus-visible{outline:2px solid var(--purple);outline-offset:1px;border-color:var(--purple);}
 .cal-sub{margin-top:20px;}
 .cal-note{font-weight:300;font-size:12.5px;color:var(--muted);margin-top:10px;text-align:center;}
 .cal-note.mono{font-family:var(--mono);} /* quiet caption where the subscribe button will live (issue 0004) */
@@ -650,27 +642,81 @@ a.key-num:hover,a.key-num:focus-visible{text-decoration:underline;text-underline
 .keys.stop p{margin:0;font-size:15px;line-height:1.5;color:var(--ink);}
 .keys.stop strong{color:var(--red);}
 
-/* Fridge sheet (calendar/print, pass C opt A): <doc-page> (assets/doc-page.js) owns A4
-   pagination and repeats the masthead/footer on every printed page; these rules style the
-   slots + the dated list and apply to the on-screen preview and the paper alike. The host
-   is dialled back from the starter's full-viewport desk to a contained preview band. */
-.fridge-stage{margin:22px 0 8px;}
-@media screen{.fridge-stage{overflow-x:auto;-webkit-overflow-scrolling:touch;}}
-.fridge-doc{min-height:auto;padding:30px 24px;}
-.fridge-head{display:flex;align-items:center;gap:14px;padding-bottom:11px;border-bottom:1.5px solid var(--ink);}
-.fridge-mark{width:44px;height:auto;flex:none;}
-.fridge-kicker{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1.02;color:var(--ink);}
-.fridge-range{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-top:4px;white-space:nowrap;}
-.fridge-foot{font-family:var(--mono);font-size:10px;letter-spacing:0.03em;color:var(--muted);padding-top:9px;border-top:1.5px solid var(--ink);}
-.fridge-doc #print-list{padding-top:4px;}
-.fridge-doc .ev-row{display:flex;gap:14px;padding:7px 2px;border-bottom:1px solid var(--rule);align-items:baseline;}
-.fridge-doc .ev-row:last-child{border-bottom:none;}
-.fridge-doc .dte{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700;font-size:12px;color:var(--ink);min-width:96px;flex:none;}
-.fridge-doc .dte.today{color:var(--red);}
-.fridge-doc .ev-main{flex:1;min-width:0;}
-.fridge-doc .et{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;}
-.fridge-doc .es{font-family:var(--mono);font-size:11px;letter-spacing:0.03em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
-.fridge-doc .fridge-empty{font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 2px;}
+/* ============================================================
+   Year calendar sheet (calendar/print + purple-elephant/*/print, issue 0046).
+   The fridge sheet: the whole academic year on one A4, matching the City School
+   PDF. <doc-page> (assets/doc-page.js) owns A4 pagination + repeats the masthead
+   (slot=header) and footnote (slot=footer) on every page. render.js EMITS the
+   month grid (.yc-months) + dated key (.yc-keys) into #print-list; the masthead,
+   subscribe strip, legend + footnote are static in the page HTML. All classes are
+   yc-* so they never collide with the .cal-* / .ev-row / .legend rules that drive
+   /calendar/. Ground = white (official ELC register); ink = charcoal; purple the
+   one accent. Design = Claude Design; values reconciled onto the tokens seam. */
+.yc{font-family:var(--sans);color:var(--charcoal);print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+.yc-stage{margin:22px 0 8px;}
+/* On screen the doc-page host is a contained preview band, not the full-viewport
+   desk; print leaves the component's own @media print (padding 0, full bleed) alone. */
+@media screen{.yc-stage{overflow-x:auto;-webkit-overflow-scrolling:touch;}.yc-stage doc-page.yc{min-height:auto;padding:30px 24px;}}
+
+/* masthead (doc-page header slot) */
+.yc-mast{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;padding-bottom:15px;border-bottom:1px solid var(--charcoal);}
+.yc-lock{height:64px;width:auto;display:block;}
+.yc-titlewrap{display:flex;align-items:center;gap:14px;}
+.yc-sublogo{width:auto;display:block;}
+.yc-sublogo-cs{height:60px;}
+.yc-sublogo-pe{height:56px;}
+.yc-title{text-align:right;}
+.yc-sub{font-family:var(--wordmark);font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.01em;line-height:1;white-space:nowrap;}
+.yc-sub .yc-the{font-size:13px;color:var(--muted);font-weight:500;}
+.yc-yr{font-family:var(--sans);font-size:29px;font-weight:700;color:var(--ink);letter-spacing:-.015em;line-height:1;margin-top:8px;white-space:nowrap;}
+.yc-kicker{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+
+/* subscribe strip (static; the live calendar beats the static sheet). The button
+   mirrors the calendar page's held state (UC-1): disabled + "Coming for launch"
+   until the feed goes live, never a fake live link (rule 6). */
+.yc-subscribe{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:12px;padding:8px 10px 8px 14px;background:color-mix(in srgb,var(--purple) 8%,var(--white-pure));border:1px solid color-mix(in srgb,var(--purple) 24%,var(--rule));border-radius:8px;break-inside:avoid;}
+.yc-sub-msg{font-size:10.5px;line-height:1.42;color:var(--muted);}
+.yc-sub-msg b{color:var(--ink);font-weight:700;}
+.yc-sub-hold{flex:none;display:inline-flex;align-items:center;gap:9px;}
+.yc-sub-btn{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--muted);background:color-mix(in srgb,var(--purple) 10%,var(--white-pure));border:1px solid var(--rule);border-radius:6px;padding:8px 13px;white-space:nowrap;}
+.yc-sub-soon{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);white-space:nowrap;}
+
+/* month grid (render.js EMITS into #print-list) */
+.yc-months{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:12px;}
+.yc-mini{border:1px solid var(--rule);border-radius:8px;padding:7px 9px 8px;background:var(--white-pure);break-inside:avoid;}
+.yc-mn{font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:3px;letter-spacing:-.005em;}
+.yc-cells{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+.yc-dow{font-family:var(--sans);font-size:7.5px;font-weight:600;letter-spacing:.03em;color:var(--cal-dow);text-align:center;padding-bottom:3px;text-transform:uppercase;font-style:normal;}
+.yc-d{font-size:10.5px;font-variant-numeric:tabular-nums;text-align:center;line-height:1.58;color:var(--cal-ink);border-radius:3px;font-style:normal;}
+.yc-d.yc-e{color:transparent;}
+.yc-c-H{--cc:var(--cal-holiday);} .yc-c-PD{--cc:var(--cal-staff);} .yc-c-PT{--cc:var(--cal-conf);} .yc-c-SE{--cc:var(--cal-event);} .yc-c-SC{--cc:var(--cal-child);}
+.yc-d.yc-c{background:color-mix(in srgb,var(--cc) 15%,var(--white-pure));color:color-mix(in srgb,var(--cc) 66%,var(--ink));font-weight:700;}
+
+/* dated key (render.js EMITS into #print-list) */
+.yc-keys{column-count:3;column-gap:22px;margin-top:12px;padding-top:11px;border-top:1px solid var(--rule);}
+.yc-kgm{break-inside:avoid;margin-bottom:6px;}
+.yc-km{font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px;letter-spacing:-.005em;}
+.yc-kr{display:flex;gap:6px;font-size:10px;line-height:1.34;margin-bottom:1px;align-items:baseline;}
+/* density (Trevor 2026-07-21): date shrinks to content so the glyph sits right next to it and the title line runs longer; was min-width:46px (glyphs aligned in a column, wasting title width). nowrap+no-shrink keeps date ranges on one line. CC mechanical pass; CD may refine the rhythm (rule 7). */
+.yc-kd{font-family:var(--sans);font-weight:700;color:var(--ink);white-space:nowrap;flex-shrink:0;font-size:9px;font-variant-numeric:tabular-nums;}
+.yc-kgl{font-size:6.5px;line-height:1;position:relative;top:-1px;}
+.yc-kt{color:var(--cal-ink);flex:1;}
+
+/* legend + footnote (static) */
+.yc-legend{display:flex;flex-wrap:wrap;gap:7px 22px;margin-top:12px;padding-top:11px;border-top:1px solid var(--rule);break-inside:avoid;}
+.yc-lg{font-size:10px;color:var(--muted);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.yc-lg .yc-gl{font-size:8.5px;line-height:1;}
+.yc-foot{font-family:var(--sans);font-size:8.5px;letter-spacing:.02em;color:var(--cal-foot);}
+
+/* category glyph colours (grayscale-safe: the shape carries meaning without colour) */
+.yc-g-H{color:var(--cal-holiday);} .yc-g-PD{color:var(--cal-staff);} .yc-g-PT{color:var(--cal-conf);} .yc-g-SE{color:var(--cal-event);} .yc-g-SC{color:var(--cal-child);}
+
+/* Purple Elephant variant (early years): purple leads the masthead + month heads */
+.yc-pe .yc-mast{border-bottom-color:var(--purple);border-bottom-width:2px;}
+.yc-pe .yc-sub,.yc-pe .yc-yr,.yc-pe .yc-mn,.yc-pe .yc-km{color:var(--purple);}
+
+/* empty-state fallback (no JS): honest, points at the live calendar */
+.yc-empty{font-family:var(--mono);font-size:12px;color:var(--muted);padding:8px 2px;}
 
 .print-only{display:none;}
 

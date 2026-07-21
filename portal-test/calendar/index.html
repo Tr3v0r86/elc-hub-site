@@ -102,9 +102,9 @@
                hosted vs the ELC Master Google Calendar, issue 0004) on the production host, not
                the test host whose URL dies at the 0017 cutover. Per-event add-to-calendar (the
                agenda rows above) stays and carries the event-page URL. -->
-          <!-- Print: week / month / term ranges render from render.js (#print-list); the fridge
-               print is rebuilt on <doc-page> (pass C). -->
-          <p class="btn-row"><a class="btn ghost sm" href="print/?range=month">Print this month</a><a class="btn ghost sm" href="print/?range=term">Print the term</a><a class="btn ghost sm" href="print/?range=year">Print the academic year</a><a class="btn ghost sm" href="print/?range=custom">Custom range</a></p>
+          <!-- Print: the whole academic year on one sheet for the fridge (issue 0046),
+               rendered from #print-list on <doc-page>. Ranges retired: the sheet is the year. -->
+          <p class="btn-row"><a class="btn ghost sm" href="print/">Print the calendar <span class="arw">&rarr;</span></a></p>
         </div>
       </div>
     </div>

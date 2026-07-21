@@ -64,4 +64,19 @@
   --pe-tint:var(--purple-tint);           /* soft wash for the "in the making" panels */
   --pe-art-ink:var(--purple);             /* hero-art seam inherits the accent (art layer) */
   --pe-ground:34%;                        /* strength of the faint contour motif behind the hero */
+
+  /* --- print year-calendar sheet (issue 0046, Phase 2 Claude Design). The
+         OFFICIAL ELC register for the fridge sheet: clean white ground, cool
+         charcoal ink, one audience-based colour key that matches the City School
+         PDF (elc.ac.th/the-city-school-calendar). Deliberately NOT the portal warm
+         palette. Grayscale-safe: a glyph shape carries each category too, so the
+         key survives a black-and-white print. CD may retune the mapping (ADR-0002). --- */
+  --cal-holiday:#B0655C;    /* holiday, school closed (muted clay) */
+  --cal-staff:#A98C57;      /* staff / professional development day, no children (ochre) */
+  --cal-conf:#5F7EA0;       /* parent-teacher conferences, no children (slate) */
+  --cal-event:var(--purple);/* school event, parents invited (the ELC signature) */
+  --cal-child:#6E8A56;      /* school event for children, parents not expected (sage) */
+  --cal-ink:#54545A;        /* sheet body ink: cool grey, official register */
+  --cal-dow:#B4B0A4;        /* weekday letters + empty day cells */
+  --cal-foot:#A09C90;       /* footnote */
 }

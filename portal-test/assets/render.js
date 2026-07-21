@@ -811,74 +811,133 @@
     renderMonth();
   }
 
-  // Fridge print (calendar/print/, sprint 3 F2; ranges reworked 0058): #print-list.
-  // ?range=month|term|year|custom (default month; week retired). month = today through
-  // month-end; term = today through the next term close (else 120 days); year = the
-  // FULL academic year from PORTAL.academicYear (NOT today-anchored); custom = the
-  // ?from/?to date pair. Dense date rows; an empty range says so plainly. Print page
-  // rebuild (doc_page) = pass C.
+  // Year calendar sheet (calendar/print/ + purple-elephant/*/print/, issue 0046). The
+  // whole academic year on one A4, matching the City School PDF (colour + shape by
+  // audience). render.js EMITS the month grid + dated key into #print-list; the
+  // masthead, subscribe strip, legend + footnote are static in the page HTML (styled
+  // .yc-* in app.css). The source dataset is chosen by #print-list[data-cal-source]:
+  // "city" -> calendarEvents; "pe-thonglor"/"pe-samakee" -> peEvents filtered by pe.
+  // Range picking (0058) is retired: the sheet is always the full year, like the PDF.
   var printList = document.getElementById('print-list');
-  if (printList && P.calendarEvents) {
-    var pq = new URLSearchParams(location.search);
-    var pParam = pq.get('range');
-    var pRange = (pParam === 'term' || pParam === 'year' || pParam === 'custom') ? pParam : 'month';
-    var pAsc = P.calendarEvents.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
-    // Custom range reads two ISO date params; a valid ordered pair drives the range,
-    // otherwise the picker is revealed and the sheet stays empty until the reader picks.
-    var cFrom = pq.get('from'), cTo = pq.get('to');
-    var ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
-    var customOk = pRange === 'custom' && ISO_RE.test(cFrom || '') && ISO_RE.test(cTo || '') && cFrom <= cTo;
-    var AY = P.academicYear || {};
-    var pBounds = pRange === 'term'
-      ? { start: bkkToday, end: termEnd(pAsc, bkkToday), label: 'This term' }
-      : pRange === 'year'
-      ? { start: AY.start || '', end: AY.end || '', label: 'The academic year' }
-      : pRange === 'custom'
-      ? (customOk ? { start: cFrom, end: cTo, label: fmtDMY(cFrom) + ' to ' + fmtDMY(cTo) }
-                  : { start: '', end: '', label: 'Custom range' })
-      : { start: bkkToday, end: monthEndISO(bkkToday), label: 'This month' };
-    var pRows = (pBounds.start && pBounds.end)
-      ? pAsc.filter(function (e) { return e.date >= pBounds.start && e.date <= pBounds.end; })
-      : [];
-    printList.innerHTML = pRows.length
-      ? pRows.map(function (e) {
-          var d = new Date(e.date + 'T00:00:00Z');
-          return '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
-            DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
-            '<div class="ev-main"><div class="et">' + e.title + '</div>' +
-            (e.sub ? '<div class="es">' + e.sub + '</div>' : '') + '</div></div>';
-        }).join('')
-      : '<div class="ev-row"><div class="ev-main"><div class="et">' +
-        (pRange === 'custom' && !customOk ? 'Pick a from and to date above.' : 'No dated events in this range.') +
-        '</div></div></div>';
-    var pLabel = document.getElementById('print-range-label');
-    if (pLabel) pLabel.textContent = pBounds.label + ' · printed ' + fmtDMY(bkkToday);
+  if (printList) {
+    var calSrc = printList.getAttribute('data-cal-source') || 'city';
+    var calRows = calSrc === 'city'
+      ? (P.calendarEvents || [])
+      : (P.peEvents || []).filter(function (e) { return e.pe === (calSrc === 'pe-samakee' ? 'samakee' : 'thonglor'); });
 
-    // Range controls (0058): mark the active button; wire the custom-range picker.
-    // Native <input type="date"> (no picker library, ponytail); the ?range=custom URL
-    // is built here (gated render.js), not an inline script.
-    var pRanges = document.getElementById('print-ranges');
-    if (pRanges) [].forEach.call(pRanges.querySelectorAll('a[href*="range="]'), function (a) {
-      if (new URLSearchParams(a.search).get('range') === pRange) a.setAttribute('aria-current', 'true');
-    });
-    var pcWrap = document.getElementById('print-custom');
-    var pcToggle = document.getElementById('print-custom-toggle');
-    if (pcWrap && pcToggle) {
-      var pcFrom = document.getElementById('pc-from'), pcTo = document.getElementById('pc-to'), pcGo = document.getElementById('pc-go');
-      if (pRange === 'custom') { pcWrap.hidden = false; pcToggle.setAttribute('aria-expanded', 'true'); }
-      if (customOk) { if (pcFrom) pcFrom.value = cFrom; if (pcTo) pcTo.value = cTo; }
-      pcToggle.addEventListener('click', function () {
-        var willOpen = pcWrap.hidden;
-        pcWrap.hidden = !willOpen;
-        pcToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-      });
-      if (pcGo) pcGo.addEventListener('click', function () {
-        var f = pcFrom && pcFrom.value, t = pcTo && pcTo.value;
-        if (!f || !t) return;
-        if (f > t) { var s = f; f = t; t = s; }   // tolerate a reversed pick
-        location.search = '?range=custom&from=' + f + '&to=' + t;
-      });
+    // Print sheet = key dates only. Workshops + parent socials stay on the live
+    // calendar and the subscribe feed (build-api.mjs, unfiltered), off the printed
+    // fridge sheet so it fits one page (0065 density; Trevor 2026-07-21). cat is the
+    // SSOT's own human-set field, so Sarah tunes what prints by setting it in the sheet
+    // (no title-matching here: the ingest does zero inference, 2026-07-20 decision).
+    var PRINT_SKIP = { workshop: 1, social: 1 };
+    calRows = calRows.filter(function (e) { return !PRINT_SKIP[e.cat]; });
+    console.assert([{ cat: 'workshop' }, { cat: 'holiday' }, { cat: 'social' }, { cat: 'event' }]
+      .filter(function (e) { return !PRINT_SKIP[e.cat]; }).length === 2, 'print sheet: drops workshop + social, keeps the rest');
+
+    // Category glyph + label. Grayscale-safe: the shape carries meaning without
+    // colour, so the key survives a black-and-white print (WCAG 1.4.1 precedent).
+    var YC_CAT = {
+      H:  { glyph: '●', label: 'Holiday, school closed' },
+      PD: { glyph: '○', label: 'Staff day, no children' },
+      PT: { glyph: '◆', label: 'Parent-teacher conferences' },
+      SE: { glyph: '■', label: 'School event, parents invited' },
+      SC: { glyph: '▲', label: 'For children, parents not expected' }
+    };
+    var YC_PREC = { H: 5, PT: 4, PD: 3, SC: 2, SE: 1 };   // category that wins a shared day cell
+    var YC_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    function ycTxt(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+    // Derive the sheet category from the SSOT row: aud is the spine (holiday/parent/
+    // child); two title splits carve the no-children days into staff/PD days and
+    // parent-teacher conferences, to match the PDF's audience key.
+    // ponytail: keyword heuristic on the holiday split; upgrade path = an explicit
+    // category column on the SSOT sheet (then this collapses to a field read).
+    function ycCat(e) {
+      if (/parent[\s-]*teacher conference/i.test(e.title || '')) return 'PT';
+      if (e.aud === 'holiday') {
+        return /staff (training|day)|in[\s-]?service|professional development|pd day/i.test((e.title || '') + ' ' + (e.sub || '')) ? 'PD' : 'H';
+      }
+      return e.aud === 'child' ? 'SC' : 'SE';
     }
+
+    // 12 months from the academic-year start (data-driven; rolls forward each year).
+    var AY0 = (P.academicYear && P.academicYear.start) || '2026-08-01';
+    var ayY = parseInt(AY0.slice(0, 4), 10), ayStartM = parseInt(AY0.slice(5, 7), 10) - 1;
+    var YCM = [];
+    for (var ycm = 0; ycm < 12; ycm++) {
+      var mm = (ayStartM + ycm) % 12, yy = ayY + Math.floor((ayStartM + ycm) / 12);
+      YCM.push({ mi: mm, y: yy, name: YC_FULL[mm] });
+    }
+
+    // Paint every day a row touches into a "year-month" -> {day: cat} map. Multi-day
+    // rows expand across their until (crossing month/year boundaries); a higher-
+    // precedence category wins a shared cell (a holiday over an event on the same day).
+    var ycDayMap = {};
+    calRows.forEach(function (e) {
+      var cat = ycCat(e), cur = new Date(e.date + 'T00:00:00Z');
+      var end = e.until ? new Date(e.until + 'T00:00:00Z') : new Date(cur);
+      for (; cur <= end; cur.setUTCDate(cur.getUTCDate() + 1)) {
+        var mk = cur.getUTCFullYear() + '-' + cur.getUTCMonth(), day = cur.getUTCDate();
+        var bucket = ycDayMap[mk] || (ycDayMap[mk] = {});
+        if (!bucket[day] || YC_PREC[cat] > YC_PREC[bucket[day]]) bucket[day] = cat;
+      }
+    });
+
+    function ycMonthCells(M) {
+      var dim = new Date(Date.UTC(M.y, M.mi + 1, 0)).getUTCDate();
+      var firstDow = new Date(Date.UTC(M.y, M.mi, 1)).getUTCDay();
+      var dc = ycDayMap[M.y + '-' + M.mi] || {}, h = '';
+      ['S', 'M', 'T', 'W', 'TH', 'F', 'S'].forEach(function (x) { h += '<i class="yc-dow">' + x + '</i>'; });
+      for (var b = 0; b < firstDow; b++) h += '<i class="yc-d yc-e"></i>';
+      for (var day = 1; day <= dim; day++) {
+        var cat = dc[day];
+        h += '<i class="yc-d' + (cat ? ' yc-c yc-c-' + cat : '') + '">' + day + '</i>';
+      }
+      return '<div class="yc-cells">' + h + '</div>';
+    }
+
+    // Key day label from the real row: single "12", same-month range "12-16" (en-dash),
+    // cross-month "26 Jul to 7 Aug" (house idiom: "to", never an em-dash).
+    function ycKeyDay(e) {
+      var s = new Date(e.date + 'T00:00:00Z'), sd = s.getUTCDate();
+      if (!e.until) return String(sd);
+      var u = new Date(e.until + 'T00:00:00Z');
+      if (u.getUTCMonth() === s.getUTCMonth() && u.getUTCFullYear() === s.getUTCFullYear()) return sd + '–' + u.getUTCDate();
+      return sd + ' ' + FN_MONS[s.getUTCMonth()] + ' to ' + u.getUTCDate() + ' ' + FN_MONS[u.getUTCMonth()];
+    }
+
+    var ycMonthsHTML = '<div class="yc-months">' + YCM.map(function (M) {
+      return '<div class="yc-mini"><div class="yc-mn">' + M.name + '</div>' + ycMonthCells(M) + '</div>';
+    }).join('') + '</div>';
+    var ycKeysHTML = '<div class="yc-keys">' + YCM.map(function (M) {
+      var rows = calRows.filter(function (e) {
+        var s = new Date(e.date + 'T00:00:00Z');
+        return s.getUTCMonth() === M.mi && s.getUTCFullYear() === M.y;
+      });
+      if (!rows.length) return '';
+      return '<div class="yc-kgm"><div class="yc-km">' + M.name + '</div>' + rows.map(function (e) {
+        var cat = ycCat(e);
+        return '<div class="yc-kr"><span class="yc-kd">' + ycKeyDay(e) + '</span>' +
+          '<b class="yc-kgl yc-g-' + cat + '">' + YC_CAT[cat].glyph + '</b>' +
+          '<span class="yc-kt">' + ycTxt(e.title) + '</span></div>';
+      }).join('') + '</div>';
+    }).join('') + '</div>';
+
+    if (calRows.length) printList.innerHTML = ycMonthsHTML + ycKeysHTML;   // else the static no-JS fallback stands
+    var pLabel = document.getElementById('print-range-label');
+    if (pLabel) pLabel.textContent = ayY + '–' + (ayY + 1);
+    var pStamp = document.getElementById('print-stamp');
+    if (pStamp) pStamp.textContent = 'printed ' + fmtDMY(bkkToday);
+
+    // self-check (ponytail): the classifier + day label are the load-bearing logic.
+    console.assert(ycCat({ aud: 'holiday', title: 'The Queen Mother’s Birthday Holiday' }) === 'H', 'ycCat: public holiday -> H');
+    console.assert(ycCat({ aud: 'holiday', title: 'No school for children (staff training day)' }) === 'PD', 'ycCat: staff training -> PD');
+    console.assert(ycCat({ aud: 'parent', title: 'Parent Teacher Conferences (Progress)' }) === 'PT', 'ycCat: conferences -> PT');
+    console.assert(ycCat({ aud: 'parent', title: 'K1 Information Session' }) === 'SE', 'ycCat: parent event -> SE');
+    console.assert(ycCat({ aud: 'child', title: 'K1 first day of school' }) === 'SC', 'ycCat: children-only -> SC');
+    console.assert(ycKeyDay({ date: '2026-10-12', until: '2026-10-16' }) === '12–16', 'ycKeyDay: same-month range');
+    console.assert(ycKeyDay({ date: '2026-12-21', until: '2027-01-09' }) === '21 Dec to 9 Jan', 'ycKeyDay: cross-month range');
   }
 
   // Sport rows + status pills (home sport tile). status vocab: open | soon |

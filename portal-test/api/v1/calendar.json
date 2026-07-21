@@ -1,6 +1,6 @@
 {
   "term": "Term 1",
-  "generated": "2026-07-21T03:03:03.122Z",
+  "generated": "2026-07-21T13:48:33.066Z",
   "events": [
     {
       "date": "2026-08-03",
@@ -86,14 +86,6 @@
       "cat": "event",
       "type": "purple",
       "aud": "parent",
-      "title": "Sport parent info evening",
-      "sub": "Basketball, cricket and swimming explained"
-    },
-    {
-      "date": "2026-08-20",
-      "cat": "event",
-      "type": "purple",
-      "aud": "parent",
       "cohort": "Y3 to Y6",
       "title": "Y3 to Y6 Information Session",
       "sub": ""
@@ -135,16 +127,8 @@
       "sub": ""
     },
     {
-      "date": "2026-09-07",
-      "cat": "event",
-      "type": "purple",
-      "aud": "parent",
-      "title": "Sport sign-up opens",
-      "sub": "Basketball, cricket and swimming"
-    },
-    {
       "date": "2026-09-17",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Safeguarding parent info session",
@@ -168,7 +152,7 @@
     },
     {
       "date": "2026-10-01",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "ISB parent info session",
@@ -193,7 +177,7 @@
     },
     {
       "date": "2026-10-08",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Digital Safety parent info session",
@@ -401,7 +385,7 @@
     },
     {
       "date": "2027-02-11",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Project Through the Years at ELC",
@@ -409,7 +393,7 @@
     },
     {
       "date": "2027-02-12",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Project Through the Years at ELC",
@@ -417,7 +401,7 @@
     },
     {
       "date": "2027-02-12",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Project in Kindergarten",
@@ -461,7 +445,7 @@
     },
     {
       "date": "2027-03-04",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Atelier explorations and learning",
@@ -469,7 +453,7 @@
     },
     {
       "date": "2027-03-09",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Wycombe Abbey Head of School info session",
@@ -477,7 +461,7 @@
     },
     {
       "date": "2027-03-11",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Emergent reading skill development",
@@ -485,7 +469,7 @@
     },
     {
       "date": "2027-03-17",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Philosophy Circle with Y6",
@@ -501,7 +485,7 @@
     },
     {
       "date": "2027-03-22",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Compass Initiatives: transitions to K1",
@@ -534,7 +518,7 @@
     },
     {
       "date": "2027-04-01",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "The Wonder of Y6",
@@ -568,7 +552,7 @@
     },
     {
       "date": "2027-04-22",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Math at ELC",
@@ -611,7 +595,7 @@
     },
     {
       "date": "2027-05-05",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Little Steps, Big Futures: charting your child's K to 6 journey",
@@ -619,7 +603,7 @@
     },
     {
       "date": "2027-05-06",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Little Steps, Big Futures: charting your child's K to 6 journey",
@@ -635,7 +619,7 @@
     },
     {
       "date": "2027-05-13",
-      "cat": "event",
+      "cat": "workshop",
       "type": "purple",
       "aud": "parent",
       "title": "Navigating the AI Terrain",
