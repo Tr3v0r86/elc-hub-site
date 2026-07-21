@@ -47,10 +47,13 @@
       <a class="navlink" href="activities/">Activities</a>
       <a class="navlink" href="calendar/">Calendar</a>
       <details class="nav-dd">
-        <summary class="navlink">Purple Elephant</summary>
+        <summary class="navlink">Centres</summary>
         <div class="dd-panel">
-          <a href="purple-elephant/thong-lor/">PE 39, 49 &amp; 55</a>
-          <a href="purple-elephant/samakee/">PE Samakee</a>
+          <div class="campus-switch" role="group" aria-label="Choose an ELC centre">
+            <a class="campus" href="./">City School</a>
+            <a class="campus" href="purple-elephant/thong-lor/">PE 39, 49 &amp; 55</a>
+            <a class="campus" href="purple-elephant/samakee/">PE Samakee</a>
+          </div>
         </div>
       </details>
       <a class="navlink" href="policies/">Policies</a>
@@ -77,6 +80,35 @@
         <h1>Everything on this term, <span class="turn">in one place.</span></h1>
       </div>
     </div>
+
+    <!-- NOTE FROM TREVOR (moved above the week bands, Trevor 2026-07-21): the single
+         parent-facing voice sits right under the hero, before This week. Copy rotates
+         from data.js notes[]; this static markup is the JS-off fallback (rendered
+         expanded). render.js fills the #note-* ids, sets read-state (auto-open only for
+         a note this device has not seen, collapsed once read), and builds #note-history.
+         Collapse = native <details>; polish of the collapsed/expanded states and the
+         history list = Claude Design lane (rule 7). -->
+    <details class="tile note tile-top-purple home-note" id="home-note" open>
+      <summary class="note-summary">
+        <div class="who">
+          <img class="headshot" src="assets/img/trevor.png" alt="Trevor" width="56" height="56" onerror="this.style.display='none'">
+          <div>
+            <span class="eyebrow" id="note-eyebrow">A note from Trevor</span>
+            <div class="when" id="note-when">This month · August</div>
+          </div>
+        </div>
+        <h2 id="note-title">Welcome to a new year.</h2>
+      </summary>
+      <div class="note-reveal">
+        <div class="note-main">
+          <p id="note-body">This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and I am building it in the open. Tell me what you need with the feedback button, and watch this page grow around your answers.</p>
+          <div class="sig" id="note-sig">Trevor &middot; Head of Operations and Educational Experience</div>
+          <div class="sig-sub">Supporting your family with everything outside the classroom.</div>
+        </div>
+        <img class="note-art" src="assets/img/art/thai-houses.svg" alt="" aria-hidden="true" loading="lazy" width="520" height="277">
+      </div>
+      <div class="note-history" id="note-history" hidden></div>
+    </details>
 
     <!-- THIS WEEK strip (P4 pass A): the current Asia/Bangkok Mon-Sun as day cards,
          each event linking into the calendar, so the week and the calendar are one
@@ -132,29 +164,6 @@
         </a>
       </div>
     </section>
-
-    <!-- NOTE FROM TREVOR (0051: single voice for the parent-facing hard launch;
-         the joint/HoS letter seam stays alive below and in issue 0007. Copy rotates
-         from data.js notes[]; this static copy is the JS-off fallback.) -->
-    <!-- The Thai-houses art (moved from the hero, P4 pass A) rides beside the note:
-         to the side on desktop, a header above on mobile. render.js fills the
-         #note-* spans by id inside .note-main, which stays untouched. -->
-    <div class="tile note tile-top-purple home-note">
-      <div class="note-main">
-        <div class="who">
-          <img class="headshot" src="assets/img/trevor.png" alt="Trevor" width="56" height="56" onerror="this.style.display='none'">
-          <div>
-            <span class="eyebrow" id="note-eyebrow">A note from Trevor</span>
-            <div class="when" id="note-when">This month · August</div>
-          </div>
-        </div>
-        <h2 id="note-title">Welcome to a new year.</h2>
-        <p id="note-body">This portal is the one place for everything your family does with ELC beyond the classroom: the week ahead, the calendar, sign-ups, and every policy and form. It is new, and I am building it in the open. Tell me what you need with the feedback button, and watch this page grow around your answers.</p>
-        <div class="sig" id="note-sig">Trevor &middot; Head of Operations and Educational Experience</div>
-        <div class="sig-sub">Supporting your family with everything outside the classroom.</div>
-      </div>
-      <img class="note-art" src="assets/img/art/thai-houses.svg" alt="" aria-hidden="true" loading="lazy" width="520" height="277">
-    </div>
 
     <!-- ONGOING band (slice 2). Persistent quick-links, not time-bound: ASA,
          Armonia, Sport, Policies regrouped under one heading. The slice-1 Events
@@ -237,6 +246,7 @@
     <a class="tab" href="activities/"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l5 3"/></svg>Activities</a>
     <a class="tab" href="calendar/"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18"/></svg>Calendar</a>
     <a class="tab" href="policies/"><svg class="ic" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></svg>Policies</a>
+    <button class="tab" type="button" id="centres-tab" aria-haspopup="dialog" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21h7V3H3zM14 21h7V9h-7zM14 3v3h7"/></svg>Centres</button>
   </div>
 
   <script src="assets/data.js"></script>

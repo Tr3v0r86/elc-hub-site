@@ -65,6 +65,15 @@ nav{display:flex;align-items:center;gap:28px;}
 .nav-dd .dd-panel a{font-family:var(--sans);font-weight:500;font-size:14.5px;color:var(--charcoal);
   padding:8px 12px;border-radius:6px;white-space:nowrap;}
 .nav-dd .dd-panel a:hover{color:var(--ink);background:var(--paper);}
+/* campus switcher (issue 0067): SCAFFOLD, Claude Design to restyle. Desktop = a
+   nav-dd dropdown (summary "Centres"); links flow into .dd-panel (display:contents)
+   and take .dd-panel a styling. Mobile = a .cal-pop sheet cloned from .campus-switch. */
+.campus-switch{display:contents;}
+.campus-switch .campus.active{color:var(--ink);font-weight:600;}
+button.tab{background:none;border:none;padding:0;}
+.cal-pop .campus-switch{display:flex;flex-direction:column;}
+.cal-pop .campus{padding:13px 2px;border-top:1px solid var(--rule-2);font-size:15.5px;color:var(--charcoal);text-decoration:none;}
+.cal-pop .campus:first-child{border-top:none;}
 
 /* footer FAQ links: mobile only (no top nav below 720px) */
 .foot-links .m-only{display:none;}
@@ -720,6 +729,32 @@ a.key-num:hover,a.key-num:focus-visible{text-decoration:underline;text-underline
 
 .print-only{display:none;}
 
+/* Print fit (Trevor 2026-07-21): on screen the sheet is CD's comfortable design; at
+   print the running masthead + footer spacers eat ~48mm per page, so the body has to be
+   ~48mm tighter to land on ONE A4. These cuts are PRINT-ONLY: the on-screen preview is
+   untouched (rule 7: CD's visual design stands; this only tunes the print mechanics).
+   The subscribe strip is dead on paper (the button can't be tapped and the footer already
+   carries the "live calendar online" note), so it drops. */
+@media print{
+  .yc-subscribe{display:none;}
+  /* trim the running masthead a touch: the header spacer is the biggest per-page
+     overhead (~40mm), so a smaller mast buys bottom buffer for physical printers'
+     hardware margins without cramming the calendar grid or key. */
+  .yc-mast{padding-bottom:10px;}
+  .yc-lock{height:52px;}
+  .yc-sublogo-cs{height:50px;}
+  .yc-sublogo-pe{height:47px;}
+  .yc-sub{font-size:19px;}
+  .yc-yr{font-size:25px;margin-top:6px;}
+  .yc-months{margin-top:5px;}
+  .yc-mini{padding:5px 8px 6px;}
+  .yc-d{line-height:1.18;}
+  .yc-keys{margin-top:5px;padding-top:6px;}
+  .yc-kgm{margin-bottom:2px;}
+  .yc-kr{line-height:1.2;}
+  .yc-legend{margin-top:5px;padding-top:6px;}
+}
+
 /* ---- print / PDF: clean flow, drop the fixed contour field, keep colours ---- */
 @media print{
   *,*::before,*::after{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -832,10 +867,27 @@ a.doc-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;bord
    text on desktop, reordered ABOVE it as a header on mobile. The note text stays
    render.js's textContent surface (#note-* ids intact inside .note-main).
    Composition = Claude Design lane. */
-.note.home-note{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,440px);align-items:center;gap:clamp(24px,3.2vw,38px);margin-bottom:42px;}
+/* Note card is a <details> (Trevor 2026-07-21 read-state feature): <summary> = who +
+   title (always visible, the collapsed face), .note-reveal = body + art (the collapsible
+   half), #note-history scrolls past notes. The 2-col text|art grid moved off the card
+   onto .note-reveal. Mechanical structure only; the collapsed/expanded look, a custom
+   disclosure affordance, and history styling = Claude Design lane (rule 7). */
+.note.home-note{margin-bottom:42px;}
+.note-summary{cursor:pointer;list-style:none;}
+.note-summary::-webkit-details-marker{display:none;}
+.note-reveal{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,440px);align-items:center;gap:clamp(24px,3.2vw,38px);}
 .note-main{display:flex;flex-direction:column;min-width:0;}
 .note-art{width:100%;height:auto;justify-self:end;align-self:center;opacity:0.85;}
-@media(max-width:760px){.note.home-note{grid-template-columns:1fr;gap:16px;}.note-art{order:-1;max-width:190px;justify-self:start;}}
+@media(max-width:760px){.note-reveal{grid-template-columns:1fr;gap:16px;}.note-art{order:-1;max-width:190px;justify-self:start;}}
+/* Past-note history: a light-touch scroll inside the card. Reveals only when expanded
+   (native <details>); render.js fills it from data.js notes[] older than the current. */
+.note-history{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule-2);max-height:230px;overflow-y:auto;}
+.nh-label{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+.nh-item{padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--rule-2);}
+.nh-item:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0;}
+.nh-when{font-family:var(--wordmark);font-weight:500;font-size:12px;color:var(--muted);margin-bottom:4px;}
+.nh-title{font-family:var(--serif);font-weight:400;font-size:16px;color:var(--ink);margin-bottom:5px;}
+.nh-body{font-size:13.5px;line-height:1.6;color:var(--charcoal);}
 /* Calendar hero (P4 pass A, Trevor 2026-07-19): Giovanni's ring spiral becomes a
    large, rotated, hero-esque background header. It is bled off the right edge and
    clipped by the band so only a clean semicircle of rings shows: the white text

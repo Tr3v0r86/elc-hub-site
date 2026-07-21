@@ -264,6 +264,63 @@
     else { window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(url), '_blank', 'noopener'); }
   });
 
+  /* Campus switcher (issue 0067). Desktop: highlight the current centre in the
+     header .campus-switch. Mobile: the #centres-tab button opens a bottom sheet
+     (cloned from the header switcher, so hrefs already carry this page's depth),
+     reusing the day-sheet convention (.cal-pop + body.sheet-open). */
+  (function () {
+    var sw = document.querySelector('.campus-switch');
+    if (!sw) return;
+    function centreOf(href) {
+      if (/purple-elephant\/thong-lor\//.test(href)) return 'thonglor';
+      if (/purple-elephant\/samakee\//.test(href)) return 'samakee';
+      return 'city';
+    }
+    var here = /\/purple-elephant\/thong-lor(\/|$)/.test(location.pathname) ? 'thonglor'
+             : /\/purple-elephant\/samakee(\/|$)/.test(location.pathname) ? 'samakee'
+             : 'city';
+    var links = sw.querySelectorAll('.campus');
+    for (var i = 0; i < links.length; i++) {
+      if (centreOf(links[i].getAttribute('href')) === here) {
+        links[i].classList.add('active');
+        links[i].setAttribute('aria-current', 'page');
+      }
+    }
+
+    var tab = document.getElementById('centres-tab');
+    if (!tab) return;
+    var sheet = null;
+    function closeSheet(returnFocus) {
+      if (!sheet) return;
+      sheet.remove(); sheet = null;
+      document.body.classList.remove('sheet-open');
+      tab.setAttribute('aria-expanded', 'false');
+      if (returnFocus) tab.focus();
+    }
+    function openSheet() {
+      if (sheet) { closeSheet(false); return; }
+      sheet = document.createElement('div');
+      sheet.className = 'cal-pop';
+      sheet.setAttribute('role', 'dialog');
+      sheet.setAttribute('aria-modal', 'true');
+      sheet.setAttribute('aria-label', 'Choose an ELC centre');
+      sheet.tabIndex = -1;
+      sheet.appendChild(sw.cloneNode(true));   // depth-correct links + the .active marker
+      document.body.appendChild(sheet);
+      document.body.classList.add('sheet-open');
+      tab.setAttribute('aria-expanded', 'true');
+      sheet.focus();
+    }
+    tab.addEventListener('click', function () { openSheet(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(true); });
+    // Tap outside the sheet (and not on the tab) closes it.
+    document.addEventListener('click', function (e) {
+      if (!sheet) return;
+      if (sheet.contains(e.target) || tab.contains(e.target)) return;
+      closeSheet(false);
+    });
+  })();
+
   // Add/share cluster toggle (0055): reveal the three controls on mobile. Delegated so it
   // covers every agenda row; the inner add/share buttons keep their own handlers above.
   document.addEventListener('click', function (e) {
@@ -486,6 +543,47 @@
         ctaA.href = ctaHref;
         ctaA.textContent = current.cta.label;
         noteBody.parentNode.insertBefore(ctaA, noteBody.nextSibling);
+      }
+
+      // Read-state + past-note history (Trevor 2026-07-21). Device-local only: the card
+      // (a native <details>) auto-opens for a note this device has not seen, marks it
+      // read on first view, then stays collapsed until a newer note appears. Past notes
+      // scroll inside the card (revealed on expand). JS-off = the static <details open>.
+      var noteCard = document.getElementById('home-note');
+      if (noteCard) {
+        var SEEN_KEY = 'elcp:note-seen';
+        var seen = null;
+        try { seen = localStorage.getItem(SEEN_KEY); } catch (e) {}   // private mode: no store, stays open
+        var isNew = seen !== current.from;
+        noteCard.open = isNew;
+        // ponytail: mark read on first view of a new note, not on an explicit collapse
+        // click, so a returning device is never nagged. Upgrade path if "read" must mean
+        // dwell/scroll: gate this write behind an IntersectionObserver + timer.
+        if (isNew) { try { localStorage.setItem(SEEN_KEY, current.from); } catch (e) {} }
+
+        // History: notes already live (from <= today) other than the current, newest first.
+        var byFromDesc = function (a, b) { return b.from.localeCompare(a.from); };
+        console.assert([{ from: '2026-07-01' }, { from: '2026-08-17' }].slice().sort(byFromDesc)[0].from === '2026-08-17', 'note history: newest first');
+        var hist = document.getElementById('note-history');
+        var past = (P.notes || []).filter(function (n) { return n.from <= bkkToday && n.from !== current.from; }).sort(byFromDesc);
+        if (hist && past.length) {
+          var hf = document.createDocumentFragment();
+          var lbl = document.createElement('div');
+          lbl.className = 'nh-label';
+          lbl.textContent = 'Earlier notes';
+          hf.appendChild(lbl);
+          past.forEach(function (n) {
+            var it = document.createElement('article');
+            it.className = 'nh-item';
+            var w = document.createElement('div'); w.className = 'nh-when'; w.textContent = n.when || '';
+            var h = document.createElement('h3'); h.className = 'nh-title'; h.textContent = n.title || '';
+            var b = document.createElement('p'); b.className = 'nh-body'; b.textContent = n.body || '';
+            it.appendChild(w); it.appendChild(h); it.appendChild(b);
+            hf.appendChild(it);
+          });
+          hist.appendChild(hf);
+          hist.hidden = false;
+        }
       }
     }
   }
