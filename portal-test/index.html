@@ -229,6 +229,58 @@
       </div>
     </section>
 
+    <!-- KOB KHUN WALL (issue 0074): gratitude + celebrations, below Ongoing. Two card
+         templates for v1.0, both reusing the .ev-card shell so the band matches the rest
+         of the landing page: a CELEBRATION card (a child or alumnus, linking out to the
+         story) and a VOICES card (several parent thank-yous folded into one piece).
+         STATIC markup on purpose: at two items a data island + renderer + JS-off fallback
+         is more plumbing than content, and the copy pipeline (0062) picks these strings up
+         as ordinary page copy. Move to a PORTAL.gratitude array + render.js when this
+         becomes a monthly rotation with an archive (the notes[] + #note-history pattern).
+         CONSENT: quotes come from internal staff email, NOT a consent-checkbox form, so no
+         child names, no parent names and no other school is named until the office has a
+         written yes (see the issue). Card look + any "wall" texture = Claude Design (rule 7). -->
+    <section class="section band" aria-labelledby="kk-h">
+      <div class="sec-eyebrow"><span class="eyebrow" id="kk-h">Kob khun wall</span><span class="ln"></span></div>
+      <p class="kk-lead">Kob khun means thank you. This is where we keep what families tell us, and where we celebrate our children and what they go on to do.</p>
+      <div class="kk-cards">
+        <!-- Template 1: celebration. Facts verified against the source article; one short
+             attributed quote. HERO = the pair (his portrait + one frame of his work) in ONE
+             row at a capped height, so it never dominates on a phone (Trevor 2026-07-26);
+             the header sits directly under it. Images supplied by Trevor: the work is Pari's
+             copyright, credited in the caption. -->
+        <a class="tile ev-card ev-link kk-card" href="https://www.bkmagazine.com/arts-culture/a-14-year-old-thai-photographers-underwater-shots-are-gaining-international-acclaim/" target="_blank" rel="noopener" aria-label="Congratulations, Pari &middot; the story on BK Magazine">
+          <span class="when">July 2026 &middot; Celebrating our children</span>
+          <figure class="kk-hero">
+            <img src="assets/img/kk/pari-portrait.jpg" alt="Pari in a wetsuit, holding his underwater camera housing" loading="lazy" width="640" height="700">
+            <img class="wide" src="assets/img/kk/pari-dwellers-of-the-night.jpg" alt="A blue ribbon eel with its jaws open, lit against a glowing orange and yellow orb" loading="lazy" width="1200" height="799">
+            <figcaption>Pari, and one frame from <i>Dwellers of the Night</i>. Photograph his own.</figcaption>
+          </figure>
+          <h3>Congratulations, Pari.</h3>
+          <p>Panitbhand Paribatra Na Ayudhya, Pari to us, is one of our Year 6 alumni. At fourteen he is an underwater photographer, and this month his series <i>Dwellers of the Night</i> won the Project//21 category at the Hasselblad Masters, chosen from more than 108,000 entries worldwide, a year after he was named Young Shark Photographer of the Year. Asked how it began, he told BK Magazine: "I practiced and practiced and it became a passion." A child who finds the thing that fascinates them and keeps going is what we hope for every child here.</p>
+          <span class="go">Read the story <span class="arw">&rarr;</span></span>
+        </a>
+
+        <!-- Template 2: voices. One card holds the batch; add a figure per quote. Quotes are
+             verbatim and anonymised; the closing line is reported, not quoted, because it
+             came to us through staff rather than in the family's own words. -->
+        <div class="tile ev-card ev-inert kk-card">
+          <span class="when">Summer 2026 &middot; Kob khun</span>
+          <h3>What summer families told us.</h3>
+          <p>Session one of the Festival of the Arts brought families onto our campus from across Bangkok and from as far as Hong Kong and India, many of them for the first time. Some of what they said on the way out:</p>
+          <figure class="kk-q">
+            <blockquote>Honestly, this school is so beautiful, it amazes me. We had friends tell us to come here and they didn't let us down.</blockquote>
+            <figcaption>A parent, summer school session one</figcaption>
+          </figure>
+          <figure class="kk-q">
+            <blockquote>Thank you very much for giving our kids such a wonderful time. They absolutely loved it and came home full of stories every day.</blockquote>
+            <figcaption>A parent of two children, Years 2 to 6</figcaption>
+          </figure>
+          <p class="kk-note">Families visiting from India told us they chose a school over a holiday camp because their children would be with educators all week. Kob khun to all of you for trusting us with your summer.</p>
+        </div>
+      </div>
+    </section>
+
     <p class="page-note">The practical everyday (parking, the school day, lunches and what to send) lives in <a href="nuts-and-bolts/">the nuts and bolts</a>. And there is more to school life than the schedule: <a href="community/">get to know the ELC community</a>.</p>
   </div>
 
