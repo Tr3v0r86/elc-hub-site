@@ -8,8 +8,15 @@
    mini-infobar, which Chrome shows once per origin and then withdraws after an
    install-then-uninstall, so the install path vanished with nothing behind it. We
    now capture beforeinstallprompt ourselves and preventDefault it, which suppresses
-   Chrome's one-shot bar and hands us the event to fire on demand. Chrome's
-   suppression applies to its bar, not to a captured event, so our button survives.
+   Chrome's one-shot bar and hands us the event to fire on demand.
+
+   The affordance does NOT wait for that event on Android (2026-07-28, Trevor's
+   Pixel): Chrome can withhold beforeinstallprompt entirely, for an unobservable
+   stretch after an uninstall, and the first build only rendered the pill FROM the
+   event, so a withheld event meant no install UI at all, which is the original bug
+   wearing a new coat. Android now renders the pill unconditionally; a captured
+   event upgrades the tap to the native prompt, and without one the tap coaches the
+   menu path (browser menu, then Add to Home screen), which always exists.
 
    iOS Safari never fires beforeinstallprompt: Add to Home Screen is Share-sheet only,
    so iOS gets the two steps as a coach card. Line's in-app browser cannot install at
@@ -33,6 +40,7 @@
     if (hasPrompt) return 'prompt';             // Chromium: drive the real prompt
     if (/\bLine\//i.test(ua)) return 'inapp';   // in-app browser: cannot install here
     if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';  // Safari: Share sheet, manual
+    if (/Android/i.test(ua)) return 'android';  // pill now, event may upgrade the tap
     return 'none';                              // no install path we can offer
   }
 
@@ -84,6 +92,11 @@
       title: 'Add the Portal to your home screen',
       steps: ['Tap the Share button in the Safari toolbar.', 'Choose Add to Home Screen.']
     },
+    android: {
+      title: 'Add the Portal to your home screen',
+      steps: ['Tap the browser menu (the three dots, top right).',
+        'Choose Add to Home screen, then Install.']
+    },
     inapp: {
       title: 'Open the Portal in your browser first',
       steps: ['Tap the menu, then choose Open in browser.',
@@ -105,33 +118,40 @@
       '<path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>Install app';
     document.body.appendChild(pill);
 
-    if (kind === 'prompt') {
-      pill.addEventListener('click', function () {
-        if (!deferred) return;
-        deferred.prompt();
-        deferred.userChoice.then(function (choice) {
-          // Kept only until it is used: a prompt event cannot be fired twice.
-          deferred = null;
-          if (choice && choice.outcome === 'accepted') hide();
-        });
+    var copy = COACH[kind];
+    var dlg = null;
+    if (copy) {
+      dlg = document.createElement('dialog');
+      dlg.id = 'install-coach';
+      dlg.innerHTML = '<h2></h2><ol></ol><button type="button">Got it</button>';
+      dlg.querySelector('h2').textContent = copy.title;
+      copy.steps.forEach(function (step) {
+        var li = document.createElement('li');
+        li.textContent = step;
+        dlg.querySelector('ol').appendChild(li);
       });
-      return;
+      document.body.appendChild(dlg);
+      dlg.querySelector('button').addEventListener('click', function () { dlg.close(); });
     }
 
-    var copy = COACH[kind];
-    var dlg = document.createElement('dialog');
-    dlg.id = 'install-coach';
-    dlg.innerHTML = '<h2></h2><ol></ol><button type="button">Got it</button>';
-    dlg.querySelector('h2').textContent = copy.title;
-    copy.steps.forEach(function (step) {
-      var li = document.createElement('li');
-      li.textContent = step;
-      dlg.querySelector('ol').appendChild(li);
+    /* ONE handler, decided at tap time, because the capabilities change under the
+       pill: on Android the event can land (or be consumed) after render. Captured
+       event -> the native prompt; none -> the coach card; neither (desktop 'prompt'
+       pill whose event was consumed) -> nothing, honestly inert. */
+    pill.addEventListener('click', function () {
+      if (deferred) {
+        var ev = deferred;
+        // Kept only until it is used: a prompt event cannot be fired twice.
+        deferred = null;
+        ev.prompt();
+        ev.userChoice.then(function (choice) {
+          if (choice && choice.outcome === 'accepted') hide();
+        });
+        return;
+      }
+      // Native <dialog>: focus trap and Escape come from the platform, not from us.
+      if (dlg) dlg.showModal();
     });
-    document.body.appendChild(dlg);
-    // Native <dialog>: focus trap and Escape come from the platform, not from us.
-    pill.addEventListener('click', function () { dlg.showModal(); });
-    dlg.querySelector('button').addEventListener('click', function () { dlg.close(); });
   }
 
   function hide() {
@@ -151,9 +171,12 @@
     hide();
   });
 
-  /* The non-Chromium branches have no event to wait for, so they resolve on load.
-     'prompt' is deliberately absent here: hasPrompt is false until the event lands,
-     and the listener above renders it the moment it does. */
+  /* Startup branches resolve on load without waiting for any event: iOS and in-app
+     never get one, and Android must not depend on one (a withheld event meant no
+     install UI at all, the original bug). 'prompt' is deliberately absent here:
+     hasPrompt is false until the event lands, and the listener above renders it the
+     moment it does (desktop Chromium); on an already-rendered Android pill the event
+     just upgrades the tap. */
   var startup = mode(navigator.userAgent || '', false, false);
   if (startup !== 'none') render(startup);
 })();
