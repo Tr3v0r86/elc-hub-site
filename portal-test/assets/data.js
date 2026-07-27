@@ -110,7 +110,7 @@ window.PORTAL = {
       blurb: 'Twenty minutes with your child\'s teacher to start the year, in your words.',
       go: 'Find your class' },
     { href: 'coffee-mornings/', title: 'Information session',
-      blurb: 'Meet your year group\'s coordinators and administrators and hear how the year runs, before the first day.',
+      blurb: 'Meet your year group\'s coordinators and administrators and hear how the year runs, in the opening weeks.',
       go: 'Find your session' }
   ],
 
@@ -132,14 +132,14 @@ window.PORTAL = {
       body: 'ELC Portal is new this year: one place for everything your family does with us beyond the classroom. We are building it not just for our community, but with you. Just as we shape the children\'s learning around relationships and listening, this page grows from what families tell us they need. So tell us, with the feedback button, and together we will make something that fits our school and our community.',
       sig: 'Trevor · Head of Operations and Educational Experience' },
     // Optional cta (plan 1.5): renders as one link after the body, gone after `until`.
-    { from: '2026-08-10', eyebrow: 'A note from Trevor', when: 'This week',
+    { from: '2026-08-10', eyebrow: 'A note from Trevor', when: '17 to 18 August',
       title: 'We start with your hopes.',
-      body: 'This week your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is my favourite way to begin the year. Everything else on this page can wait until you have booked your time.',
+      body: 'On 17 and 18 August your child\'s teachers sit down with you for Hopes and Wishes: what you want this year to hold for your child, in your words. It is my favourite way to begin the year. Everything else on this page can wait until you have booked your time.',
       cta: { href: 'hopes-and-wishes/', label: 'Book your time', until: '2026-08-18' },
       sig: 'Trevor · Head of Operations and Educational Experience' },
-    { from: '2026-08-17', eyebrow: 'A note from Trevor', when: 'This week',
+    { from: '2026-08-17', eyebrow: 'A note from Trevor', when: '17 to 25 August',
       title: 'Come and meet your year team.',
-      body: 'This week is your year group\'s information session: meet the coordinators and administrators who hold the year together and hear how it runs, before the first day. It is not a coffee morning. Those come later in the year and are about community; this is the practical start. Times are on the calendar; come find me while you are there.',
+      body: 'Your year group\'s information session lands between 17 and 25 August: meet the coordinators and administrators who hold the year together and hear how it runs. It is not a coffee morning. Those come later in the year and are about community; this is the practical start. Times are on the calendar; come find me while you are there.',
       cta: { href: 'coffee-mornings/', label: 'Find your session' },
       sig: 'Trevor · Head of Operations and Educational Experience' },
     { from: '2026-08-24', eyebrow: 'A note from Trevor', when: 'This week',

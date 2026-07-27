@@ -8,7 +8,7 @@
   /* Drop screen chrome and anything interactive; the background art just wastes ink. */
   header, nav, .tabbar, .foot-strip, .crumb, .topline, #topo,
   button, .btn, .btn-row, .no-print,
-  #pw-pill, #fb-pill, .status-banner, .draft-chip {
+  #pw-pill, #fb-pill, #install-pill, .status-banner, .draft-chip {
     display: none !important;
   }
   [data-page="calendar-print"] .page-head,

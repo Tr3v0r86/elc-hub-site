@@ -10,6 +10,8 @@
   // reuses these; nothing recomputes its own.
   var bkkToday = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok' }).format(new Date()); // YYYY-MM-DD
   var FN_MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var CAL_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
   var DOW = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function escAttr(s) { return String(s).replace(/"/g, '&quot;'); }
@@ -43,10 +45,13 @@
     var days = Math.round((new Date(w.until + 'T00:00:00Z') - new Date(todayISO + 'T00:00:00Z')) / 86400000);
     return { show: true, days: days, closes: days === 0 ? 'Closes today' : days === 1 ? 'Closes tomorrow' : days + ' days left' };
   }
-  // Monday (UTC midnight) of the week containing the given ISO date.
+  // Sunday (UTC midnight) of the week containing the given ISO date. Weeks start on
+  // Sunday portal-wide (relay #16, Trevor 2026-07-27): a family checking on Sunday
+  // sees the week ahead, not the week that just ended. The month grid and the print
+  // sheet share the convention.
   function weekStart(iso) {
     var d = new Date(iso + 'T00:00:00Z');
-    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+    d.setUTCDate(d.getUTCDate() - d.getUTCDay());
     return d;
   }
   // ISO date + n days (UTC-midnight anchored). The one add-days idiom (0050 sweep;
@@ -63,12 +68,6 @@
   }
   function agendaBucket(dateISO, todayISO) {
     return dateISO <= monthEndISO(todayISO) ? 0 : 1;
-  }
-  // Monday-to-Sunday bounds (ISO) of the week containing todayISO. Pure + assertable.
-  function weekBounds(todayISO) {
-    var mon = weekStart(todayISO);
-    var sun = new Date(mon); sun.setUTCDate(mon.getUTCDate() + 6);
-    return { start: mon.toISOString().slice(0, 10), end: sun.toISOString().slice(0, 10) };
   }
   // Fridge-print "term" end: the next key date titled like a term close (else 120
   // days out). evs must be sorted ascending. Pure + assertable.
@@ -212,11 +211,10 @@
   console.assert(toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('URL:') > -1 && toICS({ date: '2026-08-03', title: 'x', sub: '' }).indexOf('DESCRIPTION:Details: ') > -1, 'toICS: carries event URL + description');
   console.assert(toICSAll([{ date: '2026-08-03', title: 'a', sub: '' }, { date: '2026-08-04', title: 'b', sub: '' }]).split('BEGIN:VEVENT').length === 3, 'toICSAll: two events, one calendar');
   console.assert(icsFilename({ date: '2026-08-14', title: 'New Family Orientation' }) === 'ELC - New Family Orientation - 14 Aug 2026.ics', 'icsFilename: readable name');
-  console.assert(weekStart('2026-10-08').toISOString().slice(0, 10) === '2026-10-05' && weekStart('2026-10-11').toISOString().slice(0, 10) === '2026-10-05', 'weekStart: Monday for a Thursday + the Sunday edge');
+  console.assert(weekStart('2026-10-08').toISOString().slice(0, 10) === '2026-10-04' && weekStart('2026-10-10').toISOString().slice(0, 10) === '2026-10-04' && weekStart('2026-10-11').toISOString().slice(0, 10) === '2026-10-11', 'weekStart: Sunday for a Thursday/Saturday + a Sunday is its own start');
   console.assert(monthEndISO('2026-10-02') === '2026-10-31' && monthEndISO('2027-02-15') === '2027-02-28', 'monthEndISO: last day of month');
   console.assert(agendaBucket('2026-10-20', '2026-10-02') === 0 && agendaBucket('2026-11-01', '2026-10-02') === 1 && agendaBucket('2026-10-31', '2026-10-02') === 0, 'agendaBucket: this-month vs later, month-end inclusive');
   console.assert(goldOnly([{ type: 'gold' }, { type: 'purple' }, { type: 'gold' }]).length === 2, 'goldOnly: gold events only');
-  console.assert(weekBounds('2026-10-08').start === '2026-10-05' && weekBounds('2026-10-08').end === '2026-10-11', 'weekBounds: Monday to Sunday');
   console.assert(termEnd([{ date: '2026-12-18', title: 'Last day of Term 1' }], '2026-07-11') === '2026-12-18', 'termEnd: next term close');
   console.assert(termEnd([{ date: '2026-08-01', title: 'x' }], '2026-01-01') === '2026-05-01', 'termEnd: 120-day fallback');
   console.assert(isDraftPage('glossary', ['glossary', 'refunds']) && !isDraftPage('calendar-print', ['glossary']), 'isDraftPage: membership');
@@ -588,46 +586,70 @@
     }
   }
 
-  // This-week strip (#week, home; P4 pass A): the current Asia/Bangkok Mon-Sun as a
-  // row of day cards, each event linking into the calendar. Replaces the retired
-  // registration-windows countdown and the JS-off fallback link. Dots carry the
-  // audience taxonomy (P4 pass B): the aud value IS the class (.dot.parent/.child/
-  // .holiday: colour + shape via app.css), falling back to .gold for a key date, then
-  // mono. Same 1:1 aud->class the grid uses; the home key (.legend.wk) teaches it.
+  // This-week strip (#week, home; P4 pass A): one Asia/Bangkok SUNDAY-TO-SATURDAY
+  // week as day cards, each event linking into the calendar. Weeks start on Sunday
+  // (relay #16, Trevor 2026-07-27) so a family checking on Sunday sees the week
+  // ahead; a jump under the eyebrow flips the strip one week forward and back
+  // (JS-injected next to the Full-calendar link: no JS, no dead control). Dots
+  // carry the audience taxonomy (P4 pass B): the aud value IS the class
+  // (.dot.parent/.child/.holiday: colour + shape via app.css), falling back to
+  // .gold for a key date, then mono. Same 1:1 aud->class the grid uses; the home
+  // key (.legend.wk) teaches it.
   var week = document.getElementById('week');
   if (week && P.calendarEvents) {
-    var wkb = weekBounds(bkkToday);
-    var wkMon = weekStart(bkkToday);
+    var WK_DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var wkBy = {};
-    P.calendarEvents.forEach(function (e) {
-      if (e.date >= wkb.start && e.date <= wkb.end) (wkBy[e.date] = wkBy[e.date] || []).push(e);
-    });
-    var WK_DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var wkCells = [];
-    for (var wi = 0; wi < 7; wi++) {
-      var wd = new Date(wkMon); wd.setUTCDate(wkMon.getUTCDate() + wi);
-      var wIso = wd.toISOString().slice(0, 10);
-      var wIsToday = wIso === bkkToday;
-      var wEvs = wkBy[wIso] || [];
-      var wDow = WK_DOW[wi] + (wIsToday ? ' &middot; Today' : '');
-      var wEvsHtml = wEvs.length
-        ? wEvs.map(function (e) {
-            var wxt = evHref(e.href) ? null : extUrl(e);
-            var h = evHref(e.href) || wxt || (ROOT + 'calendar/');
-            return '<a class="day-ev" href="' + h + '"' + (wxt ? ' target="_blank" rel="noopener"' : '') + '><span class="dot' + (e.aud ? ' ' + e.aud : (e.type === 'gold' ? ' gold' : '')) + '"></span>' +
-              '<span class="lbl">' + e.title + '</span></a>';
-          }).join('')
-        : '<span class="day-none"></span>';
-      wkCells.push('<div class="day' + (wIsToday ? ' today' : '') + '"><div class="day-top">' +
-        '<span class="dow">' + wDow + '</span><span class="dnum">' + wd.getUTCDate() + '</span></div>' +
-        '<div class="day-evs">' + wEvsHtml + '</div></div>');
+    P.calendarEvents.forEach(function (e) { (wkBy[e.date] = wkBy[e.date] || []).push(e); });
+    var wkH = document.getElementById('wk-h');
+    if (wkH) wkH.setAttribute('aria-live', 'polite');   // the heading announces the flip
+    var renderWeek = function (off) {
+      var wkSun = weekStart(isoPlusDays(bkkToday, off * 7));
+      var wkCells = [];
+      for (var wi = 0; wi < 7; wi++) {
+        var wd = new Date(wkSun); wd.setUTCDate(wkSun.getUTCDate() + wi);
+        var wIso = wd.toISOString().slice(0, 10);
+        var wIsToday = wIso === bkkToday;
+        var wEvs = wkBy[wIso] || [];
+        var wDow = WK_DOW[wi] + (wIsToday ? ' &middot; Today' : '');
+        var wEvsHtml = wEvs.length
+          ? wEvs.map(function (e) {
+              var wxt = evHref(e.href) ? null : extUrl(e);
+              var h = evHref(e.href) || wxt || (ROOT + 'calendar/');
+              return '<a class="day-ev" href="' + h + '"' + (wxt ? ' target="_blank" rel="noopener"' : '') + '><span class="dot' + (e.aud ? ' ' + e.aud : (e.type === 'gold' ? ' gold' : '')) + '"></span>' +
+                '<span class="lbl">' + e.title + '</span></a>';
+            }).join('')
+          : '<span class="day-none"></span>';
+        wkCells.push('<div class="day' + (wIsToday ? ' today' : '') + '"><div class="day-top">' +
+          '<span class="dow">' + wDow + '</span><span class="dnum">' + wd.getUTCDate() + '</span></div>' +
+          '<div class="day-evs">' + wEvsHtml + '</div></div>');
+      }
+      week.innerHTML = wkCells.join('');
+      if (wkH) wkH.textContent = off ? 'Next week' : 'This week';
+      // Narrow screens: bring today's card into view without scrolling the page
+      // vertically; next week has no today, so it opens at its Sunday.
+      var wkToday = week.querySelector('.day.today');
+      if (wkToday && window.matchMedia && window.matchMedia('(max-width:820px)').matches) {
+        wkToday.scrollIntoView({ inline: 'center', block: 'nearest' });
+      } else if (off) { week.scrollLeft = 0; }
+    };
+    // The week jump (relay #16): one flip between this week and next, injected into
+    // the band header before the Full-calendar link. Look = scaffolding (rule 7).
+    var wkHead = wkH && wkH.parentNode;
+    if (wkHead) {
+      var wkOff = 0;
+      var wkJump = document.createElement('button');
+      wkJump.type = 'button'; wkJump.className = 'wk-jump';
+      var syncJump = function () {
+        wkJump.innerHTML = wkOff ? '&larr; This week' : 'Next week &rarr;';
+        wkJump.setAttribute('aria-label', wkOff ? 'Show this week' : 'Show next week');
+      };
+      syncJump();
+      wkJump.addEventListener('click', function () {
+        wkOff = wkOff ? 0 : 1; renderWeek(wkOff); syncJump();
+      });
+      wkHead.insertBefore(wkJump, wkHead.querySelector('.more'));
     }
-    week.innerHTML = wkCells.join('');
-    // Narrow screens: bring today's card into view without scrolling the page vertically.
-    var wkToday = week.querySelector('.day.today');
-    if (wkToday && window.matchMedia && window.matchMedia('(max-width:820px)').matches) {
-      wkToday.scrollIntoView({ inline: 'center', block: 'nearest' });
-    }
+    renderWeek(0);
   }
 
   // Date-range label for a card's grouped dates (sorted ISO). Single day "SAT 22 Aug";
@@ -714,48 +736,72 @@
     }
   }
 
-  // Calendar page agenda (#cal-agenda): defaults to the CURRENT MONTH (P4 pass A,
-  // Trevor 2026-07-19). Two buckets: "On this month" (today through month-end) then
-  // "Later this term" (month-end through the next term close). Events after the term
-  // close are NOT mislabelled under "this term": they collapse into the honest
-  // "And N more across the year" line (the month grid holds the full year).
+  // Calendar page agenda (#cal-agenda): FOLLOWS the month the grid shows (relay #5
+  // Adam + #12 Trevor, issues 0073/0075). The current month keeps the two
+  // forward-looking buckets from P4 pass A: "On this month" (today through
+  // month-end) then "Later this term" (month-end through the next term close),
+  // with events past the term close folded into the honest "And N more across the
+  // year" line. Any OTHER month, past or future, lists ALL of that month's events
+  // under a "Month Year" head: a month view tells the truth about its month
+  // (Trevor 2026-07-27), so a past month shows what happened. Every date chip
+  // carries its month (#5: rows read as dates, not bare day numbers). The grid's
+  // prev/next arrows re-render this agenda through renderCalAgenda.
   var calAgenda = document.getElementById('cal-agenda');
+  var renderCalAgenda = null;
   if (calAgenda && P.calendarEvents) {
     var shareUrl = location.origin + location.pathname;   // the calendar page itself (F10)
     // 0064: a Purple Elephant page carries data-pe on the mount, so the agenda reads the
     // filtered peEvents; the main calendar (no data-pe) reads calendarEvents unchanged.
     var agPe = calAgenda.getAttribute('data-pe');
     var agSrc = agPe ? (P.peEvents || []).filter(function (e) { return e.pe === agPe; }) : P.calendarEvents;
-    var evs = agSrc.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
-    var today0 = new Date(bkkToday + 'T00:00:00Z');
-    var tEnd = termEnd(evs, bkkToday);   // next term close (else +120d); bounds "later this term"
-    var buckets = [
-      { h: 'On this month', cls: 'wk', rows: [] },
-      { h: 'Later this term', cls: 'wk next', rows: [] }
-    ];
-    var beyondTerm = 0;
-    evs.forEach(function (e) {
+    var agEvs = agSrc.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    var agToday0 = new Date(bkkToday + 'T00:00:00Z');
+    var agCurY = agToday0.getUTCFullYear(), agCurM = agToday0.getUTCMonth();
+    var agTermEnd = termEnd(agEvs, bkkToday);   // next term close (else +120d); bounds "later this term"
+    // One agenda row, shared by both views (plan 1.2/1.3: linked title + the event
+    // page becomes the share target; ext rows open the school site in a new tab).
+    var agRow = function (e) {
       var d = new Date(e.date + 'T00:00:00Z');
-      if (d < today0) return;          /* past events drop off the agenda */
-      if (e.date > tEnd) { beyondTerm++; return; }   /* next term and beyond: counted, not listed here */
-      var cHref = evHref(e.href);   // plan 1.2/1.3: linked title + the event page becomes the share target
+      var cHref = evHref(e.href);
       var cExt = cHref ? null : extUrl(e);   // events that live on the main school site (round 4)
       var inner = '<div class="et">' + e.title + '</div><div class="es">' + e.sub + '</div>';
-      buckets[agendaBucket(e.date, bkkToday)].rows.push(
-        '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
-        DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + '</span>' +
+      return '<div class="ev-row"><span class="dte' + (e.date === bkkToday ? ' today' : '') + '">' +
+        DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
         '<div class="ev-main">' + ((cHref || cExt) ? '<a class="ev-link" href="' + (cHref || cExt) + '"' + (cExt ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' + escAttr(e.title) + (cExt ? ' · on the school site' : ' · event page') + '">' + inner + '</a>' : inner) + '</div>' +
-        calActions(e.date, e.title, e.sub, e.href, e.until, cHref ? absHref(e.href) : (cExt || shareUrl)) + '</div>'
-      );
-    });
-    /* Keep the agenda column readable: cap "Later this term" at 12 rows; fold the cap
-       overflow AND the beyond-term events into one honest line pointing at the grid. */
-    var laterShown = buckets[1].rows.length;
-    var hidden = beyondTerm + Math.max(0, laterShown - 12);
-    if (laterShown > 12) buckets[1].rows = buckets[1].rows.slice(0, 12);
-    if (hidden > 0) buckets[1].rows.push('<div class="cal-note mono">And ' + hidden + ' more across the year: use the month grid above.</div>');
-    calAgenda.innerHTML = buckets.filter(function (g) { return g.rows.length; })
-      .map(function (g) { return '<div class="' + g.cls + '">' + g.h + '</div>' + g.rows.join(''); }).join('');
+        calActions(e.date, e.title, e.sub, e.href, e.until, cHref ? absHref(e.href) : (cExt || shareUrl)) + '</div>';
+    };
+    renderCalAgenda = function (y, m) {
+      if (y === agCurY && m === agCurM) {
+        // Current month: forward-looking, exactly the P4 pass-A shape.
+        var buckets = [
+          { h: 'On this month', cls: 'wk', rows: [] },
+          { h: 'Later this term', cls: 'wk next', rows: [] }
+        ];
+        var beyondTerm = 0;
+        agEvs.forEach(function (e) {
+          var d = new Date(e.date + 'T00:00:00Z');
+          if (d < agToday0) return;          /* past events drop off the forward view */
+          if (e.date > agTermEnd) { beyondTerm++; return; }   /* next term and beyond: counted, not listed here */
+          buckets[agendaBucket(e.date, bkkToday)].rows.push(agRow(e));
+        });
+        /* Keep the agenda column readable: cap "Later this term" at 12 rows; fold the cap
+           overflow AND the beyond-term events into one honest line pointing at the grid. */
+        var laterShown = buckets[1].rows.length;
+        var hidden = beyondTerm + Math.max(0, laterShown - 12);
+        if (laterShown > 12) buckets[1].rows = buckets[1].rows.slice(0, 12);
+        if (hidden > 0) buckets[1].rows.push('<div class="cal-note mono">And ' + hidden + ' more across the year: use the month grid above.</div>');
+        calAgenda.innerHTML = buckets.filter(function (g) { return g.rows.length; })
+          .map(function (g) { return '<div class="' + g.cls + '">' + g.h + '</div>' + g.rows.join(''); }).join('');
+        return;
+      }
+      // Any other month: everything in it, oldest first, or an honest empty line.
+      var mKey = y + '-' + pad(m + 1);
+      var mRows = agEvs.filter(function (e) { return e.date.slice(0, 7) === mKey; }).map(agRow);
+      calAgenda.innerHTML = '<div class="wk">' + CAL_MONTHS[m] + ' ' + y + '</div>' +
+        (mRows.length ? mRows.join('')
+          : '<div class="cal-note mono">Nothing on the calendar in ' + CAL_MONTHS[m] + ' ' + y + '.</div>');
+    };
+    renderCalAgenda(agCurY, agCurM);
   }
 
   // Calendar month grid (#cal-grid, calendar page; P4 pass A: moved here from an inline
@@ -768,9 +814,9 @@
   // popover opens so the day's detail is always reachable.
   var calGrid = document.getElementById('cal-grid');
   if (calGrid && P.calendarEvents) {
-    var CAL_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'];
-    var CAL_DOWS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    // Sunday-first (relay #16, Trevor 2026-07-27): one convention across the home
+    // week strip, this grid and the print sheet (which was already Sunday-first).
+    var CAL_DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var AUD_CLASS = { parent: 'parent', child: 'child', holiday: 'holiday' };
     var calByDate = {};
     // 0064: PE page filters peEvents via data-pe on the grid mount; main calendar unchanged.
@@ -784,6 +830,7 @@
 
     calGrid.style.position = 'relative';   // positioning context for the absolute popover
     var calTitle = document.getElementById('cal-title');
+    if (calTitle) calTitle.setAttribute('aria-live', 'polite');
     var view = { y: calToday.getUTCFullYear(), m: calToday.getUTCMonth() };
     var pop = null, popCell = null;
 
@@ -798,7 +845,7 @@
       if (pop && popCell === cell) { closePop(false); return; }
       closePop(false);
       var d = new Date(iso + 'T00:00:00Z');
-      var head = CAL_DOWS[(d.getUTCDay() + 6) % 7] + ' ' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()];
+      var head = CAL_DOWS[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()];
       var rows = evs.map(function (e) {
         var h = evHref(e.href);
         var inner = '<span class="' + dotClass(e) + '"></span><span><span class="pt">' + e.title + '</span>' +
@@ -834,7 +881,7 @@
     function renderMonth() {
       closePop(false);
       if (calTitle) calTitle.textContent = CAL_MONTHS[view.m] + ' ' + view.y;
-      var lead = (calUtc(view.y, view.m, 1).getUTCDay() + 6) % 7;
+      var lead = calUtc(view.y, view.m, 1).getUTCDay();   // Sunday-first lead-in
       var days = calUtc(view.y, view.m + 1, 0).getUTCDate();
       var total = Math.ceil((lead + days) / 7) * 7;
       var html = CAL_DOWS.map(function (d) { return '<div class="cal-dow">' + d + '</div>'; }).join('');
@@ -866,6 +913,8 @@
           num + '<span class="evs">' + dots + more + presence + '</span></button>';
       }
       calGrid.innerHTML = html;
+      // Relay #5/#12: the agenda column follows the grid, so the arrows move both.
+      if (renderCalAgenda) renderCalAgenda(view.y, view.m);
     }
 
     // One delegated click: single-event-with-page navigates; otherwise open the popover.
@@ -943,7 +992,6 @@
       SC: { glyph: '▲', label: 'For children, parents not expected' }
     };
     var YC_PREC = { H: 5, PT: 4, PD: 3, SC: 2, SE: 1 };   // category that wins a shared day cell
-    var YC_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     function ycTxt(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
 
     // Derive the sheet category from the SSOT row: aud is the spine (holiday/parent/
@@ -965,7 +1013,7 @@
     var YCM = [];
     for (var ycm = 0; ycm < 12; ycm++) {
       var mm = (ayStartM + ycm) % 12, yy = ayY + Math.floor((ayStartM + ycm) / 12);
-      YCM.push({ mi: mm, y: yy, name: YC_FULL[mm] });
+      YCM.push({ mi: mm, y: yy, name: CAL_MONTHS[mm] });
     }
 
     // Paint every day a row touches into a "year-month" -> {day: cat} map. Multi-day

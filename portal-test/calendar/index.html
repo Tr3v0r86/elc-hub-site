@@ -95,8 +95,11 @@
 
       <!-- AGENDA -->
       <div class="cal-col-agenda">
-        <!-- Agenda renders from assets/render.js (#cal-agenda): "On this month" then
-             "Later this term", today onward, per-row add-to-calendar + share. -->
+        <!-- Agenda renders from assets/render.js (#cal-agenda) and FOLLOWS the grid
+             month (relay #5/#12): current month = "On this month" then "Later this
+             term", today onward; any other month = all of that month's events.
+             Per-row add-to-calendar + share. -->
+
         <div class="cal-agenda" id="cal-agenda"></div>
         <div class="cal-sub">
           <!-- Calendar sharing (round 2): the subscribe messaging + MOCK button moved to the
@@ -133,6 +136,7 @@
   <script src="../assets/render.js"></script>
   <script src="../assets/contour.js"></script>
   <script src="../assets/feedback.js"></script>
+  <script src="../assets/install.js"></script>
   <!-- The month grid + day popover now render from assets/render.js (#cal-grid mount),
        moved out of an inline page script (P4 pass A) so it shares the Bangkok clock and
        the evHref link guard, and rides the node --check + service-worker SHELL gates. -->
@@ -141,7 +145,7 @@
     navigator.serviceWorker.register(new URL('sw.js', document.querySelector('link[rel="manifest"]').href).href);
   }
   </script>
-<style>#pw-pill{position:fixed;bottom:26px;left:26px;z-index:9998;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--aubergine);background:var(--paper);border:1px solid var(--aubergine);border-radius:999px;padding:9px 14px;text-decoration:none;}@media(max-width:720px){#pw-pill{bottom:80px;left:16px;font-size:11.5px;padding:8px 12px;}}</style>
+<style>#pw-pill{position:fixed;bottom:74px;left:26px;z-index:9998;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--aubergine);background:var(--paper);border:1px solid var(--aubergine);border-radius:999px;padding:9px 14px;text-decoration:none;}@media(max-width:720px){#pw-pill{bottom:124px;left:16px;font-size:11.5px;padding:8px 12px;}}</style>
 <a id="pw-pill" href="../project/">Project window</a>
 </body>
 </html>

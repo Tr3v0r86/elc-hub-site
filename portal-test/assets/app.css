@@ -181,6 +181,11 @@ button.tab{background:none;border:none;padding:0;}
 .section{margin-bottom:34px;}
 .sec-eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
 .sec-eyebrow .ln{height:1px;flex:1;background:var(--rule);}
+/* Week jump (relay #16): the this-week/next-week flip in the home band header.
+   Mechanical scaffolding only; look = Claude Design lane (rule 7). */
+.wk-jump{background:none;border:none;cursor:pointer;padding:0;min-height:24px;flex:none;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--purple);}
+.wk-jump:hover{color:var(--ink);text-decoration:underline;}
+.wk-jump:focus-visible{outline:2px solid var(--purple);outline-offset:2px;border-radius:2px;}
 .page-note{font-weight:300;font-size:13px;color:var(--muted);max-width:60ch;}
 .btn-row{margin-top:20px;} /* row after a list or tile (was an inline margin on the old asa page) */
 
@@ -251,6 +256,9 @@ button.tab{background:none;border:none;padding:0;}
 .ev-row{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--rule-2);}
 .ev-row:last-child{border-bottom:none;}
 .ev-row .dte{font-family:var(--sans);font-variant-numeric:tabular-nums;font-weight:700;font-size:12px;color:var(--muted);width:52px;flex:none;padding-top:1px;}
+/* Calendar agenda chips carry the month (relay #5: bare day numbers read as nothing
+   once the list crosses a month), so they need the extra width. Base 52px elsewhere. */
+.cal-agenda .ev-row .dte{width:78px;}
 .ev-row .dte.today{color:var(--red);}
 .ev-row .ev-main{flex:1;min-width:0;}
 .ev-row .et{flex:1;font-size:14px;color:var(--ink);}
@@ -358,12 +366,15 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
      .pdot, so their one shaped dot stays visible. */
   .cal-cell .evs:has(.pdot) .ev,.cal-cell .evs:has(.pdot) .more{display:none;}
   .cal-cell .evs .pdot,.cal-cell .evs .pcount{display:inline-flex;}
-  /* 0057: the bottom sheet (z-index 40) sits under the fixed feedback FAB + project-
-     window pill (z-index 9998) AND the fixed tabbar (z-index 55), so hide all three
-     while a day sheet is open (body.sheet-open is toggled by render.js on sheet
-     open/close). #pw-pill is deploy-injected chrome. Without hiding .tabbar the tabbar
-     paints over the bottom of the sheet (issue 0064 QA). */
-  body.sheet-open #fb-pill,body.sheet-open #pw-pill,body.sheet-open .tabbar{display:none;}
+  /* 0057: the bottom sheet (z-index 40) sits under the fixed feedback FAB, the project-
+     window pill and the install pill (all z-index 9998) AND the fixed tabbar
+     (z-index 55), so hide all four while a day sheet is open (body.sheet-open is
+     toggled by render.js on sheet open/close). #pw-pill is deploy-injected chrome;
+     #install-pill (0076) ships in site/ and inherits that slot when the project window
+     retires at v1. This selector outweighs #install-pill.on by one element, so the
+     sheet wins. Without hiding .tabbar the tabbar paints over the bottom of the sheet
+     (issue 0064 QA). */
+  body.sheet-open #fb-pill,body.sheet-open #pw-pill,body.sheet-open #install-pill,body.sheet-open .tabbar{display:none;}
   /* 0055: one add/share toggle per agenda row on mobile; tapping reveals the three.
      Row wraps so the revealed controls sit under the event without crushing it. */
   .cal-actions-toggle{display:inline-flex;}
@@ -402,7 +413,7 @@ button.cal-cell{-webkit-appearance:none;appearance:none;background:transparent;f
 .win-main .ws{font-size:12px;color:var(--muted);margin-top:2px;}
 .win-count{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--red);flex:none;}
 
-/* THIS WEEK strip (P4 pass A): a lateral Mon–Sun row of day cards, replacing
+/* THIS WEEK strip (P4 pass A): a lateral Sun–Sat row of day cards, replacing
    the retired registration-windows countdown. Extends the .band / .sec-eyebrow
    system; tokens only. render.js fills #week (Claude Code lane). */
 .weekstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
@@ -628,6 +639,7 @@ a.win-row.book-row:focus-visible{outline:2px solid var(--purple);outline-offset:
 @media(max-width:420px){
   .ev-row{flex-wrap:wrap;row-gap:6px;}
   .ev-row .ev-main{min-width:calc(100% - 66px);}
+  .cal-agenda .ev-row .ev-main{min-width:calc(100% - 92px);}
   .ev-row .cal-add{margin-left:66px;}
   .win-row{flex-wrap:wrap;row-gap:6px;}
   .win-row .win-main{min-width:calc(100% - 150px);}
@@ -921,6 +933,11 @@ a.doc-row:focus-visible{outline:2px solid var(--purple);outline-offset:-2px;bord
 .note.home-note:not([open]) .who{margin-bottom:0;gap:9px;flex:0 0 auto;}
 .note.home-note:not([open]) .who .headshot{width:30px;height:30px;}
 .note.home-note:not([open]) .when{display:none;}
+/* The label lives in a block wrapper whose line box comes from the inherited 16px/1.6
+   strut, so its baseline sat ~2px below the flex-centred headline (Trevor 2026-07-26,
+   relay #13). Collapsed hides the date, so the wrapper has no job: dissolve it and the
+   label centres in the row on its own. */
+.note.home-note:not([open]) .who>div{display:contents;}
 .note.home-note:not([open]) h2{font-size:15px;margin:0;line-height:1.3;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* Narrow screens: the label + headline don't both fit, so drop the label. The avatar
    carries "from Trevor" and the headline is the hook. Full label returns on expand. */
