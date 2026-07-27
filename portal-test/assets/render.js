@@ -1415,7 +1415,7 @@
   // data.js is network-first, so a new deploy restamps every page the moment fresh
   // data lands, the visible signal that the update propagated. The message text is
   // unchanged; JS just prefixes the live version + build date. Static HTML keeps the
-  // hardcoded "v0.7 ..." as the no-JS fallback.
+  // hardcoded "v0.8 ..." as the no-JS fallback.
   var fineStamp = document.querySelector('.fine');
   if (fineStamp && P.version) {
     fineStamp.textContent = P.version + (P.build ? ' · ' + P.build : '') +

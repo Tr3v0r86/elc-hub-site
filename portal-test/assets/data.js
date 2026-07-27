@@ -8,8 +8,8 @@ window.PORTAL = {
   // update-propagation worked. feedback.js payloads also read version. The MASTHEAD
   // tape (.tape) stays shell-owned, hardcoded per page: bump it in the v0.8 stamp
   // pass. build = deploy date of the current shell (honest, not the viewer's clock).
-  version: 'v0.7',
-  build: '20 Jul',
+  version: 'v0.8',
+  build: '27 Jul',
   term: 'Term 1',
 
   // Academic-year bounds for the calendar print "academic year" range (0058). A full
