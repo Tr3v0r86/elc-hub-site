@@ -77,6 +77,7 @@ const SHELL = [
   "assets/img/art/thai-houses.svg",
   "assets/img/art/spiral.png",
   "assets/icon-180.png",
+  "assets/icon-192.png",
   "assets/icon-512.png",
   "assets/img/hos.png",
   "assets/img/trevor.png",
