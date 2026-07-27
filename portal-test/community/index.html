@@ -73,6 +73,14 @@
     <!-- Integrator seam: upcoming community-tagged calendar entries render here; removed when empty. -->
     <section id="community-events" hidden></section>
 
+    <!-- La Comunità split seams (issue 0071): comunita-flagged rows leave the core
+         calendar surfaces and render here instead. Workshops = comunita rows with
+         cat 'workshop'; Coffee mornings = cat 'social'. Both self-remove when empty
+         (air-tile pattern), so these ship inert until Sarah flags rows in the SSOT.
+         Structure only: CD skins in the 0.8/0.9 loop (rule 7). -->
+    <section id="community-workshops" hidden></section>
+    <section id="community-mornings" hidden></section>
+
     <div class="section">
       <div class="sec-eyebrow"><span class="eyebrow">What these occasions are like</span><span class="ln"></span></div>
       <p class="txt">Social mornings are the easiest place to start: coffee, no agenda, and other families who walk the same route as you. Dates for each one are on the <a href="../calendar/">calendar</a>.</p>

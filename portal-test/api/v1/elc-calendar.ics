@@ -5,9 +5,9 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 X-WR-CALNAME:ELC International Schools
 BEGIN:VEVENT
-UID:20260803-elc-summer-festival-of-the-arts-session-2@portal.elc.ac.th
-DTSTAMP:20260803T000000Z
-DTSTART;VALUE=DATE:20260803
+UID:20260729-elc-summer-festival-of-the-arts-session-2@portal.elc.ac.th
+DTSTAMP:20260729T000000Z
+DTSTART;VALUE=DATE:20260729
 DTEND;VALUE=DATE:20260808
 SUMMARY:ELC Summer Festival of the Arts\, Session 2\, A week of making and performing\, to 7 Aug.
 URL:https://elc-hub.com/portal-test/calendar/

@@ -80,6 +80,12 @@
   }
   // type:'gold' = key date / milestone; drives the key-dates .ics feed (issue 0032 F3).
   function goldOnly(evs) { return evs.filter(function (e) { return e.type === 'gold'; }); }
+  // La Comunità split (issue 0071): comunita:true rows live on community/ and stay off
+  // every CORE calendar surface. This is THE filter point: the week strip, the coming-up
+  // band, the calendar month grid and the calendar agenda (City and PE alike) all read
+  // their rows through it. The community/ renderers below select exactly these rows;
+  // the print sheet already drops them via cat (0066); search is page-based, unaffected.
+  function coreRows(evs) { return (evs || []).filter(function (e) { return !e.comunita; }); }
   function fmtDMY(iso) {
     var d = new Date(iso + 'T00:00:00Z');
     return d.getUTCDate() + ' ' + FN_MONS[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
@@ -215,6 +221,7 @@
   console.assert(monthEndISO('2026-10-02') === '2026-10-31' && monthEndISO('2027-02-15') === '2027-02-28', 'monthEndISO: last day of month');
   console.assert(agendaBucket('2026-10-20', '2026-10-02') === 0 && agendaBucket('2026-11-01', '2026-10-02') === 1 && agendaBucket('2026-10-31', '2026-10-02') === 0, 'agendaBucket: this-month vs later, month-end inclusive');
   console.assert(goldOnly([{ type: 'gold' }, { type: 'purple' }, { type: 'gold' }]).length === 2, 'goldOnly: gold events only');
+  console.assert(coreRows([{ title: 'a' }, { title: 'b', comunita: true }, { title: 'c', comunita: false }]).length === 2 && coreRows(null).length === 0, 'coreRows: drops comunita rows, tolerates a missing island');
   console.assert(termEnd([{ date: '2026-12-18', title: 'Last day of Term 1' }], '2026-07-11') === '2026-12-18', 'termEnd: next term close');
   console.assert(termEnd([{ date: '2026-08-01', title: 'x' }], '2026-01-01') === '2026-05-01', 'termEnd: 120-day fallback');
   console.assert(isDraftPage('glossary', ['glossary', 'refunds']) && !isDraftPage('calendar-print', ['glossary']), 'isDraftPage: membership');
@@ -394,6 +401,18 @@
   // upcoming community-tagged calendarEvents rows; #giving-next (community/giving/)
   // shows the next community-tagged fundraising entry. Both self-remove when nothing
   // is upcoming (air-tile pattern): the pages hardcode no claim either way.
+  // commRow is one event row (dated, linked title, add-to-calendar), shared with the
+  // comunita sections below (issue 0071). extLabel names what an external link opens.
+  function commRow(e, extLabel) {
+    var d = new Date(e.date + 'T00:00:00Z');
+    var mHref = evHref(e.href);   // plan 1.2: same linked-title rule as the agendas
+    var mExt = mHref ? null : extUrl(e);   // else, an external https link (round 4)
+    var mInner = '<div class="et">' + e.title + '</div>' +
+      (e.sub ? '<div class="es">' + e.sub + '</div>' : '');
+    return '<div class="ev-row"><span class="dte">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
+      '<div class="ev-main">' + ((mHref || mExt) ? '<a class="ev-link" href="' + (mHref || mExt) + '"' + (mExt ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' + escAttr(e.title) + (mExt ? extLabel : ' · event page') + '">' + mInner + '</a>' : mInner) + '</div>' +
+      addBtns(e.date, e.title, e.sub, e.href, e.until) + '</div>';
+  }
   var commEvents = document.getElementById('community-events');
   if (commEvents && P.calendarEvents) {
     var commRows = P.calendarEvents
@@ -406,18 +425,32 @@
       commEvents.className = 'section';
       commEvents.innerHTML =
         '<div class="sec-eyebrow"><span class="eyebrow">Coming up</span><span class="ln"></span></div>' +
-        commRows.map(function (e) {
-          var d = new Date(e.date + 'T00:00:00Z');
-          var mHref = evHref(e.href);   // plan 1.2: same linked-title rule as the agendas
-          var mExt = mHref ? null : extUrl(e);   // else, a school-site link (round 4)
-          var mInner = '<div class="et">' + e.title + '</div>' +
-            (e.sub ? '<div class="es">' + e.sub + '</div>' : '');
-          return '<div class="ev-row"><span class="dte">' + DOW[d.getUTCDay()] + ' ' + pad(d.getUTCDate()) + ' ' + FN_MONS[d.getUTCMonth()] + '</span>' +
-            '<div class="ev-main">' + ((mHref || mExt) ? '<a class="ev-link" href="' + (mHref || mExt) + '"' + (mExt ? ' target="_blank" rel="noopener"' : '') + ' aria-label="' + escAttr(e.title) + (mExt ? ' · on the school site' : ' · event page') + '">' + mInner + '</a>' : mInner) + '</div>' +
-            addBtns(e.date, e.title, e.sub, e.href, e.until) + '</div>';
-        }).join('');
+        commRows.map(function (e) { return commRow(e, ' · on the school site'); }).join('');
     }
   }
+
+  // La Comunità split sections (issue 0071): the comunita rows that coreRows() filters
+  // off the core calendar surfaces land HERE instead. #community-workshops = upcoming
+  // comunita rows with cat 'workshop'; #community-mornings = cat 'social', shown as
+  // "Coffee mornings" (naming fixed in-sheet by Sarah). Both islands feed in, so a
+  // PE-tab comunita row is never invisible (no campus chip yet: copy/CD pass). A title
+  // links out only when the row carries a registration URL on ext (Jotform etc.:
+  // progressive enrichment, no hard content gate). Same self-remove-when-empty idiom
+  // as #community-events above, so the page ships inert until Sarah flags rows.
+  [{ id: 'community-workshops', cat: 'workshop', heading: 'Workshops' },
+   { id: 'community-mornings', cat: 'social', heading: 'Coffee mornings' }].forEach(function (sec) {
+    var mount = document.getElementById(sec.id);
+    if (!mount) return;
+    var rows = (P.calendarEvents || []).concat(P.peEvents || [])
+      .filter(function (e) { return e.comunita && e.cat === sec.cat && e.date >= bkkToday; })
+      .sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+    if (!rows.length) { mount.remove(); return; }
+    mount.hidden = false;
+    mount.className = 'section';
+    mount.innerHTML =
+      '<div class="sec-eyebrow"><span class="eyebrow">' + sec.heading + '</span><span class="ln"></span></div>' +
+      rows.map(function (e) { return commRow(e, ' · registration page'); }).join('');
+  });
   var givingNext = document.getElementById('giving-next');
   if (givingNext && P.calendarEvents) {
     var drive = P.calendarEvents
@@ -599,7 +632,7 @@
   if (week && P.calendarEvents) {
     var WK_DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var wkBy = {};
-    P.calendarEvents.forEach(function (e) { (wkBy[e.date] = wkBy[e.date] || []).push(e); });
+    coreRows(P.calendarEvents).forEach(function (e) { (wkBy[e.date] = wkBy[e.date] || []).push(e); });   // 0071: comunita rows live on community/
     var wkH = document.getElementById('wk-h');
     if (wkH) wkH.setAttribute('aria-live', 'polite');   // the heading announces the flip
     var renderWeek = function (off) {
@@ -685,7 +718,7 @@
     (P.featuredEvents || []).forEach(function (f) { if (f && f.href) featBy[f.href] = f; });
 
     var cuMap = {}, cuOrder = [];
-    P.calendarEvents.forEach(function (e) {
+    coreRows(P.calendarEvents).forEach(function (e) {   // 0071: comunita rows live on community/
       if (!e.date || e.date < bkkToday || e.date > cuHorizon) return;
       var key = e.href || ('row:' + e.date + ':' + e.title);   // pageless rows never collide with an href group
       if (!cuMap[key]) { cuMap[key] = { rows: [], href: e.href || null }; cuOrder.push(key); }
@@ -753,7 +786,7 @@
     // 0064: a Purple Elephant page carries data-pe on the mount, so the agenda reads the
     // filtered peEvents; the main calendar (no data-pe) reads calendarEvents unchanged.
     var agPe = calAgenda.getAttribute('data-pe');
-    var agSrc = agPe ? (P.peEvents || []).filter(function (e) { return e.pe === agPe; }) : P.calendarEvents;
+    var agSrc = coreRows(agPe ? (P.peEvents || []).filter(function (e) { return e.pe === agPe; }) : P.calendarEvents);   // 0071
     var agEvs = agSrc.slice().sort(function (a, b) { return a.date < b.date ? -1 : 1; });
     var agToday0 = new Date(bkkToday + 'T00:00:00Z');
     var agCurY = agToday0.getUTCFullYear(), agCurM = agToday0.getUTCMonth();
@@ -821,7 +854,7 @@
     var calByDate = {};
     // 0064: PE page filters peEvents via data-pe on the grid mount; main calendar unchanged.
     var gridPe = calGrid.getAttribute('data-pe');
-    var gridSrc = gridPe ? (P.peEvents || []).filter(function (e) { return e.pe === gridPe; }) : P.calendarEvents;
+    var gridSrc = coreRows(gridPe ? (P.peEvents || []).filter(function (e) { return e.pe === gridPe; }) : P.calendarEvents);   // 0071
     gridSrc.forEach(function (e) { if (e.date) (calByDate[e.date] = calByDate[e.date] || []).push(e); });
     var calToday = new Date(bkkToday + 'T00:00:00Z');
     function calUtc(y, m, d) { return new Date(Date.UTC(y, m, d)); }
@@ -1084,6 +1117,31 @@
     console.assert(ycCat({ aud: 'child', title: 'K1 first day of school' }) === 'SC', 'ycCat: children-only -> SC');
     console.assert(ycKeyDay({ date: '2026-10-12', until: '2026-10-16' }) === '12–16', 'ycKeyDay: same-month range');
     console.assert(ycKeyDay({ date: '2026-12-21', until: '2027-01-09' }) === '21 Dec to 9 Jan', 'ycKeyDay: cross-month range');
+  }
+
+  // Subscribe control (ADR-0006): a [data-subscribe] mount names its feed file under
+  // api/v1/ (City calendar page + the two PE calendar pages). While PORTAL.subscribeLive
+  // is false, the static mock button + honest "Coming for launch" pill in the page HTML
+  // stand untouched (rule 6: never fake liveness, and nobody subscribes to a dying
+  // test-host URL). When the flag flips true inside the Aug 11-13 cutover window
+  // (issue 0017), the mock is replaced with the wired control: Apple (webcal), Google
+  // (add by URL) and a visible https line for any other app. Every URL derives from
+  // THIS page's own origin + depth at render time; no host is ever hardcoded.
+  var subMounts = document.querySelectorAll('[data-subscribe]');
+  if (subMounts.length && P.subscribeLive) {
+    subMounts.forEach(function (el) {
+      var feedUrl = new URL(ROOT + 'api/v1/' + el.getAttribute('data-subscribe'), location.href).href;
+      if (feedUrl.indexOf('https:') !== 0) return;   // webcal needs https; a local preview keeps the mock
+      var webcal = 'webcal:' + feedUrl.slice('https:'.length);
+      var gcal = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(feedUrl);
+      el.innerHTML =
+        '<a class="btn purple sm" href="' + escAttr(webcal) + '">Subscribe in Apple Calendar</a> ' +
+        '<a class="btn purple sm" target="_blank" rel="noopener" href="' + escAttr(gcal) + '">Subscribe in Google Calendar</a>';
+      var urlLine = document.createElement('p');
+      urlLine.className = 'cal-note mono';
+      urlLine.textContent = 'Any other calendar app: subscribe to ' + feedUrl;
+      el.parentNode.insertBefore(urlLine, el.nextSibling);
+    });
   }
 
   // Sport rows + status pills (home sport tile). status vocab: open | soon |

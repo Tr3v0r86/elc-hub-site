@@ -12,6 +12,13 @@ window.PORTAL = {
   build: '27 Jul',
   term: 'Term 1',
 
+  // Live-feed subscribe controls (ADR-0006). While false, the City + PE calendar pages
+  // keep their static mock button and the honest "Coming for launch" pill (rule 6);
+  // render.js leaves the wired Apple/Google/https links unrendered. Flips true inside
+  // the Aug 11-13 cutover window (issue 0017), once portal.elc.ac.th points at this
+  // site, so no family ever subscribes to the dying test-host URL.
+  subscribeLive: false,
+
   // Academic-year bounds for the calendar print "academic year" range (0058). A full
   // span that brackets the school year's dated events (first 3 Aug 2026, last 28 Jul
   // 2027), NOT a claim about the exact first/last school day: those live in
@@ -375,7 +382,7 @@ window.PORTAL = {
   // { href:'https://…', tag:'PDF' }; HTTPS only or the build gate rejects).
   // BEGIN SHEET-OWNED: calendarEvents
   calendarEvents: [
-    { date: '2026-08-03', cat: 'event', type: 'purple', aud: 'parent', until: '2026-08-07', nopage: true, ext: 'https://www.elc.ac.th/summer-school/', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'A week of making and performing, to 7 Aug.' },
+    { date: '2026-07-29', cat: 'event', type: 'purple', aud: 'parent', until: '2026-08-07', nopage: true, ext: 'https://www.elc.ac.th/summer-school/', title: 'ELC Summer Festival of the Arts, Session 2', sub: 'A week of making and performing, to 7 Aug.' },
     { date: '2026-08-12', cat: 'holiday', type: 'purple', aud: 'holiday', title: 'The Queen Mother\'s Birthday Holiday', sub: '' },
     { date: '2026-08-14', cat: 'event', type: 'gold', aud: 'parent', href: 'new-family-orientation/', title: 'New Family Orientation', sub: 'A warm welcome for families new to ELC.' },
     { date: '2026-08-17', cat: 'event', type: 'purple', aud: 'parent', href: 'coffee-mornings/', cohort: 'K1', title: 'K1 Information Session', sub: '' },
