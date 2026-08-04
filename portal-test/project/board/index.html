@@ -32,7 +32,7 @@
   </header>
   <div class="crumb"><a href="../">Project window</a> &nbsp;/&nbsp; The board</div>
 
-  <div class="wrap sub">
+  <main class="wrap sub">
     <div class="page-head">
       <span class="eyebrow">The Portal · the board</span>
       <h1>The board, <span class="turn">live.</span></h1>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="section">
-    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Shipped · 30</span><span class="ln"></span></div>
+    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Shipped · 38</span><span class="ln"></span></div>
     <div class="doc-list">
     <div class="doc-row">
       <span class="chip n">0001</span>
@@ -163,25 +163,43 @@
       <span class="chip n">0063</span>
       <div class="meta"><div class="nm">Portal ring mark to live site (favicon · app icon · masthead · footer), retire the dial</div><div class="sub">shipped 2026-07-20 (v0.8 Phase 6): ring is the official logo, bigger + leading (Trevor sign-off) on masthead + footer + favicon + icon.svg + both PNGs + hub, all 32 pages; assembled tree dial-free, gates clean, check-icon-hex added. [v0.8 plan](../superpowers/plans/2026-07-20-v0.8-feedback-batch.md)</div></div>
     </div>
-    </div>
-    </div>
-
-    <div class="section">
-    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Being built now · 2</span><span class="ln"></span></div>
-    <div class="doc-list">
-    <div class="doc-row">
-      <span class="chip n">0072</span>
-      <div class="meta"><div class="nm">Copy-owner dispatch: owners registry sheet + scoped review Docs on command</div><div class="sub">2026-07-26 v1 grill. Reuses 0062 loop; Gmail drafts Trevor sends; Sarah = deputy, events/workshops route via her. Build after Erica import ~Jul 31; wave 1 Aug 3, wave 2 inservice. Two-tier lock in prd/0003</div></div>
-    </div>
     <div class="doc-row">
       <span class="chip n">0073</span>
-      <div class="meta"><div class="nm">v0.8 feedback batch 2: Heather ×5 + Adam ×1 (relay #5–#10)</div><div class="sub">Triaged 2026-07-26. Fixes: agenda month label+grid-follow (#5), N&amp;B "before first day" wrong vs SSOT Aug 17–25 (#8), glossary snack/lunch (#9). Gated: naming collision info-session vs coffee-morning = Trevor+Heather decision BEFORE Aug-3 dispatch (#7); H&amp;W bios EXIST, file share pending (#6, unblocks 0043); Armonia Y4–6 glossary line rides rebuild (#10)</div></div>
+      <div class="meta"><div class="nm">v0.8 feedback batch 2: Heather ×5 + Adam ×1 (GitHub relay #5–#10)</div><div class="sub">CLOSED 2026-08-04. #7 decided by **Payal + Trevor and it REVERSES the round-3 rename**: the August per-year-group events are **Coffee mornings**, with **Information session as the subheading**, because that is what families already call them; the year-round ones are **social mornings**, a different event type keeping the `Parent Social Morning` term (what Sarah's sheet emits). "This is not a coffee morning" removed from the page and the Aug-17 note; community section re-headed Social mornings. 7 files / 30 replacements, gates green. **Carry-over: the 6 cohort rows are INSIDE the SHEET-OWNED fence, so titles revert at the next `pull-events.py`: durable fix is Sarah's sheet, exact list in the issue.** Thai in both glossary entries is agent-written and owes the flagged reviewer a pass. Earlier items: #5/#12, #8, #9 verified shipped in code; #6 dissolved under 0078 KISS (and its real owner was Trevor sharing SSOT doc `1ERoFkY…` to `trevorc@`, not Heather); #10 dissolved under 0080, question moved to 0035</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0077</span>
+      <div class="meta"><div class="nm">Subscribe UI off the calendar pages; feeds keep building silently</div><div class="sub">EXECUTED 2026-08-03: **six surfaces, not three**: 3 calendar rows + the `.yc-subscribe` strip on all 3 print sheets, plus the City lead sentence that promised it in prose. `subscribeLive` + render.js wiring stay dormant so re-flip = one row + one flag. ADR-0006 headed superseded-for-launch (decision stands, consequence 1 frozen). Feeds verified emitting 83/45/50 VEVENTs; 8 gates green. **0017's two subscribe checkboxes are now dead**</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0080</span>
+      <div class="meta"><div class="nm">Lean-site archive batch: Armonia · sport · gate card · PE subpages · safeguarding link · PE logo</div><div class="sub">EXECUTED 2026-08-03: 17 pages `git mv`'d to `site-archive/` (site 44→27), all refs cut, `draftPages` −8, SW SHELL −17 + CACHE v25, PE hubs took the spiral graphic. **Second pass same day (Trevor): sport off ALL surfaces**, not just the page: home tile + activities card + the `sports` search mapping. Caught in the browser: the activities **Sport and Music filter chips matched zero cards** after the removals; both cut. 8 gates green, browser-verified. Flags: PE "logo" carry-over was graphic-only (the City calendar page has no on-page logo, only its print sheet) + home bento rebalance = CD (rule 7). **Open glossary call ANSWERED 2026-08-04: keep ELC FC + La Comunità** (vocabulary families meet in letters, not sport surfaces). ELC FC REWORDED: it had promised "the first competitive sport with open sign-up", a route the portal does not have since sport came off every surface; now "the first of the competitive sports ELC runs in house", EN + TH. Thai owes the flagged reviewer a pass</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0081</span>
+      <div class="meta"><div class="nm">Template registry + gate: every page declares a known shape</div><div class="sub">EXECUTED 2026-08-04: `docs/templates.md` + `data-template` on every `&lt;html&gt;` + `tools/check-templates.py` in BOTH deploy scripts. **7 shapes, not the ~5 guessed** (27 pages): `home` 1 · `calendar` 3 · `calendar-print` 3 · `section-stack` 13 · `prose-page` 3 · `index-grid` 3 · `redirect-stub` 1. `doc-page` renamed `section-stack` (collides with the real `&lt;doc-page&gt;` print element); `event/info` does not exist post-0080; `index-grid` is the weakest cluster and is flagged as the rebuild's first reconcile. Gate also asserts doc-vs-disk both ways, so the deliverable cannot rot. Surfaced but NOT fixed: content root is `main` on 13 pages / `div` on 14, and the `main[data-page]` draft-chip mount is a latent trap. Toolchain: `check-links.py` unresolved-`..` MAX_PATH weakness = follow-up issue owed (`redact.py` + `check-chrome.py` separator bugs already fixed on main, `8ff9bbe`/`cae922f`)</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0086</span>
+      <div class="meta"><div class="nm">Copy residue after 0080: two surfaces still promise Armonia and sport</div><div class="sub">RESOLVED 2026-08-04, Trevor's call: **keep the help row, route to a human**: portal stays the one front door (0040) without re-adding archived pages. `help/` row kept but no longer claims Activities "has every programme" (two cards since 0080); says Armonia and sport are not portal surfaces and routes to the Activities team. Sign-ups row narrowed and the true 7 Sep sport date now says it is not on the portal. `activities/` description + og:description dropped "Armonia, sport". **Lesson: no gate reads prose for claims gone false: 0080 removed the pages and left the promises about them standing. Next archive batch, grep the copy for the thing's NAME, not just links.**</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0089</span>
+      <div class="meta"><div class="nm">`check-links.py`: unresolved `..` targets lie past MAX_PATH on a deep Windows checkout</div><div class="sub">EXECUTED 2026-08-04, discharges the follow-up [0081](0081-template-registry.md) owed. **False FAILURES, not missed ones**: `link_miss()` handed the unresolved `page.parent / "../../..."` string to the OS, and Windows measures MAX_PATH before `..` cancellation, so a deep-enough checkout made `.exists()` return False for files present on disk and tracked in git: the gate exited 1 on a clean tree. Flip measured exactly at the limit on roxy (same file: 259-char unresolved = True, 261 = False). Fix = `os.path.normpath` before any syscall (not `resolve()`: `..` in an href is lexical, and resolve() would follow symlinks + stat ancestors) + `root` resolved once in `scan()` + `.as_posix()` on every reported path, per `check-templates.py`. **Both** filesystem branches were broken: `.exists()` and the trailing-slash `dir/index.html` `.is_file()`. Resolving exposed a NEW true failure: a link climbing out of the tree used to be satisfied by a real file outside `site/` and passed the gate on a link that 404s deployed; now `link escapes the site tree` (source tree has none). 4 planted-bad self-tests added (MAX_PATH file 304-char + dir 306-char, posix reporting, tree escape), each verified failing pre-fix **in isolation** so none tests nothing; MAX_PATH case self-skips off Windows and skips rather than false-passes if the temp root is too deep. Verified: 10 gates × 2 depths (`site/` root 93 and 10 chars), all exit 0, byte-identical output; the 183-char repro tree goes 2 phantom misses → 0. **`redact.py` needed no change: already fixed on main by `8ff9bbe`**, verified live on roxy (`selftest` + `scan site` both exit 0), not just read off the log. Flagged NOT fixed (out of scope, both cosmetic, neither a gate): `build-project-hub.py:385,387,416` + `inject-base.py:89,91` still report OS-separator paths</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0090</span>
+      <div class="meta"><div class="nm">One content root, one `&lt;main&gt;`: unify the page wrapper + stop the draft chip silently missing</div><div class="sub">EXECUTED 2026-08-04, discharges both "Known problems this registry surfaces" carried by [0081](0081-template-registry.md). 13 of 27 pages wrapped content in a `div`, 14 in a `main`, splitting across shape lines (`section-stack` 8/5; `site/calendar/` div vs both PE calendars main): so 13 pages offered assistive tech no landmark. All 13 converted, 2 lines each, classes untouched; print pages' inner `.wrap.sub.no-print` divs stay divs (they sit inside an outer `&lt;main&gt;`). **The latent half was the real defect and markup alone would not have closed it:** `render.js` mounted the draft chip on `main[data-page]`, working only because all 12 `data-page` attrs happened to sit on a `main`: a `data-page` on a div plus a `draftPages` entry = no chip, no error, no way to notice but absence. Selector now `[data-page]`. **Durable guard = a 4th assert in `tools/check-templates.py`** (exactly one `&lt;main&gt;` per page, comments stripped, 3 planted-bad self-tests): no longer throwaway now 0081's gate exists. Hub template fixed in the same pass. Also corrected 0081's count: the split is 14 main / 13 div, not 13/14, and 13 pages lacked a landmark, not 14. No SW bump (no HTML-to-JS contract change: the `data-page` pages were already `main` and untouched). Browser-verified 17 pages layout-identical at 1280px + trap reproduced both sides; 13 gates green</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0091</span>
+      <div class="meta"><div class="nm">Path-separator sweep: finish the class repo-wide, not one file at a time</div><div class="sub">EXECUTED 2026-08-04, discharges the sweep [0089](0089-check-links-maxpath-windows.md) flagged. The two files 0089 named were cosmetic as it said (`build-project-hub.py:385,387,416` + `inject-base.py:89,91`, no assertion compares them, deploy scripts read exit codes only) and took the same reporting-only fix as `cae922f`/`8ff9bbe`; each verified flipping from `roadmap\index.html` to `roadmap/index.html` against a planted fixture. **The sweep turned up a fourth site 0089 did NOT flag, and it is not cosmetic**: `compute_changes()` keyed its `changes` dict with `str(path)` (`copy-pipeline.py:861,918`) while four `self_test` asserts match those keys by posix suffix, so **`copy-pipeline.py selftest` aborted on Windows and took `copy_doc_tabs.py selftest` down with it** (it runs the core's self-test first, H8). Pre-existing at HEAD, verified against a pristine `git show HEAD:` copy; neither is a deploy gate and 0062/0072 are parked, so nothing shipped wrong, but the copy tooling was dead on the peer. Fixed at the producer: keys are `.as_posix()` (the key is the unified-diff header `_diff` shows a reviewer), plus 3 exact-equality fixtures respelled to match (`rpath`, `sw2path`, `want`/`djs`). **The four `endswith` asserts were not touched and went from aborting to passing**: that is the proof the producer was the bug. `Path(key)` still opens the file (verified writing via a posix key on Windows), and on POSIX `as_posix()` == `str(Path)`, so every change is a no-op on the Mac. Confirmed safe and unchanged: `build-search.py:126,134` + `copy-pipeline.py:80,87` do produce forward-slash URLs (run, not read). Class now empty repo-wide: every `relative_to` in `tools/` + `internal/` ends `.as_posix()` or feeds `.parts`; the 3 surviving `str(Path(...))` must stay native (`sys.path.insert`, two subprocess `cwd=`). Verified 18 checks × exit 0 on roxy (Win 11, Py 3.14.5, Node 24.14.1) including the two that could not run before. No assertion weakened. Flagged NOT fixed: **nothing pins the reporting format** in the two original files (`inject-base`'s self-test cannot reach lines built inline in `main()`; `build-project-hub`'s `self_test` IS the redaction gate, with no planted-bad harness, so it would still print `PASS` if detection silently died): own issue, it is a behaviour change to a deploy gate</div></div>
     </div>
     </div>
     </div>
 
     <div class="section">
-    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Waiting on a person · 25</span><span class="ln"></span></div>
+    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Waiting on a person · 31</span><span class="ln"></span></div>
     <div class="doc-list">
     <div class="doc-row">
       <span class="chip n">0004</span>
@@ -209,7 +227,7 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0043</span>
-      <div class="meta"><div class="nm">PTC "Meet the Team" booking page (Hopes &amp; Wishes soft launch)</div><div class="sub">built 2026-07-16 + live on portal-test; Direction A skin applied 2026-07-17; open = human gates (staffing sign-off · booking links by Aug 7 · bios · Thai · embed QA · Y4 photo identity); Direction A live 2026-07-18 (40719c0)</div></div>
+      <div class="meta"><div class="nm">PTC "Meet the Team" booking page (Hopes &amp; Wishes soft launch)</div><div class="sub">built 2026-07-16 + live on portal-test; Direction A skin applied 2026-07-17; **SUPERSEDED-PENDING by 0078** (KISS built 2026-08-03; every asset here survives, revert is one attribute). Its gates (staffing sign-off · booking links · bios · Thai · embed QA · Y4 photo identity) dissolve if KISS holds at the **Mon 2026-08-10** Payal+Heather call, revive verbatim if reversed. Direction A live 2026-07-18 (40719c0)</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0047</span>
@@ -233,11 +251,11 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0054</span>
-      <div class="meta"><div class="nm">Privacy-clean metrics by design + campaign refs on shared links</div><div class="sub">code done 2026-07-20 (v0.8 Phase 4): `?ref=` beacon + fixed vocab in worker + `/privacy/` clause. HUMAN GATE: Trevor flips Analytics Engine (0038) + deploys ops worker. [v0.8 plan](../superpowers/plans/2026-07-20-v0.8-feedback-batch.md)</div></div>
+      <div class="meta"><div class="nm">Privacy-clean metrics by design + campaign refs on shared links</div><div class="sub">internal planning detail</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0062</span>
-      <div class="meta"><div class="nm">Copy export → Google Doc → re-import workflow for Erica's full-site edit</div><div class="sub">**v4 Doc CUT + acceptance-verified 2026-07-28** (795 units, 52 marked; import byte-identical, 0 halts; redact clean) after both `e794d86` guards were adversarially verified and two silent-corruption paths closed at root (`b22267a`). ONE `(CURRENT)` Doc in Drive (17gTl7FO); concurrent-export duplicate + partial carry bin markers. HUMAN (Trevor): delete the 4 held-back tabs, retitle/bin the graveyard per the issue, send Erica the link</div></div>
+      <div class="meta"><div class="nm">Copy export → Google Doc → re-import workflow for Erica's full-site edit</div><div class="sub">**v4 Doc CUT + acceptance-verified 2026-07-28** (795 units, 52 marked; import byte-identical, 0 halts; redact clean) after both `e794d86` guards were adversarially verified and two silent-corruption paths closed at root (`b22267a`). ONE `(CURRENT)` Doc in Drive (17gTl7FO); concurrent-export duplicate + partial carry bin markers. HUMAN (Trevor): delete the 4 held-back tabs, retitle/bin the graveyard per the issue, send Erica the link. **PARKED 2026-08-04 (Trevor): he hand-edits the pages himself for 1.0, so the Erica dispatch defers past launch and those three human steps defer with it. Parked, NOT `wontfix`**: pipeline stays built and verified, un-park on his word. 0072 parks with it</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0064</span>
@@ -245,7 +263,7 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0065</span>
-      <div class="meta"><div class="nm">Print year-calendar sheet: follow-ups after Phase 3</div><div class="sub">Filed 2026-07-21 after 0046 Phase 3. Open: (1) `pe-calendar.ics` feed when subscribe un-holds (0004); (2) one-page density on 85-event real data = CD design call (sheet is 2 pages, paginates cleanly); (3) sub-brand marks are raster, vector nicer</div></div>
+      <div class="meta"><div class="nm">Print year-calendar sheet: follow-ups after Phase 3</div><div class="sub">Filed 2026-07-21 after 0046 Phase 3. Open: (1) `pe-calendar.ics` feed when subscribe un-holds (0004); (2) one-page density on 85-event real data = CD design call (sheet is 2 pages, paginates cleanly); (3) sub-brand marks are raster, vector nicer. **2026-08-04: item (1) is DEAD BOTH WAYS**: 0071 already built and verified both PE feeds (45/50 VEVENTs) and 0077 removed the `.yc-subscribe` strip this item is written around from all three print sheets. **(2) and (3) stand and are folded into the 0087 calendar CD job**</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0066</span>
@@ -253,7 +271,7 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0067</span>
-      <div class="meta"><div class="nm">Cross-campus navigation (flat-3 switcher, mobile Centres tab) + Purple Elephant policy pages</div><div class="sub">BUILT+pushed 2026-07-21 (bfe88d5/7ca94ed/8f44294, NOT deployed). Flat-3 switcher (City · PE Thong Lor · PE Samakee) replaces PE dropdown; mobile tabbar 4→5 `Centres` bottom-sheet; light switch. +2 PE policy holding pages. ADR-0005 v1.3 + nav_ia gate + CD brief. All 7 gates green, browser QA clean desktop+375px. Advances 0030. Deploy + visual treatment (CD) HELD for Trevor</div></div>
+      <div class="meta"><div class="nm">Cross-campus navigation (flat-3 switcher, mobile Centres tab) + Purple Elephant policy pages</div><div class="sub">BUILT+pushed 2026-07-21 (bfe88d5/7ca94ed/8f44294, NOT deployed). Flat-3 switcher (City · PE Thong Lor · PE Samakee) replaces PE dropdown; mobile tabbar 4→5 `Centres` bottom-sheet; light switch. +2 PE policy holding pages. ADR-0005 v1.3 + nav_ia gate + CD brief. All 7 gates green, browser QA clean desktop+375px. Advances 0030. Deploy + visual treatment (CD) HELD for Trevor. **2026-08-04: the 2 PE policy holding pages built here were ARCHIVED by 0080** (PE = calendar only until PE heads supply copy), along with the Policies buttons pointing at them. **The switcher half is untouched and still live**, as is ADR-0005 v1.3</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0068</span>
@@ -273,21 +291,45 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0074</span>
-      <div class="meta"><div class="nm">Kob khun wall: gratitude + celebrations band on home (two templates: celebration + voices)</div><div class="sub">Built 2026-07-26: static band below Ongoing, .ev-card shell + kk-q quote figures; Pari celebration (BK Mag, facts verified) + summer voices (anonymised, no school named). **DEPLOYED LIVE** `a4d5cda` (source `863e695`). +hero pair (portrait + his work, one row, height-capped). HUMAN: consent gate before named quotes; CD polish (rule 7)</div></div>
+      <div class="meta"><div class="nm">Kob khun wall: gratitude + celebrations band on home (two templates: celebration + voices)</div><div class="sub">Built 2026-07-26: static band below Ongoing, .ev-card shell + kk-q quote figures; Pari celebration (BK Mag, facts verified) + summer voices (anonymised, no school named). **DEPLOYED LIVE** `a4d5cda` (source `863e695`). +hero pair (portrait + his work, one row, height-capped). **Summer-voices half SUPERSEDED 2026-08-04 by [0095](0095-kob-khun-rework-alumni-return.md)** (PRD-0003 peel-back decision 3: too markety for a family surface, card removed; most of the consent gate dissolved with it). Pari celebration stays. HUMAN: CD polish (rule 7)</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0075</span>
-      <div class="meta"><div class="nm">v1 feedback batch 3: Trevor ×6 (relay #11–#16)</div><div class="sub">SPRINT SHIPPED 2026-07-27 (source `abe5212`, deployed `cb2db15`): #13 + #16 Sunday weeks/jump + #5/#12 agenda-follow + #8 + #9 all live; GH 5/8/9/13/16 closed. Verify fan-out caught 4 defects pre-deploy (note chips ×2, 420px agenda, wk-jump squeeze), all fixed. Open = human: #11 wrangler deploy (tier labels) · #14 NFO copy ~Aug 8 · #15 photo swap. 0.8 locks on Erica import</div></div>
+      <div class="meta"><div class="nm">v1 feedback batch 3: Trevor ×6 (relay #11–#16)</div><div class="sub">internal planning detail</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0076</span>
       <div class="meta"><div class="nm">Install affordance: our own install button, in the project-window slot</div><div class="sub">internal planning detail</div></div>
     </div>
+    <div class="doc-row">
+      <span class="chip n">0078</span>
+      <div class="meta"><div class="nm">H&amp;W KISS rework: explanation + photos, no bios, no booking links, reversible</div><div class="sub">BUILT 2026-08-03: lean-A ships as `data-faces` on `#team-cards` (same renderer, bios + Book cell omitted, demo card dropped). `classes[]` untouched, so **revert = delete one attribute, proven live** (24 cards / 26 bios / 24 booking cells return). Copy reworked; questionnaire row cut with the machinery. HUMAN: **Payal + Heather Mon 2026-08-10** keep-or-reverse</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0079</span>
+      <div class="meta"><div class="nm">Workshops' home = community/ section + homepage card; no new page type</div><div class="sub">BUILT 2026-08-03: `#community-workshops` now **stands when empty** with an honest waiting line (self-removing would leave workshops no home at all); coffee mornings keep self-removing. Homepage card = one `.ev-card` appended into the existing Coming-up grid, row-driven, outside `CU_CAP`. Fixed the page's now-false "dates are on the calendar" line. Zero new pages/templates/CSS; both paths verified with simulated rows. **Still INERT until Sarah's `comunita` column**. **+2026-08-04 (Trevor): photos pulled "for now"**: the two story figures (Carnival of Cultures, Fun Field Day) are out of "What these occasions are like"; prose and all 3 blog links stay, captions had only restated the following paragraph. Both .jpg files stay in `assets/img/blog/` and neither was precached, so restoring = re-adding two `&lt;figure&gt;` lines. `.story-figure` CSS kept: new-families + community/giving use it. Verified live: 0 story figures, only the footer lockup left</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0082</span>
+      <div class="meta"><div class="nm">Feedback relay bot catchment: honeypot + rate-limit + Turnstile</div><div class="sub">BUILT 2026-08-04, NOT deployed. **Layer 1 already existed** (honeypot + KV limiter shipped with 0020; `RATE` already bound): build was Turnstile + hardening. Three guards cheapest-first so a flood never costs a siteverify subrequest. **Fail-open is structural:** every rejection is the `ok:false` the widget already answers with its mailto, plus four accept-anyway paths (secret unset = gate off + kill switch · siteverify unreachable/500/unparseable = accept, stamped `unverified` · KV throwing = no limit, not a 500 · widget never blocks, bounded 6s/2s waits, thanks panel up first). Only a positive bot verdict rejects. Turnstile loads from `feedback.js` (one file, not 27 pages; no request at all unless the widget opens). Self-check `node internal/relay/guard.test.mjs`, mutation-checked. No SW bump, no HTML touched, idea board untouched. HUMAN: Turnstile widget → paste site key → publish site → `wrangler secret put TURNSTILE_SECRET` + deploy (order matters, steps in the issue)</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0083</span>
+      <div class="meta"><div class="nm">CD job: masthead lockup + colour warmth pass</div><div class="sub">internal planning detail</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0084</span>
+      <div class="meta"><div class="nm">Policy review (sprint backlog)</div><div class="sub">Trevor devwork note 2026-08-03. **2026-08-04: TREVOR OWNS IT and is walking the `/policies/` hub himself today** for additions and cuts. Off the agent queue; the "scope confirm → ready-for-agent" path is superseded. A mechanical half comes back only if he names one. **He named one 2026-08-04: the calendars come off `/policies/`.** Four `docs[]` rows removed (`Term dates and calendar` → `../calendar/`, plus the three official WordPress academic-year calendars: City, PE 39/49/55, PE Samakee). Policies is the document hub, the calendar has its own nav item AND tabbar tab on every page, and three external calendars sitting beside the portal's own offered families a choice with no way to tell which is current, when the portal's is the sheet-fed one (0046). Registry rows 21 → 17; **"Start here" is now a one-row group** (Parent handbook), flagged as an IA/CD question rather than restructured. WordPress pages untouched. Verified live</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0095</span>
+      <div class="meta"><div class="nm">Kob khun rework: summer-school voices out, alumni-return card in</div><div class="sub">**Decided 2026-08-02 as PRD-0003 peel-back decision 3 and never filed**: it survived only as PRD prose, so 0074's row and the `prd/0004` sprint plan both inherited the hole and Trevor caught it by eye. Same class as 0086: the Aug-02 decision batch was never converted to issues, and decisions 2/8/9 survived only because 0080 happened to carry them. Half 1 DONE 2026-08-04: the summer-school testimonial card removed (admissions copy on a surface for families who already chose ELC; also dissolves most of 0074's consent gate, since those quotes came from staff email not a consent form) + a self-reverting `:has(&gt; :only-child)` rule so the lone Pari card is not half-width in the 2-col grid. Verified at a real 1280px viewport: 1 card, single column, 1092/1092px, 0 quote figures. Half 2 = HUMAN: the alumni-return card needs Trevor's names + consent (template + the 4 needs in the issue); deliberately NOT scaffolded as empty markup (rule 6, families land on this page now)</div></div>
+    </div>
     </div>
     </div>
 
     <div class="section">
-    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Waiting on an answer · 18</span><span class="ln"></span></div>
+    <div class="sec-eyebrow"><div class="ruler"></div><span class="eyebrow">Waiting on an answer · 25</span><span class="ln"></span></div>
     <div class="doc-list">
     <div class="doc-row">
       <span class="chip n">0002</span>
@@ -323,7 +365,7 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0029</span>
-      <div class="meta"><div class="nm">E4: notify-me on Armonia/sport cards</div><div class="sub">2026-07-09 review; keyless Jotform submit; form via Neung/Sarah on request (0021)</div></div>
+      <div class="meta"><div class="nm">E4: notify-me on Armonia/sport cards</div><div class="sub">2026-07-09 review; keyless Jotform submit; form via Neung/Sarah on request (0021). **2026-08-04: BOTH host cards archived by 0080**: no mount point exists, so this is blocked on a surface as well as on the Jotform form. Not agent-actionable; `wontfix` is Trevor's call. **Trevor confirmed 2026-08-04: stays `needs-info`, deferred not cancelled** (offered `wontfix`, declined). Not an open triage question</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0030</span>
@@ -335,7 +377,7 @@
     </div>
     <div class="doc-row">
       <span class="chip n">0035</span>
-      <div class="meta"><div class="nm">Armonia details page + 4 curated offering landing pages</div><div class="sub">scaffold + 4 landing pages shipped in sprint 3; content lands as programme settles</div></div>
+      <div class="meta"><div class="nm">Armonia details page + 4 curated offering landing pages</div><div class="sub">scaffold + 4 landing pages shipped in sprint 3; content lands as programme settles. **⚠️ 2026-08-04: THE SUBJECT PAGES ARE ARCHIVED.** 0080 moved the whole Armonia tree (hub + 6) to `site-archive/`, executing PRD-0003 decision 8 whose effect column reads "Removes 0035"; PRD-0004: the rebuild "drops out entirely". Out of v1. Kept `needs-info` because archive ≠ delete and `docs/content/armonia-context.md` survives: **`wontfix` is Trevor's triage call**. Now also carries relay #10's open "Armonia = Y4–6 only?" glossary-scope question, inherited from the narrowed 0073. **Trevor confirmed 2026-08-04: stays `needs-info`, deferred not cancelled** (offered `wontfix`, declined). Not an open triage question</div></div>
     </div>
     <div class="doc-row">
       <span class="chip n">0036</span>
@@ -361,6 +403,34 @@
       <span class="chip n">0046</span>
       <div class="meta"><div class="nm">Events sheet ↔ Portal sync: sheet stays planning SSOT, Portal publishes</div><div class="sub">internal planning detail</div></div>
     </div>
+    <div class="doc-row">
+      <span class="chip n">0072</span>
+      <div class="meta"><div class="nm">Copy-owner dispatch: owners registry sheet + scoped review Docs on command</div><div class="sub">2026-07-26 v1 grill. Reuses 0062 loop; Gmail drafts Trevor sends; Sarah = deputy, events/workshops route via her. Build after Erica import ~Jul 31; wave 1 Aug 3, wave 2 inservice. Two-tier lock in prd/0003. **PARKED 2026-08-04 (Trevor), same reason as 0062: nothing built, off `ready-for-agent`, and DROPPED from prd/0004 Sprint 2.** Knock-on: the wave-1/wave-2 dates in prd/0003 have no mechanism behind them, and 0073 #7's "before wave-1 dispatch" gate now hangs on Trevor's own copy pass</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0085</span>
+      <div class="meta"><div class="nm">Feedback batch 4: Trevor ×2 + anonymous ×1 + Bernard ×1 (relay #17–#20)</div><div class="sub">internal planning detail</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0087</span>
+      <div class="meta"><div class="nm">CD job: calendar output: visual fidelity + reader clarity</div><div class="sub">Trevor 2026-08-04: Sarah is doing a final pass on the Events SSOT **and** the calendar output; colours, symbols and clarity for readers need tweaks. **Claude Design work, rule 7: CC does not touch it.** Scoped to the post-0080 surfaces (3 calendar pages, grid dots/glyphs, agenda chips, week strip + legend, 3 print sheets). Settled ground cross-referenced so CD does not redo it: `aud` colours + the WCAG 1.4.1 circle/diamond/ring system (TODOS pass-B seams), 0066 glyph density, 0065 #2 one-page density + #3 raster-vs-vector marks. Two moving inputs: Sarah's SSOT pass and the still-inert `comunita` column. **Sequenced after 0083** (which moves the palette). Cross-linked to GH #20</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0088</span>
+      <div class="meta"><div class="nm">Internal issue/PRD/ADR references ship inside published HTML comments</div><div class="sub">Found 2026-08-04 verifying the Sprint 1 prod deploy: 17 of 27 live pages carry HTML comments naming internal issue numbers, PRD decisions and ADRs (`issue 0080` ×17, `issue 0077` ×6, `PRD-0003` ×4, …), readable via view-source on `parentportal.elc.ac.th`. `redact.py` passes them correctly: an issue number is not a HARD/HUB term: so this is a gap in what is banned, not a gate failure. Breaks the letter of HARD rule 4; content leaking is process metadata, not org-sensitive, so low severity and not a launch blocker. Tension at triage: the comments are good maintenance notes in SOURCE, so the likely shape is strip-at-assembly in both deploy scripts + a gate on the assembled tree, not deletion from `site/`</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0092</span>
+      <div class="meta"><div class="nm">`build-project-hub.py`'s redaction gate is the only gate that cannot fail its own self-check</div><div class="sub">internal planning detail</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0093</span>
+      <div class="meta"><div class="nm">Self-checks nobody runs, and one that cannot reach the code it would catch</div><div class="sub">Filed 2026-08-04 out of [0091](0091-path-separator-sweep-repo-wide.md). One thesis: a self-check only counts if something runs it AND it can reach the code that breaks. **(1) Nothing runs `copy-pipeline.py selftest` / `copy_doc_tabs.py selftest`**: no deploy script mentions them and the repo's single workflow (`coming-up-watch.yml`) runs only check-coming-up. Not hypothetical: both had been aborting on Windows and only a hand-run sweep found it (0091). Substantial coverage thrown away: 36+ asserts over write-back corruption paths the docstrings call the safety. Not deploy gates and 0062/0072 parked, so nothing shipped wrong; the point is a parked tool's self-test still rots invisibly. **(2) `inject-base.py`'s self-test cannot reach its failure lines**: 5 real H8 asserts, but the reporting lines are built inline in `main()`, so 0091's separator fix there is unpinned and verifying it needed an out-of-tree harness driving `main()`. Fix = factor `gate_failures(dest)` out (the `check-templates.py:check()` / `redact.py:scan()` shape), then plant `a/b/index.html` and assert the posix line, same as redact + check-chrome already carry. **(3) No single command runs the checks**: the gate set exists only as lines inside two deploy bash scripts that also pull sheets and publish, so on the Windows peer verifying 0091 meant 18 hand-driven commands. A `tools/selftest-all` that enumerates (not hardcodes) the tools would give the two orphaned self-tests a home and any future sweep one command. Hygiene, not a launch blocker, touches no `site/`. Sequence after [0092](0092-hub-redaction-gate-cannot-fail.md)</div></div>
+    </div>
+    <div class="doc-row">
+      <span class="chip n">0094</span>
+      <div class="meta"><div class="nm">Which Cloudflare account runs the portal's live workers is written down nowhere</div><div class="sub">Surfaced 2026-08-04 when a deploy from roxy offered to register a NEW `workers.dev` subdomain: taking it would have published `elc-ops` to a hostname the live site never calls. Three workers serve `elcportal.workers.dev` (`elc-feedback-relay` · `elc-ops` · `elc-idea-board`) plus KV `RATE`, all hardcoded in published assets, and **neither `wrangler.toml` carries an `account_id` and no doc names the owner**. Trevor's `trevor.cardozo@gmail.com` login holds one account (`a07369b3…`) with NO workers.dev subdomain: not the one serving `elcportal`; every historic deploy ran from the MacBook. Relay verified healthy during the check (204 preflight, `{"ok":false}` 404 = worker.js:147/148), so no outage. Blocks 3 pending deploys (0054 · 0075 #11 · 0082) and is a prerequisite nobody listed for the ADR-0007 Anat handover. Whether to MIGRATE to an ELC account is a separate, costly question (hostnames baked into assets): triage decides document-only vs document-plus-migrate</div></div>
+    </div>
     </div>
     </div>
 
@@ -373,7 +443,7 @@
     </div>
     </div>
     </div>
-  </div>
+  </main>
 
   <div class="foot-strip">
     <span class="l">ELC Portal · project window</span>

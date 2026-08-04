@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-template="calendar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,18 +64,20 @@
        add-to-calendar as the main /calendar/ page. The rest are honest holding shells for the
        Purple Elephant team to populate. Public-safe. -->
   <main class="wrap sub pe">
+    <!-- Hero art carried over from the City School calendar page (issue 0080):
+         Giovanni's infinity spiral, same background idiom. Treatment = CD lane. -->
+    <img class="spiral-art" src="../../assets/img/art/spiral.png" alt="" aria-hidden="true" loading="lazy" width="1600" height="1174">
     <div class="pe-hero">
       <div class="page-head">
         <span class="eyebrow">Purple Elephant</span>
         <h1>Purple Elephant Samakee.</h1>
         <p class="lead">The early years at ELC, at our Samakee house. Here is the year month by month, with every event ready to add to your own calendar. The day to day and what to know is being written with the Purple Elephant team.</p>
-        <!-- Subscribe control wired but mock-disabled (ADR-0006): flips live with
-             data.js subscribeLive inside the Aug 11-13 cutover window (issue 0017). -->
+        <!-- Subscribe peeled off for launch 2026-08-03 (issue 0077): feeds keep
+             building, nothing advertises them. Re-flip = restore the row + subscribeLive. -->
         <p class="btn-row"><a class="btn ghost sm" href="print/">Print the calendar <span class="arw">&rarr;</span></a></p>
-        <p class="btn-row" data-subscribe="pe-samakee-calendar.ics"><button type="button" class="btn purple sm" disabled aria-disabled="true">Subscribe in Apple or Google Calendar</button> <span class="status soon">Coming for launch</span></p>
       </div>
-      <!-- ART SEAM (0064): as Thong Lor. -->
-      <div class="pe-hero-art" aria-hidden="true"></div>
+      <!-- ART SEAM (0064): as Thong Lor; temporary contour-mark placeholder retired
+           2026-08-03 (issue 0080), spiral graphic grounds the page instead. -->
     </div>
 
     <div class="cal-wrap">
@@ -102,11 +104,9 @@
       </div>
     </div>
 
-    <div class="section">
-      <div class="sec-eyebrow"><span class="eyebrow">More for families</span><span class="ln"></span></div>
-      <p class="txt">The practical side of Purple Elephant at Samakee. Each of these is being written with the Purple Elephant team and opens as it lands.</p>
-      <p class="btn-row"><a class="btn ghost sm" href="nuts-and-bolts/">Nuts and bolts <span class="arw">&rarr;</span></a> <a class="btn ghost sm" href="new-families/">New families <span class="arw">&rarr;</span></a> <a class="btn ghost sm" href="faq/">FAQ <span class="arw">&rarr;</span></a> <a class="btn ghost sm" href="policies/">Policies <span class="arw">&rarr;</span></a></p>
-    </div>
+    <!-- "More for families" section retired 2026-08-03 (issue 0080): the four PE
+         sub-pages moved to site-archive/ (build later, not going live). PE = calendar
+         only (0064 rescope). -->
 
     <p class="page-note pe-closing"><span class="pe-coming-dot"></span>A holding page for Purple Elephant Samakee. The calendar above is live; the rest is on its way.</p>
   </main>

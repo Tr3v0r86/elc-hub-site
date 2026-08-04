@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-template="calendar-print">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,7 +74,7 @@
          paper geometry and REPEATS the masthead + footnote on every printed page. render.js
          fills #print-list (month grid + dated key) and #print-range-label / #print-stamp;
          the component's MutationObserver re-measures the slots when they change. The
-         masthead, subscribe strip and legend are static here; #print-list[data-cal-source]
+         masthead and legend are static here; #print-list[data-cal-source]
          selects the dataset. .yc-stage confines the sheet width to a contained horizontal
          scroll on small screens (screen only, never in print, where an overflow ancestor
          would clip pagination). -->
@@ -92,10 +92,9 @@
           </div>
         </div>
         <div slot="footer" class="yc-foot">portal.elc.ac.th/calendar &middot; the live calendar is always current online &middot; <span id="print-stamp"></span> &middot; dates may change with government holiday announcements</div>
-        <div class="yc-subscribe">
-          <span class="yc-sub-msg"><b>Subscribe to the live calendar.</b> This printed sheet is a snapshot. The online calendar always has the current dates, so a live subscription keeps itself up to date.</span>
-          <span class="yc-sub-hold"><span class="yc-sub-btn" aria-disabled="true">Subscribe in Apple or Google Calendar</span><span class="yc-sub-soon">Coming for launch</span></span>
-        </div>
+        <!-- Subscribe strip removed for launch 2026-08-03 (issue 0077): the sheet no
+             longer promises a live subscription. The footer already says the online
+             calendar is always current. Restore this div at the re-flip. -->
         <div id="print-list" data-cal-source="city"><p class="yc-empty">This sheet fills itself from the live calendar and needs JavaScript. The <a href="../">calendar page</a> has the same dates.</p></div>
         <div class="yc-legend">
           <span class="yc-lg"><b class="yc-gl yc-g-H">&#9679;</b>Holiday, school closed</span>

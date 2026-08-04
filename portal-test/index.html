@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-template="home">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,7 +70,7 @@
     </nav>
   </header>
 
-  <div class="wrap">
+  <main class="wrap">
     <!-- Hero banner. The Thai-houses drawing MOVED OUT of the hero (P4 pass A,
          Trevor 2026-07-19) and now rides in line with the note from Trevor below.
          Composition = Claude Design lane. -->
@@ -189,12 +189,20 @@
           <span class="btn block">Register for ASA <span class="arw">&rarr;</span></span>
         </a>
 
-        <!-- ARMONIA -->
-        <a class="tile reg-card tile-top-purple link" href="armonia/">
-          <span class="eyebrow">Programme</span>
-          <h3>Armonia</h3>
-          <p>Music, drama, dance, Thai culture, science, tech and art. Focused after-school experiences for Years 4 to 6, Tuesdays and Thursdays, 3 to 4pm.</p>
-          <span class="btn block">Explore Armonia <span class="arw">&rarr;</span></span>
+        <!-- ARMONIA tile retired 2026-08-03 (issue 0080): the Armonia tree moved to
+             site-archive/ pending the programme rebuild. Restore the tile when it returns.
+             Bento rebalance after the cut = CD (rule 7). -->
+
+        <!-- LA COMUNITÀ (0071 follow-up, Trevor feedback 2026-07-28): community/ is now
+             the home for workshops + social mornings, off the core calendar, and this is
+             its Ongoing entry. Sits THIRD ahead of Calendar (Trevor 2026-07-28): the three
+             sign-up surfaces group first, the year reference follows.
+             Bento rebalance for the fourth reg-card = CD (rule 7). -->
+        <a class="tile reg-card tile-top-purple link" href="community/">
+          <span class="eyebrow">La Comunità</span>
+          <h3>Workshops &amp; social mornings</h3>
+          <p>Parent workshops, coffee and social mornings: the occasions that bring ELC families together across the year.</p>
+          <span class="btn block">See what's on <span class="arw">&rarr;</span></span>
         </a>
 
         <!-- CALENDAR quick-link (slice 2: the Events reg-card retired here; eyebrow
@@ -206,29 +214,11 @@
           <span class="btn block">Open the calendar <span class="arw">&rarr;</span></span>
         </a>
 
-        <!-- LA COMUNITÀ (0071 follow-up, Trevor feedback 2026-07-28): community/ is now
-             the home for workshops + social mornings, off the core calendar, and this is
-             its Ongoing entry. Bento rebalance for the fourth reg-card = CD (rule 7). -->
-        <a class="tile reg-card tile-top-purple link" href="community/">
-          <span class="eyebrow">La Comunità</span>
-          <h3>Workshops &amp; social mornings</h3>
-          <p>Parent workshops, coffee and social mornings: the occasions that bring ELC families together across the year.</p>
-          <span class="btn block">See what's on <span class="arw">&rarr;</span></span>
-        </a>
-
-        <!-- SPORT (P4 pass A): "Register for sport" stays on activities/ this pass. The
-             external nested sport flow on portal.elc.ac.th is not built and the process
-             is still settling (football + swimming are the most complete), so it degrades
-             honestly (rule 6) rather than dead-link off-site. When that flow exists it
-             repoints external like ASA (and rides the same 0017 cutover re-point). -->
-        <div class="tile sport">
-          <div class="head">
-            <div><span class="eyebrow">Sport · Term 1</span><h3>Pick a season. Try out, train, play.</h3></div>
-            <a class="btn purple" href="activities/">Register for sport <span class="arw">&rarr;</span></a>
-          </div>
-          <div class="grid" id="sport-grid"></div>
-          <p class="sub" id="sport-note"></p>
-        </div>
+        <!-- SPORT TILE RETIRED 2026-08-03 (issue 0080, PRD-0003 decision 9: "sport comes
+             off the site"). Sport is built with the rest of the ASAs on the WordPress ASA
+             surface, so the ASA card above is the route; a second sport CTA here would
+             promise a portal flow that does not exist. data.js keeps `sports` + `sportNote`
+             dormant (statuses stay true), so restoring the tile is markup only. -->
 
         <!-- POLICIES -->
         <a class="policies" href="policies/">
@@ -272,28 +262,20 @@
           <span class="go">Read the story <span class="arw">&rarr;</span></span>
         </a>
 
-        <!-- Template 2: voices. One card holds the batch; add a figure per quote. Quotes are
-             verbatim and anonymised; the closing line is reported, not quoted, because it
-             came to us through staff rather than in the family's own words. -->
-        <div class="tile ev-card ev-inert kk-card">
-          <span class="when">Summer 2026 &middot; Kob khun</span>
-          <h3>What summer families told us.</h3>
-          <p>Session one of the Festival of the Arts brought families onto our campus from across Bangkok and from as far as Hong Kong and India, many of them for the first time. Some of what they said on the way out:</p>
-          <figure class="kk-q">
-            <blockquote>Honestly, this school is so beautiful, it amazes me. We had friends tell us to come here and they didn't let us down.</blockquote>
-            <figcaption>A parent, summer school session one</figcaption>
-          </figure>
-          <figure class="kk-q">
-            <blockquote>Thank you very much for giving our kids such a wonderful time. They absolutely loved it and came home full of stories every day.</blockquote>
-            <figcaption>A parent of two children, Years 2 to 6</figcaption>
-          </figure>
-          <p class="kk-note">Families visiting from India told us they chose a school over a holiday camp because their children would be with educators all week. Kob khun to all of you for trusting us with your summer.</p>
-        </div>
+        <!-- SUMMER-SCHOOL VOICES CARD REMOVED 2026-08-04 (issue 0095, PRD-0003 peel-back
+             decision 3). Trevor: too markety for a family surface. It was a batch of
+             anonymised Festival-of-the-Arts testimonials, which is admissions copy, and this
+             page is for families who have already chosen ELC. Removing it also dissolves most
+             of 0074's consent gate: those quotes came from staff email, not a consent form.
+             NEXT CARD HERE = the alumni-return card (decision 3's other half). NOT scaffolded
+             as empty markup on purpose: a placeholder card on the family home page would
+             breach rule 6, and real families land here from Wed 5 Aug. Content + consent are
+             Trevor's, template + the four things needed are in issue 0095. -->
       </div>
     </section>
 
     <p class="page-note">The practical everyday (parking, the school day, lunches and what to send) lives in <a href="nuts-and-bolts/">the nuts and bolts</a>. And there is more to school life than the schedule: <a href="community/">get to know the ELC community</a>.</p>
-  </div>
+  </main>
 
   <div class="foot-strip">
     <span class="foot-mark" aria-hidden="true"></span><img class="foot-lockup" src="assets/img/elc-logo.svg" alt="ELC International Schools Bangkok" width="63" height="58">

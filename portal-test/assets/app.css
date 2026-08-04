@@ -852,6 +852,10 @@ a.key-num:hover,a.key-num:focus-visible{text-decoration:underline;text-underline
    figure. Mechanical scaffolding: visual treatment = Claude Design (rule 7). */
 .kk-lead{font-weight:300;font-size:14.5px;line-height:1.6;color:var(--charcoal);max-width:62ch;margin:-4px 0 16px;}
 .kk-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+/* A lone card must not sit half-width against dead space (issue 0095 removed the voices
+   card; the alumni-return card refills the second slot). Self-reverting: the rule stops
+   applying the moment a second card lands. Same :has() gate idiom as 0056. */
+.kk-cards:has(> :only-child){grid-template-columns:minmax(0,1fr);max-width:none;}
 .kk-card p{flex:none;}
 .kk-q{margin:14px 0 0;padding-left:14px;border-left:2px solid var(--gold);}
 .kk-q blockquote{font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.55;color:var(--ink);}

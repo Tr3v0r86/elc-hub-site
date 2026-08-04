@@ -1,6 +1,6 @@
 {
   "term": "Term 1",
-  "generated": "2026-07-27T22:56:16.582Z",
+  "generated": "2026-08-04T05:53:51.784Z",
   "events": [
     {
       "date": "2026-07-29",
@@ -35,8 +35,8 @@
       "type": "purple",
       "aud": "parent",
       "cohort": "K1",
-      "title": "K1 Information Session",
-      "sub": ""
+      "title": "K1 Coffee morning",
+      "sub": "Information session"
     },
     {
       "date": "2026-08-17",
@@ -69,8 +69,8 @@
       "type": "purple",
       "aud": "parent",
       "cohort": "Y1",
-      "title": "Y1 Information Session",
-      "sub": ""
+      "title": "Y1 Coffee morning",
+      "sub": "Information session"
     },
     {
       "date": "2026-08-19",
@@ -87,8 +87,8 @@
       "type": "purple",
       "aud": "parent",
       "cohort": "Y3 to Y6",
-      "title": "Y3 to Y6 Information Session",
-      "sub": ""
+      "title": "Y3 to Y6 Coffee morning",
+      "sub": "Information session"
     },
     {
       "date": "2026-08-21",
@@ -96,8 +96,8 @@
       "type": "purple",
       "aud": "parent",
       "cohort": "Y2",
-      "title": "Y2 Information Session",
-      "sub": ""
+      "title": "Y2 Coffee morning",
+      "sub": "Information session"
     },
     {
       "date": "2026-08-24",
@@ -105,8 +105,8 @@
       "type": "purple",
       "aud": "parent",
       "cohort": "K2",
-      "title": "K2 Information Session",
-      "sub": ""
+      "title": "K2 Coffee morning",
+      "sub": "Information session"
     },
     {
       "date": "2026-08-25",
@@ -114,14 +114,15 @@
       "type": "purple",
       "aud": "parent",
       "cohort": "Dove",
-      "title": "Dove Information Session",
-      "sub": "Dove Centre"
+      "title": "Dove Coffee morning",
+      "sub": "Information session"
     },
     {
       "date": "2026-09-07",
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -171,6 +172,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -214,6 +216,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -352,6 +355,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -370,6 +374,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -439,6 +444,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -581,6 +587,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""
@@ -647,6 +654,7 @@
       "cat": "social",
       "type": "purple",
       "aud": "parent",
+      "nopage": true,
       "community": true,
       "title": "Parent Social Morning",
       "sub": ""

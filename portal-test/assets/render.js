@@ -338,13 +338,16 @@
   });
 
   // Draft chip (sprint 3 D5): a page still being finalised gets a visible marker at
-  // the top of <main>. Reuses the .status.soon pill look; no new CSS (rule 7).
-  var draftMain = document.querySelector('main[data-page]');
-  if (draftMain && isDraftPage(draftMain.dataset.page, P.draftPages)) {
+  // the top of its content root. Reuses the .status.soon pill look; no new CSS (rule 7).
+  // Matched on [data-page], NOT main[data-page] (issue 0090): every content root is a
+  // <main> today, but tying the chip to the element name means a data-page on anything
+  // else renders no chip and reports no error. The key is the contract, not the tag.
+  var draftRoot = document.querySelector('[data-page]');
+  if (draftRoot && isDraftPage(draftRoot.dataset.page, P.draftPages)) {
     var chip = document.createElement('div');
     chip.className = 'status soon draft-chip';
     chip.textContent = 'We are finalising this page. Details may change.';
-    draftMain.insertBefore(chip, draftMain.firstChild);
+    draftRoot.insertBefore(chip, draftRoot.firstChild);
   }
 
   // School status banner (issue 0031): injected under the header on every page
@@ -437,19 +440,30 @@
   // links out only when the row carries a registration URL on ext (Jotform etc.:
   // progressive enrichment, no hard content gate). Same self-remove-when-empty idiom
   // as #community-events above, so the page ships inert until Sarah flags rows.
-  [{ id: 'community-workshops', cat: 'workshop', heading: 'Workshops' },
-   { id: 'community-mornings', cat: 'social', heading: 'Coffee mornings' }].forEach(function (sec) {
+  //
+  // 0079 (2026-08-03): workshops separated FULLY from the calendar, and this section is
+  // their canonical home, so it STANDS EVEN WHEN EMPTY with an honest waiting line:
+  // self-removing would leave workshops with no home at all until Sarah's column lands.
+  // Social mornings keep the self-remove idiom; that section carries no such promise.
+  function comunitaRows(cat) {
+    return (P.calendarEvents || []).concat(P.peEvents || [])
+      .filter(function (e) { return e.comunita && e.cat === cat && e.date >= bkkToday; })
+      .sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+  }
+  [{ id: 'community-workshops', cat: 'workshop', heading: 'Workshops', stands: true,
+     empty: 'The year\'s parent workshops are being confirmed with the team. Every one of them will appear here, with its sign-up link, as it lands.' },
+   { id: 'community-mornings', cat: 'social', heading: 'Social mornings', stands: false }].forEach(function (sec) {
     var mount = document.getElementById(sec.id);
     if (!mount) return;
-    var rows = (P.calendarEvents || []).concat(P.peEvents || [])
-      .filter(function (e) { return e.comunita && e.cat === sec.cat && e.date >= bkkToday; })
-      .sort(function (a, b) { return a.date < b.date ? -1 : 1; });
-    if (!rows.length) { mount.remove(); return; }
+    var rows = comunitaRows(sec.cat);
+    if (!rows.length && !sec.stands) { mount.remove(); return; }
     mount.hidden = false;
     mount.className = 'section';
     mount.innerHTML =
       '<div class="sec-eyebrow"><span class="eyebrow">' + sec.heading + '</span><span class="ln"></span></div>' +
-      rows.map(function (e) { return commRow(e, ' · registration page'); }).join('');
+      (rows.length
+        ? rows.map(function (e) { return commRow(e, ' · registration page'); }).join('')
+        : '<p class="page-note">' + sec.empty + '</p>');
   });
   var givingNext = document.getElementById('giving-next');
   if (givingNext && P.calendarEvents) {
@@ -766,6 +780,26 @@
         return '<div class="tile ev-card ev-inert">' + when + '<h3>' + title + '</h3>' + body +
           (c.owed ? '<span class="soon">Page coming soon</span>' : '') + '</div>';
       }).join('');
+    }
+
+    // Workshops card (issue 0079). Workshops are fully off every calendar surface, so
+    // they would otherwise have no presence in the band families actually scan. One
+    // .ev-card, appended to the same grid (not a second grid, and deliberately outside
+    // CU_CAP: this is not a calendar row), linking to their canonical home. Row-driven
+    // and self-removing: a dateless card in a dated band is noise, and until Sarah's
+    // comunita column lands there are no rows, so nothing renders. The community page
+    // itself is where the standing "workshops live here" promise is kept.
+    var wsRows = comunitaRows('workshop');
+    if (wsRows.length) {
+      var wsWhen = '<span class="when">' + cuLabel([wsRows[0].date], true) + '</span>';
+      var wsBlurb = wsRows.length > 1
+        ? wsRows.length + ' parent workshops coming up, starting with ' + wsRows[0].title + '.'
+        : wsRows[0].title + (wsRows[0].sub ? '. ' + wsRows[0].sub : '.');
+      agenda.insertAdjacentHTML('beforeend',
+        '<a class="tile ev-card ev-link" href="' + ROOT + 'community/#community-workshops"' +
+        ' aria-label="Parent workshops · La Comunità">' + wsWhen +
+        '<h3>Parent workshops</h3><p>' + wsBlurb + '</p>' +
+        '<span class="go">See what\'s on <span class="arw">&rarr;</span></span></a>');
     }
   }
 
@@ -1113,20 +1147,18 @@
     console.assert(ycCat({ aud: 'holiday', title: 'The Queen Mother’s Birthday Holiday' }) === 'H', 'ycCat: public holiday -> H');
     console.assert(ycCat({ aud: 'holiday', title: 'No school for children (staff training day)' }) === 'PD', 'ycCat: staff training -> PD');
     console.assert(ycCat({ aud: 'parent', title: 'Parent Teacher Conferences (Progress)' }) === 'PT', 'ycCat: conferences -> PT');
-    console.assert(ycCat({ aud: 'parent', title: 'K1 Information Session' }) === 'SE', 'ycCat: parent event -> SE');
+    console.assert(ycCat({ aud: 'parent', title: 'K1 Coffee morning' }) === 'SE', 'ycCat: parent event -> SE');
     console.assert(ycCat({ aud: 'child', title: 'K1 first day of school' }) === 'SC', 'ycCat: children-only -> SC');
     console.assert(ycKeyDay({ date: '2026-10-12', until: '2026-10-16' }) === '12–16', 'ycKeyDay: same-month range');
     console.assert(ycKeyDay({ date: '2026-12-21', until: '2027-01-09' }) === '21 Dec to 9 Jan', 'ycKeyDay: cross-month range');
   }
 
-  // Subscribe control (ADR-0006): a [data-subscribe] mount names its feed file under
-  // api/v1/ (City calendar page + the two PE calendar pages). While PORTAL.subscribeLive
-  // is false, the static mock button + honest "Coming for launch" pill in the page HTML
-  // stand untouched (rule 6: never fake liveness, and nobody subscribes to a dying
-  // test-host URL). When the flag flips true inside the Aug 11-13 cutover window
-  // (issue 0017), the mock is replaced with the wired control: Apple (webcal), Google
-  // (add by URL) and a visible https line for any other app. Every URL derives from
-  // THIS page's own origin + depth at render time; no host is ever hardcoded.
+  // Subscribe control (ADR-0006, superseded-for-launch by issue 0077). The UI was peeled
+  // off every calendar page on 2026-08-03, so NO [data-subscribe] mount ships today and
+  // this block is dormant, not dead: the feeds still build each deploy. Re-flip = restore
+  // a mount in the page HTML + set PORTAL.subscribeLive true; this wires Apple (webcal),
+  // Google (add by URL) and a visible https line for any other app, every URL derived
+  // from THIS page's own origin + depth at render time, no host ever hardcoded.
   var subMounts = document.querySelectorAll('[data-subscribe]');
   if (subMounts.length && P.subscribeLive) {
     subMounts.forEach(function (el) {
@@ -1209,8 +1241,16 @@
   // null-degrading (rule 6): no bookingUrl -> "Booking link coming" (never href="#"),
   // no photo -> initials placeholder, no bio -> "coming" line. Booking is LINK-OUT
   // only (rule 1); no embed. Open/dormant derives from ptc.dates, no manual flag.
+  //
+  // KISS MODE (issue 0078, 2026-08-03): the mount carrying data-faces renders the same
+  // class-keyed cards with the bios and the booking cell OMITTED, and drops the demo
+  // card (a booking walkthrough is meaningless with no booking on the page). Teachers
+  // send their own booking links; the page only explains the programme. classes[] keeps
+  // every bio and bookingUrl untouched in data.js, so Payal's 2026-08-10 call reverses
+  // this by deleting one attribute from the page HTML. No data, CSS or renderer rebuild.
   var teamMount = document.getElementById('team-cards');
   if (teamMount && P.ptc && P.classes) {
+    var facesOnly = teamMount.hasAttribute('data-faces');
     var YEAR_ORDER = ['demo', 'K1', 'K2', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6'];
     var YEAR_LABEL = { demo: 'See how it works', K1: 'Kindergarten 1', K2: 'Kindergarten 2',
       Y1: 'Year 1', Y2: 'Year 2', Y3: 'Year 3', Y4: 'Year 4', Y5: 'Year 5', Y6: 'Year 6' };
@@ -1232,7 +1272,10 @@
 
     var ptcIsOpen = ptcOpen(P.ptc.dates, bkkToday);
     var byYear = {};
-    P.classes.forEach(function (c) { (byYear[c.year] = byYear[c.year] || []).push(c); });
+    P.classes.forEach(function (c) {
+      if (facesOnly && c.year === 'demo') return;
+      (byYear[c.year] = byYear[c.year] || []).push(c);
+    });
     var years = YEAR_ORDER.filter(function (y) { return byYear[y]; });
 
     var jump = document.getElementById('team-jump');
@@ -1242,8 +1285,9 @@
       }).join('');
     }
     // Honest closed line when the window has passed (cards stay; Book turns off).
+    // Skipped in faces mode: the page makes no booking claim to withdraw (0078).
     var ptcStatus = document.getElementById('ptc-status');
-    if (ptcStatus && !ptcIsOpen) {
+    if (ptcStatus && !ptcIsOpen && !facesOnly) {
       ptcStatus.textContent = 'Bookings are closed. The next conferences are in October.';
     }
 
@@ -1252,12 +1296,19 @@
         ? '<img class="headshot" src="' + ROOT + escAttr(t.photo) + '" alt="" width="48" height="48" loading="lazy">'
         : '<span class="hs-ph" aria-hidden="true">' + initials(t.name) + '</span>';
     }
-    function teacherLine(t) {
-      return '<div class="tname">' + t.name +
+    function teacherLine(t, faces) {
+      var head = '<div class="tname">' + t.name +
         (t.role ? ' <span class="role">' + t.role + '</span>' : '') +
-        (t.flag ? ' <span class="chip">' + t.flag + '</span>' : '') + '</div>' +
+        (t.flag ? ' <span class="chip">' + t.flag + '</span>' : '') + '</div>';
+      if (faces) return head;   // 0078: faces + names, no bio text
+      return head +
         (t.bio ? '<p class="tbio">' + t.bio + '</p>' : '<p class="tbio none">A short introduction is on the way.</p>');
     }
+    console.assert(teacherLine({ name: 'A B', bio: 'x' }, true).indexOf('tbio') === -1 &&
+      teacherLine({ name: 'A B' }, true).indexOf('tbio') === -1,
+      'teacherLine: faces mode emits no bio, present or absent (0078)');
+    console.assert(teacherLine({ name: 'A B', bio: 'x' }, false).indexOf('tbio') > -1,
+      'teacherLine: full mode still emits the bio');
     function bookCell(cls, state) {
       if (state === 'live') return '<a class="btn sm" target="_blank" rel="noopener" href="' + escAttr(cls.bookingUrl) + '" aria-label="Book a time with ' + escAttr(cls.class) + ', opens in a new tab">Book a time</a>';
       return '<span class="status soon">' + (state === 'closed' ? 'Bookings closed' : 'Booking link coming') + '</span>';
@@ -1271,8 +1322,8 @@
         return '<div class="doc-row team-card">' +
           '<span class="tc-faces">' + c.teachers.map(avatar).join('') + '</span>' +
           '<div class="meta"><div class="nm">' + c.class + (chips ? ' ' + chips : '') + '</div>' +
-          c.teachers.map(teacherLine).join('') + '</div>' +
-          '<div class="rt">' + bookCell(c, state) + '</div></div>';
+          c.teachers.map(function (t) { return teacherLine(t, facesOnly); }).join('') + '</div>' +
+          (facesOnly ? '' : '<div class="rt">' + bookCell(c, state) + '</div>') + '</div>';
       }).join('');
       return '<div class="section" id="y-' + y + '">' +
         '<div class="sec-eyebrow"><span class="eyebrow">' + (YEAR_LABEL[y] || y) + '</span><span class="ln"></span></div>' +

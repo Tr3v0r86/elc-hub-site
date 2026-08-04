@@ -32,11 +32,11 @@ URL:https://elc-hub.com/portal-test/new-family-orientation/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/new-family-orientation/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260817-k1-information-session@portal.elc.ac.th
+UID:20260817-k1-coffee-morning@portal.elc.ac.th
 DTSTAMP:20260817T000000Z
 DTSTART;VALUE=DATE:20260817
 DTEND;VALUE=DATE:20260818
-SUMMARY:K1 Information Session
+SUMMARY:K1 Coffee morning\, Information session
 URL:https://elc-hub.com/portal-test/coffee-mornings/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/coffee-mornings/
 END:VEVENT
@@ -68,11 +68,11 @@ URL:https://elc-hub.com/portal-test/calendar/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/calendar/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260818-y1-information-session@portal.elc.ac.th
+UID:20260818-y1-coffee-morning@portal.elc.ac.th
 DTSTAMP:20260818T000000Z
 DTSTART;VALUE=DATE:20260818
 DTEND;VALUE=DATE:20260819
-SUMMARY:Y1 Information Session
+SUMMARY:Y1 Coffee morning\, Information session
 URL:https://elc-hub.com/portal-test/coffee-mornings/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/coffee-mornings/
 END:VEVENT
@@ -86,38 +86,38 @@ URL:https://elc-hub.com/portal-test/calendar/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/calendar/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260820-y3-to-y6-information-session@portal.elc.ac.th
+UID:20260820-y3-to-y6-coffee-morning@portal.elc.ac.th
 DTSTAMP:20260820T000000Z
 DTSTART;VALUE=DATE:20260820
 DTEND;VALUE=DATE:20260821
-SUMMARY:Y3 to Y6 Information Session
+SUMMARY:Y3 to Y6 Coffee morning\, Information session
 URL:https://elc-hub.com/portal-test/coffee-mornings/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/coffee-mornings/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260821-y2-information-session@portal.elc.ac.th
+UID:20260821-y2-coffee-morning@portal.elc.ac.th
 DTSTAMP:20260821T000000Z
 DTSTART;VALUE=DATE:20260821
 DTEND;VALUE=DATE:20260822
-SUMMARY:Y2 Information Session
+SUMMARY:Y2 Coffee morning\, Information session
 URL:https://elc-hub.com/portal-test/coffee-mornings/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/coffee-mornings/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260824-k2-information-session@portal.elc.ac.th
+UID:20260824-k2-coffee-morning@portal.elc.ac.th
 DTSTAMP:20260824T000000Z
 DTSTART;VALUE=DATE:20260824
 DTEND;VALUE=DATE:20260825
-SUMMARY:K2 Information Session
+SUMMARY:K2 Coffee morning\, Information session
 URL:https://elc-hub.com/portal-test/coffee-mornings/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/coffee-mornings/
 END:VEVENT
 BEGIN:VEVENT
-UID:20260825-dove-information-session@portal.elc.ac.th
+UID:20260825-dove-coffee-morning@portal.elc.ac.th
 DTSTAMP:20260825T000000Z
 DTSTART;VALUE=DATE:20260825
 DTEND;VALUE=DATE:20260826
-SUMMARY:Dove Information Session\, Dove Centre
+SUMMARY:Dove Coffee morning\, Information session
 URL:https://elc-hub.com/portal-test/coffee-mornings/
 DESCRIPTION:Details: https://elc-hub.com/portal-test/coffee-mornings/
 END:VEVENT

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-template="index-grid">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Activities · ELC Portal</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#F4F2EA">
-<meta name="description" content="Everything to sign up for this term at ELC: after-school activities, Armonia, sport and events.">
+<meta name="description" content="Everything to sign up for this term at ELC: after-school activities and community events.">
 <meta property="og:title" content="Activities · ELC Portal">
-<meta property="og:description" content="Everything to sign up for this term at ELC: after-school activities, Armonia, sport and events.">
+<meta property="og:description" content="Everything to sign up for this term at ELC: after-school activities and community events.">
 <meta property="og:url" content="https://elc-hub.com/portal-test/activities/">
 <meta property="og:image" content="https://elc-hub.com/portal-test/assets/icon-512.png">
 <meta property="og:type" content="website">
@@ -58,7 +58,7 @@
 
   <div class="crumb"><a href="../">This week</a> &nbsp;/&nbsp; Activities</div>
 
-  <div class="wrap sub">
+  <main class="wrap sub">
     <div class="page-head">
       <span class="eyebrow">Register · Term 1</span>
       <h1>Everything to sign up for.</h1>
@@ -68,11 +68,13 @@
     <!-- registration-windows countdown retired in P4 pass A: sport dates are
          calendarEvents now (calendar + home week strip + Coming up). -->
 
+    <!-- Sport + Music chips retired 2026-08-03 (issue 0080): their only cards left the
+         site (sport per PRD-0003 decision 9, Armonia was the `music` card), so both
+         chips filtered the grid to nothing. A filter that empties the page is worse than
+         no filter. Restore each chip with its card. -->
     <div class="filter">
       <button class="f on">All</button>
       <button class="f" data-cat="after-school">After school</button>
-      <button class="f" data-cat="sport">Sport</button>
-      <button class="f" data-cat="music">Music</button>
       <button class="f" data-cat="events">Workshops</button>
     </div>
 
@@ -86,25 +88,14 @@
         <div class="act-foot"><span class="status open">Open now</span><a class="btn" href="../asa/">Register for ASA <span class="arw">&rarr;</span></a></div>
       </div>
 
-      <!-- ARMONIA -->
-      <div class="tile act-card tile-top-purple" data-cat="music">
-        <span class="eyebrow">Programme</span>
-        <h3>Armonia</h3>
-        <p>Music, drama and dance performance, together. A programme of its own, taught in small groups. Tuesday and Thursday, 3 to 4pm.</p>
-        <div class="act-meta"><span class="chip">Years 4 to 6</span><span class="chip">Weekly</span><span class="chip">Small groups</span></div>
-        <div class="act-foot"><span class="status soon">Details coming</span><a class="btn ghost" href="../armonia/">What is Armonia? <span class="arw">&rarr;</span></a></div>
-      </div>
+      <!-- ARMONIA card retired 2026-08-03 (issue 0080): tree in site-archive/ pending
+           the programme rebuild. -->
 
-      <!-- SPORT: rows + note render from assets/data.js (single source, honest statuses) -->
-      <div class="tile act-card tile-top-purple" data-cat="sport">
-        <span class="eyebrow">Sport · Term 1</span>
-        <h3>Sport</h3>
-        <p>Pick a season. Try out, train, play. Coached at the Dove, on our own court and pitch.</p>
-        <div class="sports" id="sport-grid"></div>
-        <p class="sub" id="sport-note"></p>
-        <p class="sub"><a href="../sport/">How try-outs work</a></p>
-        <div class="act-foot"><span class="eyebrow" id="sport-open-count"></span><a class="btn purple" href="mailto:activities@elc.ac.th?subject=Sport%20registration" data-rail="TODO" title="Sport registration rail pending · issue 0009">Register for sport <span class="arw">&rarr;</span></a></div>
-      </div>
+      <!-- SPORT CARD RETIRED 2026-08-03 (issue 0080, PRD-0003 decision 9: "sport comes off
+           the site", built with the rest of the ASAs on the WordPress ASA surface). This
+           card was the last sport surface on the portal, and its CTA was a mailto standing
+           in for a rail that never landed (issue 0009). Sport returns through the ASA
+           route, not here. Data (`sports`, `sportNote`) stays dormant in data.js. -->
 
       <!-- WORKSHOPS (renamed from "Events and workshops", Trevor round 2): the parent-facing
            workshop roadmap. The full year of workshops, each with its Jotform sign-up link and
@@ -126,7 +117,7 @@
         <div class="sub">Choose an activity, tell us your child's details, and confirm. The office does the rest and writes to you with the place. Read <a href="../asa/#after">what happens after you register</a>: what arrives, when, and what to do if it does not.</div>
       </div>
     </div>
-  </div>
+  </main>
 
   <div class="foot-strip">
     <span class="foot-mark" aria-hidden="true"></span><img class="foot-lockup" src="../assets/img/elc-logo.svg" alt="ELC International Schools Bangkok" width="63" height="58">

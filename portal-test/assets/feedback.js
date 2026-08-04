@@ -2,12 +2,22 @@
    Floating bottom-right pill + modal. On submit it POSTs to the feedback
    relay (a Cloudflare Worker that files a GitHub issue, docs/issues/0020);
    if the relay fails, it falls back to a pre-filled mailto to Trevor.
+   Carries a Cloudflare Turnstile token when one is available (docs/issues/0082).
    Styles consume tokens.css custom properties only.
    Self-contained; include with <script src> after tokens.css. */
 (function () {
   const VERSION = (window.PORTAL||{}).version || 'unknown';
   const TO = 'trevorc@elc.ac.th';
   const RELAY = 'https://elc-feedback-relay.elcportal.workers.dev/feedback';
+
+  /* Turnstile site key. Public by design (it ships in the page; the private half is the
+     worker's TURNSTILE_SECRET) but it is still a real credential, so it is pasted at deploy
+     time, not invented here. Empty string = Turnstile off and this widget behaves exactly as
+     it did before: that is both the pre-deploy state and the safe default. */
+  const TURNSTILE_SITEKEY = ''; // <- Trevor pastes the site key from the Turnstile dashboard
+  const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+  const TS_LOAD_MS = 6000;  // the script gets this long to answer before we stop waiting on it
+  const TS_TOKEN_MS = 2000; // at submit, wait at most this long for a token, then send without
 
   const css = `
     #fb-pill{position:fixed;bottom:26px;right:26px;z-index:9998;display:inline-flex;align-items:center;gap:10px;
@@ -40,6 +50,11 @@
     #fb-name:focus,#fb-body:focus{border-color:var(--purple);}
     #fb-name::placeholder,#fb-body::placeholder{color:var(--faint);}
     #fb-body{min-height:140px;resize:vertical;line-height:1.5;}
+    /* Turnstile mounts here. In interaction-only mode it renders nothing at all unless a
+       visitor actually has to be challenged, so the slot is empty on a normal visit. Mechanical
+       placement only: if a challenge ever needs a visual treatment, that is Claude Design's. */
+    #fb-ts{display:flex;justify-content:flex-end;}
+    #fb-ts:not(:empty){margin-bottom:14px;}
     #fb-actions{display:flex;align-items:center;justify-content:flex-end;gap:14px;margin-top:4px;}
     #fb-note{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;color:var(--faint);margin-right:auto;}
     #fb-submit{display:inline-flex;align-items:center;gap:9px;background:var(--aubergine);color:var(--white-pure);border:1px solid var(--aubergine);border-radius:6px;
@@ -76,6 +91,7 @@
               <label for="fb-body">Your feedback</label>
               <textarea id="fb-body" placeholder="What is working, what is missing, or what would help?"></textarea>
             </div>
+            <div id="fb-ts"></div>
             <div id="fb-actions">
               <span id="fb-note">Goes straight to Trevor &middot; ${VERSION}</span>
               <button id="fb-submit">Send feedback <span class="a">&rarr;</span></button>
@@ -106,7 +122,86 @@
   const nameI  = document.getElementById('fb-name');
   const bodyI  = document.getElementById('fb-body');
 
-  function open(){ overlay.classList.add('open'); setTimeout(()=>bodyI.focus(),50); }
+  /* ---- Turnstile (docs/issues/0082) ------------------------------------------------------
+     Loaded from here rather than a <script> tag, for two reasons: one file changes instead of
+     27 pages, and the 99% of visits that never open the widget make no third-party request at
+     all.
+
+     Fail-open is the entire design. Every failure below ends the same way, "send the note with
+     no token", and a tokenless note is answered ok:false by the relay, which is the mailto
+     fallback that already exists. There is no path where a family taps Send and nothing
+     happens:
+       no site key pasted yet   -> never loads, state 'dead'
+       script blocked or offline-> onerror, state 'dead'
+       script never answers     -> TS_LOAD_MS deadline, state 'dead'
+       challenge errors         -> error-callback, state 'dead'
+       token expires while open -> expired-callback clears it and asks for a fresh one
+       token still not minted   -> bounded TS_TOKEN_MS wait at submit, then send without it
+     ponytail: 'dead' deliberately means both "not configured" and "broken". The widget cannot
+     tell them apart from the outside and must behave identically either way. */
+  const ts = { state: 'idle', token: '', id: null }; // idle | loading | ready | dead
+  let tsWaiters = [];
+
+  function tsNotify(){
+    const list = tsWaiters; tsWaiters = [];
+    for (let i = 0; i < list.length; i++) list[i](ts.token);
+  }
+  function tsDead(){ ts.state = 'dead'; ts.token = ''; tsNotify(); }
+
+  function tsLoad(){
+    if (ts.state !== 'idle') return;
+    if (!TURNSTILE_SITEKEY){ ts.state = 'dead'; return; }
+    ts.state = 'loading';
+
+    let settled = false;
+    const timer = setTimeout(function(){ if(!settled){ settled = true; tsDead(); } }, TS_LOAD_MS);
+
+    window.__fbTurnstileOnload = function(){
+      if (settled) return;
+      settled = true; clearTimeout(timer);
+      try {
+        ts.id = window.turnstile.render('#fb-ts', {
+          sitekey: TURNSTILE_SITEKEY,
+          appearance: 'interaction-only',
+          callback: function(token){ ts.token = token || ''; tsNotify(); },
+          'error-callback': function(){ tsDead(); return true; },
+          'expired-callback': function(){ tsReset(); },
+          'timeout-callback': function(){ tsReset(); }
+        });
+        ts.state = 'ready'; // mounted; the token arrives on the callback a moment later
+      } catch(e){ tsDead(); }
+    };
+
+    const s = document.createElement('script');
+    s.src = TURNSTILE_SRC + '?render=explicit&onload=__fbTurnstileOnload';
+    s.async = true; s.defer = true;
+    s.onerror = function(){ if(!settled){ settled = true; clearTimeout(timer); tsDead(); } };
+    document.head.appendChild(s);
+  }
+
+  // A token is single use, so spend it and ask for a fresh one for the next note.
+  function tsReset(){
+    ts.token = '';
+    if (ts.state !== 'ready') return;
+    try { window.turnstile.reset(ts.id); } catch(e){ /* a failed reset never blocks a send */ }
+  }
+
+  // Resolves with a token, or with '' once the deadline passes. Never rejects, never hangs.
+  function tsToken(){
+    return new Promise(function(resolve){
+      if (ts.state === 'idle') tsLoad();
+      if (ts.state === 'dead') return resolve('');
+      if (ts.token) return resolve(ts.token);
+      let done = false;
+      tsWaiters.push(function(t){ if(!done){ done = true; resolve(t || ''); } });
+      setTimeout(function(){ if(!done){ done = true; resolve(''); } }, TS_TOKEN_MS);
+    });
+  }
+
+  // Turnstile is warmed on open, not on page load: by the time a note is typed the token is
+  // already minted, so the submit-time wait is normally zero. Overlay first, so the challenge
+  // never mounts into a display:none container.
+  function open(){ overlay.classList.add('open'); tsLoad(); setTimeout(()=>bodyI.focus(),50); }
   function close(){
     overlay.classList.remove('open');
     setTimeout(()=>{ live.style.display=''; thanks.classList.remove('show'); nameI.value=''; bodyI.value=''; submit.disabled=false; }, 300);
@@ -135,19 +230,27 @@
       window.location.href = 'mailto:' + TO + '?subject=' + subject + '&body=' + body;
     }
 
-    fetch(RELAY, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name, body: text, page: page, version: VERSION,
-        website: document.getElementById('fb-hp').value
+    /* The thanks panel goes up NOW, before the token wait and before the network. Nobody is
+       left watching a spinner, and every branch below still reaches Trevor: the relay files it,
+       or the relay says no and the mailto carries it. */
+    live.style.display = 'none';
+    thanks.classList.add('show');
+
+    tsToken()
+      .then(function(token){
+        tsReset();
+        return fetch(RELAY, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name, body: text, page: page, version: VERSION,
+            website: document.getElementById('fb-hp').value,
+            turnstileToken: token
+          })
+        });
       })
-    })
       .then(function(r){ return r.json(); })
       .then(function(res){ if(!res.ok) mailtoFallback(); })
       .catch(mailtoFallback);
-
-    live.style.display = 'none';
-    thanks.classList.add('show');
   });
 })();

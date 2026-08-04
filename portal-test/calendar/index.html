@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-template="calendar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,22 +58,20 @@
 
   <div class="crumb"><a href="../">This week</a> &nbsp;/&nbsp; Calendar</div>
 
-  <div class="wrap sub">
+  <main class="wrap sub">
     <!-- Hero art (0051): Giovanni's infinity spiral, the drawing the site's contour
          motif grew from. A year as tree rings. Treatment = Claude Design lane. -->
     <img class="spiral-art" src="../assets/img/art/spiral.png" alt="" aria-hidden="true" loading="lazy" width="1600" height="1174">
     <div class="page-head">
-      <!-- Copy (round 2, Trevor): the subscription messaging is lifted up from the old closing
-           .cal-sub note. The subscribe control is WIRED but mock-disabled (ADR-0006): while
-           data.js subscribeLive is false this static button + "Coming for launch" pill stand
-           (rule 6); when it flips true inside the Aug 11-13 cutover window (issue 0017),
-           render.js replaces this row with live Apple/Google/https links to the feed named
-           in data-subscribe, derived from the page's own origin. CD to style both states. -->
+      <!-- Subscribe peeled off for launch 2026-08-03 (issue 0077, reverses PRD-0003 d6):
+           the row, the "Coming for launch" mock and the subscription sentence in the lead
+           are all out, so no promise remains. The feeds still build every deploy; per-event
+           add-to-calendar (0027/0032) is what families use. Re-flip = restore the row +
+           data.js subscribeLive. -->
       <span class="eyebrow">The City School calendar</span>
       <h1>This academic year, month by month.</h1>
-      <p class="lead">Everything for City School in one place: this week, every term, and the key dates for the year. This page is always the latest, and a live subscription you can add to Apple or Google Calendar is coming for launch.</p>
+      <p class="lead">Everything for City School in one place: this week, every term, and the key dates for the year. This page is always the latest, and you can add any event straight to your own calendar.</p>
       <p class="btn-row"><a class="btn ghost sm" href="print/">Print the calendar <span class="arw">&rarr;</span></a></p>
-      <p class="btn-row" data-subscribe="elc-calendar.ics"><button type="button" class="btn purple sm" disabled aria-disabled="true">Subscribe in Apple or Google Calendar</button> <span class="status soon">Coming for launch</span></p>
     </div>
 
     <div class="cal-wrap">
@@ -104,18 +102,16 @@
 
         <div class="cal-agenda" id="cal-agenda"></div>
         <div class="cal-sub">
-          <!-- Calendar sharing (round 2): the subscribe messaging + MOCK button moved to the
-               page hero. The hosted feed IS built (build-api emits api/v1/elc-calendar.ics,
-               deploy-asserted); it turns on at v0.9/1.0 behind the source-of-truth ADR (portal-
-               hosted vs the ELC Master Google Calendar, issue 0004) on the production host, not
-               the test host whose URL dies at the 0017 cutover. Per-event add-to-calendar (the
-               agenda rows above) stays and carries the event-page URL. -->
+          <!-- Calendar sharing: the hosted feed IS still built (build-api emits
+               api/v1/elc-calendar.ics, deploy-asserted) but nothing advertises it, per issue
+               0077. Per-event add-to-calendar (the agenda rows above) stays and carries the
+               event-page URL. Source-of-truth ADR for a future feed = issue 0004. -->
           <!-- Print: the whole academic year on one sheet for the fridge (issue 0046),
                rendered from #print-list on <doc-page>. Ranges retired: the sheet is the year. -->
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <div class="foot-strip">
     <span class="foot-mark" aria-hidden="true"></span><img class="foot-lockup" src="../assets/img/elc-logo.svg" alt="ELC International Schools Bangkok" width="63" height="58">

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-template="section-stack">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,7 +66,10 @@
       <span class="eyebrow">Hopes and Wishes</span>
       <h1>Meet your child's teacher.</h1>
       <p class="lead">The school year begins with dialogue. We view parents as our essential partners in learning and invite you to connect with your child's teacher, exchange thoughts, and share your Hopes and Wishes for the journey ahead.</p>
-      <p class="lead">Hopes and Wishes is a twenty minute meeting with your child's teacher: what you want this year to hold for your child, in your words. No reports, no slides, just you and the person who will spend the year beside them. Find your class below and book your time.</p>
+      <!-- KISS rework 2026-08-03 (issue 0078): the page explains the programme and shows
+           the faces. Booking runs the old way, so the closing sentence points at the
+           teacher rather than at this page. Payal + Heather decide 2026-08-10. -->
+      <p class="lead">Hopes and Wishes is a twenty minute meeting with your child's teacher: what you want this year to hold for your child, in your words. No reports, no slides, just you and the person who will spend the year beside them. Your child's teacher will send you the link to book your time.</p>
       <p class="lead" lang="th">การพบครูช่วงต้นปี เพื่อบอกครูว่าคุณอยากให้ปีนี้เป็นอย่างไรสำหรับลูก ด้วยคำพูดของคุณเอง</p>
     </div>
 
@@ -90,11 +93,9 @@
     <div class="section">
       <div class="sec-eyebrow"><span class="eyebrow">Before you come</span><span class="ln"></span></div>
       <div class="doc-list">
-        <div class="doc-row">
-          <span class="ic icx"><svg class="ig" aria-hidden="true"><use href="../assets/img/icons.svg#i-form"/></svg></span>
-          <div class="meta"><div class="nm">The Hopes and Wishes questionnaire</div><div class="sub">A few questions to sit with before your meeting.</div></div>
-          <div class="rt"><span class="status soon">Coming</span></div>
-        </div>
+        <!-- Questionnaire row retired 2026-08-03 (issue 0078): it was a "Coming" promise
+             attached to the booking build. Restore it with the booking cards if Payal
+             reverses on 2026-08-10. -->
         <a class="doc-row" href="../nuts-and-bolts/">
           <span class="ic icx"><svg class="ig" aria-hidden="true"><use href="../assets/img/icons.svg#i-go"/></svg></span>
           <div class="meta"><div class="nm">The nuts and bolts</div><div class="sub">Routines, parking and drop off, in one place.</div></div>
@@ -104,12 +105,17 @@
     </div>
 
     <div class="section">
-      <div class="sec-eyebrow"><span class="eyebrow">Find your class</span><span class="ln"></span></div>
+      <div class="sec-eyebrow"><span class="eyebrow">Meet the team</span><span class="ln"></span></div>
+      <p class="txt">The teachers your family will meet this year, class by class.</p>
       <nav class="filter" id="team-jump" aria-label="Jump to a year group"></nav>
-      <div id="team-cards"></div>
+      <!-- data-faces = KISS mode (issue 0078): render.js draws the same class cards with
+           the bios and the Book cell omitted, and skips the booking demo card. Reversal
+           on Payal's 2026-08-10 call is DELETING THIS ONE ATTRIBUTE: classes[] in data.js
+           still carries every bio and bookingUrl, untouched. -->
+      <div id="team-cards" data-faces></div>
     </div>
 
-    <p class="page-note">The teacher photos and bios on this page are drafts and await each teacher's own check. The Thai line is awaiting review by a Thai speaker. If anything reads oddly, tell us with the feedback button and we will fix it.</p>
+    <p class="page-note">The teacher photos on this page are drafts and await each teacher's own check. The Thai line is awaiting review by a Thai speaker. If anything reads oddly, tell us with the feedback button and we will fix it.</p>
   </main>
 
   <div class="foot-strip">
