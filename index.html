@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ELC Hub — coming soon</title>
-<meta name="description" content="A place for young people to make, build and play, on the court and in the ateliers, in the hours the ordinary school day can't hold. Coming soon.">
+<title>ELC Hub | Years 7 and 8</title>
+<meta name="description" content="A new ELC school for Years 7 and 8 on Sukhumvit 49, Bangkok. Bigger questions, greater independence and ambitious work built on ELC's spirit of inquiry.">
 <meta name="theme-color" content="#33254A">
-<meta property="og:title" content="ELC Hub — coming soon">
-<meta property="og:description" content="Learning beyond the confines of the status quo. We're building it now.">
+<meta property="og:title" content="ELC Hub | Years 7 and 8">
+<meta property="og:description" content="A new ELC school for Years 7 and 8. Discover a new chapter of independence, inquiry and making. Open morning, 30 October.">
+<meta property="og:image" content="https://elc-hub.com/assets/maker-studio.jpg">
+<meta property="og:image:alt" content="Concept render of the Hub maker studio">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://elc-hub.com">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/favicon.svg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Crect width='64' height='64' rx='14' fill='%2333254A'/%3E%3Ccircle cx='32' cy='33' r='18' stroke='%23F4F2EA' stroke-width='3'/%3E%3Cline x1='32' y1='12' x2='32' y2='20' stroke='%23C25A4E' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='33' r='3.6' fill='%23F4F2EA'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter+Tight:wght@300;400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -42,6 +43,11 @@
   /* ---- backgrounds ---- */
   .topline{position:fixed;top:0;left:0;right:0;height:3px;background:var(--purple);z-index:6;}
   #topo{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .process-note{position:fixed;z-index:0;right:-60px;top:51%;width:430px;margin:0;transform:rotate(-7deg);pointer-events:none;}
+  .process-note img{display:block;width:100%;opacity:.25;filter:sepia(.35) saturate(.5);mask-image:linear-gradient(to right,transparent,#000 22%,#000 88%,transparent);}
+  .process-note figcaption{margin:14px 110px 0 0;text-align:right;font-family:var(--serif);font-style:italic;font-size:17px;letter-spacing:.02em;color:var(--gold);opacity:.65;}
+  @media(max-width:1180px){.process-note{right:-90px;width:330px;top:57%;}.process-note img{opacity:.16;}.process-note figcaption{font-size:14px;}}
+  @media(max-width:880px){.process-note{position:absolute;top:auto;bottom:130px;right:24px;width:270px;}.process-note img{opacity:.12;}.process-note figcaption{margin-right:20px;opacity:.5;}}
   .glow{position:fixed;inset:0;z-index:0;pointer-events:none;
     background:radial-gradient(120% 80% at 82% -12%,rgba(125,99,155,0.42),transparent 60%);}
   .bigdial{position:fixed;right:clamp(-180px,-7vw,-96px);top:45%;transform:translateY(-50%);z-index:1;opacity:0.5;pointer-events:none;
@@ -94,6 +100,13 @@
   .fa{position:absolute;top:0;left:0;width:1080px;height:1080px;transform:scale(calc(var(--cz)/1080));transform-origin:top left;
     background:var(--aubergine);overflow:hidden;font-family:var(--sans);font-weight:300;}
   .fa-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .fa-gallery{position:absolute;inset:0 0 330px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+  .fa-gallery img{width:100%;height:100%;min-width:0;min-height:0;object-fit:cover;}
+  .fa-gallery.kitchen-garden{grid-template-columns:1.65fr 1fr;}
+  .fa-grouped .fa-scrim{background:linear-gradient(to bottom,rgba(22,15,32,.35),transparent 20%,transparent 55%,var(--aubergine) 73%);}
+  .fa-grouped .fa-line{font-size:62px;max-width:24ch;}
+  .fa-grouped .fa-body{bottom:48px;}
+  .fa-grouped .fa-detail{margin-top:18px;}
   .fa-scrim{position:absolute;inset:0;background:
     linear-gradient(to top, rgba(22,15,32,0.94) 0%, rgba(28,19,42,0.82) 26%, rgba(30,21,46,0.30) 52%, rgba(30,21,46,0) 70%),
     linear-gradient(to bottom, rgba(22,15,32,0.55) 0%, rgba(22,15,32,0) 22%);}
@@ -115,6 +128,7 @@
   .fa-ey::before{content:"// ";color:var(--red-lift);}
   .fa-line{margin:0;font-family:var(--serif);font-weight:400;font-size:62px;line-height:1.05;letter-spacing:-0.016em;color:#fff;max-width:18ch;}
   .fa-line em{font-style:italic;color:var(--gold);}
+  .fa-detail{font-size:calc(12px * 1080 / var(--cz));line-height:1.4;color:var(--text-on-dark);max-width:38ch;margin:26px 0 0;}
 
   main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
     padding:clamp(4px,1vh,14px) 0;}
@@ -124,24 +138,31 @@
   .lead{font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.5;max-width:54ch;color:var(--text-on-dark);margin:0 auto;}
   .coda{font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.5;color:var(--text-on-dark);margin:8px auto 0;white-space:nowrap;}
 
-  /* ---- notify ---- */
-  form.notify{display:flex;align-items:stretch;gap:0;margin-top:clamp(14px,1.9vh,22px);}
-  form.notify input{font-family:var(--sans);font-weight:300;font-size:15px;color:var(--ink);
-    background:var(--paper);border:1px solid var(--rule);border-right:none;
-    padding:0 16px;height:48px;width:min(260px,52vw);outline:none;border-radius:8px 0 0 8px;}
-  form.notify input::placeholder{color:var(--muted);}
-  form.notify input:focus{border-color:var(--purple);}
-  form.notify button{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;
-    background:var(--gold);color:#2c2713;border:1px solid var(--gold);border-radius:0 8px 8px 0;
-    padding:0 22px;height:48px;cursor:pointer;transition:transform 0.08s ease,background 0.2s ease;white-space:nowrap;}
-  form.notify button:hover{background:#bcad81;}
-  form.notify button:active{transform:translateY(1px);}
-  .thanks{display:none;align-items:center;gap:10px;margin-top:clamp(28px,3.4vw,34px);font-size:14.5px;color:var(--text-on-dark);
-    border:1px solid rgba(244,242,234,0.22);border-radius:8px;padding:13px 18px;background:rgba(244,242,234,0.04);}
-  .thanks .mk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
-    background:var(--gold);color:#2c2713;font-size:12px;font-weight:700;flex:none;}
-  body.sent form.notify{display:none;}
-  body.sent .thanks{display:inline-flex;}
+  /* ---- invitation and on-page request form ---- */
+  .primary-action{font:600 15px var(--sans);background:var(--gold);color:#2c2713;border:1px solid var(--gold);border-radius:8px;min-height:48px;padding:12px 28px;cursor:pointer;transition:background .2s ease,transform .15s ease;}
+  .primary-action:hover{background:#c3b58d;transform:translateY(-1px);}
+  .primary-action:disabled{cursor:wait;opacity:.65;transform:none;}
+  #signup-open{margin-top:18px;min-width:200px;}
+  .dialog-open{overflow:hidden;}
+  .signup-dialog{width:min(540px,calc(100vw - 32px));max-height:calc(100svh - 32px);padding:32px;border:1px solid var(--gold);border-radius:14px;color:var(--aubergine);background:var(--paper);box-shadow:0 24px 100px rgba(0,0,0,.35);overflow:auto;}
+  .signup-dialog::backdrop{background:rgba(24,16,35,.76);backdrop-filter:blur(5px);}
+  .signup-dialog .eyebrow{color:#726440;margin:0 40px 14px 0;}
+  .signup-dialog h2{font:400 34px/1.05 var(--serif);letter-spacing:-.02em;margin:0 20px 12px 0;max-width:19ch;}
+  .dialog-intro{font-size:15px;margin:0 0 24px;color:#55485f;}
+  .dialog-close,.toast-close{position:absolute;right:10px;top:10px;width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:var(--aubergine);font-size:26px;cursor:pointer;}
+  .dialog-close:hover,.toast-close:hover{background:rgba(51,37,74,.07);}
+  .signup-fields{display:grid;grid-template-columns:1fr;gap:16px;border:0;padding:0;margin:0;min-width:0;}
+  .field-label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:500;}
+  .field-label input{width:100%;min-height:48px;padding:10px 12px;border:1px solid #aaa295;border-radius:6px;background:var(--white);color:var(--ink);font:400 16px var(--sans);}
+  .interest-group{border:0;padding:0;margin:24px 0 0;}
+  .interest-group legend{font-size:14px;font-weight:600;margin-bottom:10px;}
+  .interest-choice{display:flex;align-items:flex-start;gap:12px;border:1px solid #c6c0b4;border-radius:8px;padding:13px;margin-bottom:10px;cursor:pointer;font-size:15px;line-height:1.45;}
+  .interest-choice:has(input:checked){border-color:#847345;background:#ece7d9;}
+  .interest-choice input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--aubergine);}
+  .interest-choice small{display:block;font-size:12px;color:#665b6c;margin-top:3px;}
+  .signup-dialog .primary-action{width:100%;margin-top:16px;}
+  .signup-dialog .form-message{font-size:14px;color:#923b32;text-align:left;max-width:none;margin:8px 0;}
+  .signup-dialog .use-note{font-size:12px;text-align:center;line-height:1.5;color:#665b6c;margin:12px 0 0;}
 
   /* ---- footer: ad row, then ruler + chips ---- */
   footer{display:flex;flex-direction:column;gap:clamp(14px,2vh,20px);}
@@ -152,6 +173,36 @@
   .chip{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
     border:1px solid rgba(244,242,234,0.26);color:rgba(244,242,234,0.78);padding:7px 13px;border-radius:999px;}
 
+  /* Launch copy retains the existing editorial design. */
+  .mid{gap:clamp(22px,3vw,44px);}
+  main{min-width:0;order:1;}
+  .adside{order:0;}
+  .spacer{order:2;}
+  .intro,.invitation{display:flex;flex-direction:column;align-items:center;width:100%;text-align:center;}
+  .spacer{width:clamp(80px,15vw,240px);}
+  .lead{max-width:44ch;}
+  .coda{white-space:normal;font-size:14px;max-width:46ch;}
+  .event-note{font-size:13px;line-height:1.5;margin:16px 0 0;color:var(--paper);}
+  .signup-note{font-size:12px;line-height:1.5;max-width:43ch;margin:9px auto 0;color:var(--text-on-dark);}
+  .form-message{font-size:13px;max-width:43ch;margin:8px auto 0;color:var(--paper);}
+  .signup-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;}
+  .signup-toast{position:fixed;z-index:20;bottom:24px;left:50%;transform:translateX(-50%);width:min(440px,calc(100vw - 32px));padding:24px 46px 24px 24px;background:var(--paper);color:var(--aubergine);border:1px solid var(--gold);border-radius:12px;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:left;}
+  .signup-toast[hidden]{display:none;}
+  .signup-toast p{margin:0;font-size:17px;line-height:1.45;}
+  .signup-toast .toast-brand{font:italic 400 25px/1.2 var(--serif);margin-top:12px;}
+  .signup-toast .toast-detail{font-size:13px;margin-top:14px;color:#55485f;}
+  .render-note{font-size:11px;color:var(--text-on-dark);margin:0;}
+  .carousel-controls{display:flex;align-items:center;gap:12px;}
+  .motion-toggle{font:11px var(--sans);color:var(--paper);border:1px solid rgba(244,242,234,.35);border-radius:5px;background:transparent;padding:5px 8px;cursor:pointer;}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:4px;}
+  .cdot{width:24px;height:24px;position:relative;border:0;background:transparent;}
+  .cdot::after{content:"";position:absolute;width:8px;height:8px;inset:8px;border:1px solid var(--paper);border-radius:50%;}
+  .cdot.on{background:transparent;}
+  .cdot.on::after{background:var(--gold);border-color:var(--gold);}
+  @media(max-width:880px){.spacer{display:none;}.stage{gap:24px;}main{width:100%;}.bigdial{opacity:.2;}.adside{max-width:100%;}.carousel{max-width:100%;}.head .tag{font-size:9px;letter-spacing:.1em;}}
+  @media(max-width:400px){.head{gap:8px;}.head .tag{white-space:normal;text-align:right;}.chip{font-size:9px;letter-spacing:.07em;padding:6px 9px;}.signup-dialog{padding:26px 20px;}.signup-dialog h2{font-size:30px;}}
+  @media(prefers-reduced-motion:reduce){.cslide{transition:none;}}
+
   @media (max-height:860px){ :root{ --cz:380; } }
   @media (max-height:780px){ :root{ --cz:340; } }
   @media (max-height:700px){ :root{ --cz:300; --banner-h:clamp(104px,15vh,150px); } }
@@ -159,7 +210,10 @@
 
   @media (max-width:880px){
     .mid{flex-direction:column;align-items:center;gap:clamp(20px,4vh,34px);}
-    main{order:-1;}
+    main{display:contents;}
+    .intro{order:0;}
+    .adside{order:1;}
+    .invitation{order:2;}
     .adside{align-items:center;width:calc(var(--cz)*1px);}
     .spacer{display:none;}
     .bigdial{top:auto;bottom:-90px;right:-90px;transform:none;opacity:0.34;}
@@ -168,11 +222,23 @@
     .head{margin-top:clamp(14px,4vh,40px);}
     .coda{white-space:normal;}
   }
+  @media (max-width:400px){:root{--cz:336;}.fa-line{font-size:74px;}}
+  @media (max-width:380px){:root{--cz:304;}}
+  @media (max-width:350px){:root{--cz:264;}.kicker{font-size:10px;letter-spacing:.12em;}.head .lock{gap:8px;}.head .lock .name{font-size:19px;}.head .tag{max-width:115px;}h1{font-size:29px;}}
+  @media (min-width:881px) and (max-height:780px){
+    .stage{padding-top:22px;}.head{margin-top:6px;}.kicker{margin-top:0;margin-bottom:12px;}
+    h1{font-size:42px;margin-bottom:14px;}.lead{max-width:50ch;font-size:15.5px;}.event-note{margin-top:12px;}
+  }
+  @media (min-width:881px) and (max-width:1180px){.spacer{width:100px;}.bigdial{right:-180px;opacity:.35;}h1{font-size:38px;}}
 </style>
 </head>
 <body>
   <div class="topline"></div>
   <svg id="topo" aria-hidden="true"></svg>
+  <figure class="process-note" aria-label="An early hand-drawn plan for the Hub">
+    <img src="assets/handmade-plan.png" alt="An early Hub plan assembled by hand, with sketches, room cards and handwritten connections">
+    <figcaption>Taking shape, by hand.</figcaption>
+  </figure>
   <div class="glow"></div>
 
   <svg class="bigdial" id="bigdial" viewBox="0 0 64 64" fill="none" aria-hidden="true">
@@ -197,89 +263,141 @@
         </svg>
         <span class="wordmark name">ELC Hub</span>
       </div>
-      <span class="eyebrow tag">Coming soon</span>
+      <span class="eyebrow tag">Sukhumvit 49 · Bangkok</span>
     </header>
 
     <div class="mid">
-      <aside class="adside" aria-label="What's coming">
-        <p class="rail-label">What's coming</p>
-        <div class="carousel" id="carousel">
-          <div class="cslide on"><div class="fa">
-            <img class="fa-photo" src="assets/football.jpg" alt="Children playing sport" style="object-position:73% 56%;transform:scale(1.32);transform-origin:73% 56%">
-            <div class="fa-scrim"></div><div class="fa-frame"></div>
-            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-            <div class="fa-top">
-              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-              <span class="fa-url">elc-hub.com</span>
-            </div>
-            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Sport</div><h3 class="fa-line">Sport made with them, <em>not for them.</em></h3></div>
-          </div></div>
 
-          <div class="cslide"><div class="fa">
-            <img class="fa-photo" src="assets/experiment.jpg" alt="A child's light experiment" style="object-position:52% 46%">
-            <div class="fa-scrim"></div><div class="fa-frame"></div>
-            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-            <div class="fa-top">
-              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-              <span class="fa-url">elc-hub.com</span>
-            </div>
-            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Science</div><h3 class="fa-line">Experiments, <em>their way.</em></h3></div>
-          </div></div>
-
-          <div class="cslide"><div class="fa">
-            <img class="fa-photo" src="assets/robot.jpg" alt="Children building a robot" style="object-position:44% 50%">
-            <div class="fa-scrim"></div><div class="fa-frame"></div>
-            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-            <div class="fa-top">
-              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-              <span class="fa-url">elc-hub.com</span>
-            </div>
-            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Robotics &amp; design</div><h3 class="fa-line">Robotics and design. <em>By them.</em></h3></div>
-          </div></div>
-
-          <div class="cslide"><div class="fa">
-            <img class="fa-photo" src="assets/wings.jpg" alt="Children building big things" style="object-position:50% 42%">
-            <div class="fa-scrim"></div><div class="fa-frame"></div>
-            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
-            <div class="fa-top">
-              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
-              <span class="fa-url">elc-hub.com</span>
-            </div>
-            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Making</div><h3 class="fa-line">Big things, <em>built by them.</em></h3></div>
-          </div></div>
-        </div>
-        <div class="cdots" id="cdots">
-          <button class="cdot on" type="button" aria-label="Sport"></button>
-          <button class="cdot" type="button" aria-label="Science"></button>
-          <button class="cdot" type="button" aria-label="Robotics &amp; design"></button>
-          <button class="cdot" type="button" aria-label="Making"></button>
-        </div>
-      </aside>
 
       <main>
-        <p class="eyebrow kicker">A new place to learn</p>
+        <div class="intro">
+        <p class="eyebrow kicker">A new ELC school · Years 7 and 8</p>
         <h1>Learning beyond the<br>confines of the <span class="turn">status quo.</span></h1>
-        <p class="lead">A place for young people to make, build and play, on the court and in the ateliers, in the hours the ordinary school day can't hold.</p>
-        <p class="coda">We're building it now.</p>
-        <form class="notify" id="notify" novalidate>
-          <input type="email" id="email" required placeholder="Email address" aria-label="Email address">
-          <button type="submit">Notify me</button>
-        </form>
-        <div class="thanks"><span class="mk">&#10003;</span><span>You're on the list. We'll write when the doors open.</span></div>
+        <p class="lead">Their next chapter starts with bigger questions, greater independence and the joy of making something that matters.</p>
+        </div>
+        <div class="invitation">
+        <p class="coda">Built on ELC’s spirit of inquiry, our curriculum connects English, maths and science with ambitious studio projects. Young people take the lead in planning, making and presenting work to real audiences.</p>
+        <button class="primary-action" id="signup-open" type="button" aria-haspopup="dialog" aria-controls="signup-dialog">Find out more <span aria-hidden="true">↗</span></button>
+        <p class="signup-note">Request the details pack or register your interest in our open morning.</p>
         <div class="chips">
-          <span class="chip">Make</span>
-          <span class="chip">Design</span>
-          <span class="chip">Build</span>
-          <span class="chip">Move</span>
-          <span class="chip">Create</span>
+          <span class="chip">Strong foundations</span>
+          <span class="chip">Greater independence</span>
+          <span class="chip">Work made public</span>
+        </div>
+        <p class="event-note">Come and imagine what’s possible.<br>Open morning · Friday 30 October 2026</p>
         </div>
       </main>
+
+      <aside class="adside" aria-label="Explore the proposed learning spaces">
+        <p class="rail-label">Imagine a school day here</p>
+        <div class="carousel" id="carousel">
+          <div class="cslide on"><div class="fa">
+            <img class="fa-photo" src="assets/maker-studio.jpg" alt="Concept render of the purple maker studio, with workbenches, tools and robotics" style="object-position:52% 50%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Design &amp; making</div><h3 class="fa-line">What could an idea <em>become in their hands?</em></h3><p class="fa-detail">They sketch, build, test and think again.</p></div>
+          </div></div>
+
+          <div class="cslide"><div class="fa">
+            <img class="fa-photo" src="assets/walk-fablab.jpg" alt="Concept render of the Hub fabrication studio, with sewing machines, 3D printers and shared making tables" style="object-position:62% 46%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Design &amp; technology</div><h3 class="fa-line">What happens when <em>“what if?” becomes “let’s try”?</em></h3><p class="fa-detail">Curiosity becomes something they can test.</p></div>
+          </div></div>
+
+          <div class="cslide"><div class="fa fa-grouped">
+            <div class="fa-gallery">
+              <img src="assets/lounge-a.jpg" alt="Concept render of an indoor lounge with sofas, beanbags and books beneath the stairs">
+              <img src="assets/lounge-b.jpg" alt="Concept render of a second lounge with tiered seating, music and a shared inspiration board">
+              <img src="assets/outdoor-deck.jpg" alt="Concept render of the shaded outdoor deck with shared tables and hanging chairs">
+            </div>
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ey">Spaces to connect</div><h3 class="fa-line">Room to be themselves. <em>Space to belong.</em></h3><p class="fa-detail">Friendships grow through shared ideas and everyday moments.</p></div>
+          </div></div>
+
+          <div class="cslide"><div class="fa">
+            <img class="fa-photo" src="assets/sound-studio.jpg" alt="Concept render of the music studio, with recording equipment and musical instruments" style="object-position:50% 42%">
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top">
+              <div class="fa-lock"><svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="24" stroke="#F4F2EA" stroke-width="3"></circle><line x1="32" y1="5" x2="32" y2="15" stroke="#C25A4E" stroke-width="3" stroke-linecap="round"></line><circle cx="32" cy="32" r="4.5" fill="#F4F2EA"></circle></svg><span class="fa-nm">ELC Hub</span></div>
+              <span class="fa-url">elc-hub.com</span>
+            </div>
+            <div class="fa-body"><div class="fa-ruler"></div><div class="fa-ey">Music &amp; sound</div><h3 class="fa-line">What could they make <em>that the world should hear?</em></h3><p class="fa-detail">Their ideas reach an audience of their own.</p></div>
+          </div></div>
+          <div class="cslide"><div class="fa fa-grouped">
+            <div class="fa-gallery kitchen-garden">
+              <img src="assets/test-kitchen.jpg" alt="Concept render of the test kitchen, with cooking islands, herbs and shared equipment" style="object-position:55% 50%">
+              <img src="assets/garden.jpg" alt="Concept render of the edible garden, with growing beds and a potting bench">
+            </div>
+            <div class="fa-scrim"></div><div class="fa-frame"></div>
+            <span class="fa-reg tl"></span><span class="fa-reg br"></span>
+            <div class="fa-top"><span class="fa-nm">ELC Hub</span><span class="fa-url">elc-hub.com</span></div>
+            <div class="fa-body"><div class="fa-ey">Grow, cook, discover</div><h3 class="fa-line">What could they discover <em>from garden to table?</em></h3><p class="fa-detail">They grow, measure, experiment and make something to share.</p></div>
+          </div></div>
+        </div>
+        <div class="carousel-controls"><div class="cdots" id="cdots">
+          <button class="cdot on" type="button" aria-label="Design and making" aria-pressed="true"></button>
+          <button class="cdot" type="button" aria-label="Design and technology" aria-pressed="false"></button>
+          <button class="cdot" type="button" aria-label="Spaces to connect" aria-pressed="false"></button>
+          <button class="cdot" type="button" aria-label="Music and sound" aria-pressed="false"></button>
+          <button class="cdot" type="button" aria-label="Kitchen and garden" aria-pressed="false"></button>
+        </div><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Pause motion</button>
+        </div>
+        <p class="render-note">Concept renders of the proposed spaces.</p>
+      </aside>
 
       <div class="spacer" aria-hidden="true"></div>
     </div>
   </div>
 
   <div class="flightpath"></div>
+
+  <dialog class="signup-dialog" id="signup-dialog" aria-labelledby="signup-title" aria-describedby="signup-intro">
+    <button class="dialog-close" id="signup-close" type="button" aria-label="Close form">×</button>
+    <p class="eyebrow">A new chapter with ELC</p>
+    <h2 id="signup-title">Discover Years 7 and 8 at the Hub</h2>
+    <p class="dialog-intro" id="signup-intro">Tell us what you’d like to hear about.</p>
+    <form id="notify" novalidate>
+      <fieldset class="signup-fields" id="signup-fields">
+        <label class="field-label" for="first-name">First name<input id="first-name" name="first_name" autocomplete="given-name" maxlength="80" required autofocus></label>
+        <label class="field-label" for="email">Email address<input id="email" type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required></label>
+      </fieldset>
+      <fieldset class="interest-group" id="interest-group" aria-describedby="choice-error">
+        <legend>Choose one or both.</legend>
+        <label class="interest-choice"><input id="details-pack" type="checkbox" name="wants_details_pack"><span>Send me the Years 7–8 details pack.</span></label>
+        <label class="interest-choice"><input id="site-visit" type="checkbox" name="wants_october_30_visit"><span>I’d like to visit the Hub on Friday 30 October.<small>We’ll email you the time and visit details.</small></span></label>
+      </fieldset>
+      <p class="form-message" id="choice-error" role="alert" hidden>Choose the details pack, a visit, or both.</p>
+      <div class="signup-trap" aria-hidden="true"><label>Leave this empty<input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+      <p class="form-message" id="form-message" role="alert" hidden></p>
+      <button class="primary-action" type="submit">Send my request</button>
+      <p class="use-note">We’ll email you about the options you choose.</p>
+    </form>
+  </dialog>
+
+  <div class="signup-toast" id="signup-toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+    <button class="toast-close" id="toast-close" type="button" aria-label="Dismiss confirmation">×</button>
+    <p>Exciting things are coming and we want you to be part of it.</p>
+    <p class="toast-brand">Made for a new era of education</p>
+    <p class="toast-detail" id="toast-detail"></p>
+  </div>
+
+  <script src="signup-config.js"></script>
+  <script src="signup.js"></script>
 
   <script>
   (function(){
@@ -314,32 +432,38 @@
     build();
     var t; window.addEventListener('resize', function(){ clearTimeout(t); t=setTimeout(build, 150); });
 
-    // ---- notify (visual only; no backend wired) ----
-    document.getElementById('notify').addEventListener('submit', function(e){
-      e.preventDefault();
-      var em = document.getElementById('email');
-      if(!em.value || em.value.indexOf('@')<1){ em.focus(); return; }
-      document.body.classList.add('sent');
-    });
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var motionPaused = motionQuery.matches;
+    var motionButton = document.getElementById('motion-toggle');
+    function updateMotion(){
+      motionButton.textContent = motionPaused ? 'Play motion' : 'Pause motion';
+      motionButton.setAttribute('aria-pressed', String(motionPaused));
+      document.dispatchEvent(new Event('hubmotionchange'));
+    }
+    motionButton.addEventListener('click', function(){motionPaused = !motionPaused; updateMotion();});
+    motionQuery.addEventListener('change', function(e){motionPaused = e.matches; updateMotion();});
+    updateMotion();
 
-    // ---- big square carousel: crossfade through the four ads ----
+    // ---- big square carousel: crossfade through the learning spaces ----
     (function(){
       var slides = [].slice.call(document.querySelectorAll('#carousel .cslide'));
       var dots   = [].slice.call(document.querySelectorAll('#cdots .cdot'));
       if(slides.length < 2) return;
       var i = 0, timer = null;
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       function show(n){
         i = (n + slides.length) % slides.length;
-        slides.forEach(function(s,k){ s.classList.toggle('on', k===i); });
-        dots.forEach(function(d,k){ d.classList.toggle('on', k===i); });
+        slides.forEach(function(s,k){ s.classList.toggle('on', k===i); s.setAttribute('aria-hidden',String(k!==i)); });
+        dots.forEach(function(d,k){ d.classList.toggle('on', k===i); d.setAttribute('aria-pressed',String(k===i)); });
       }
-      function play(){ if(reduce) return; stop(); timer = setInterval(function(){ show(i+1); }, 4400); }
+      function play(){ stop(); if(motionPaused || document.hidden) return; timer = setInterval(function(){ show(i+1); }, 5400); }
       function stop(){ if(timer){ clearInterval(timer); timer = null; } }
       dots.forEach(function(d,k){ d.addEventListener('click', function(){ show(k); play(); }); });
       var car = document.getElementById('carousel');
       car.addEventListener('mouseenter', stop);
       car.addEventListener('mouseleave', play);
+      document.addEventListener('hubmotionchange',play);
+      document.addEventListener('visibilitychange',play);
+      show(0);
       play();
     })();
 
@@ -353,7 +477,6 @@
       var ink  = document.getElementById('bd-ink');   // red liquid, rises in phase A
       var fill = document.getElementById('bd-fill');   // white liquid, rises in phase B
       if(!idx || !ink || !fill) return;
-      if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       var ROT_SEG = 2900, PULSE = 4000;        // quarter-turn, then the (slow) pulse
       var R_OUT = 27, R_IN = 17;               // tick straddles the ring at rest
@@ -387,8 +510,11 @@
         el.setAttribute('d', d);
       }
 
-      var mode = 'rot', station = 0, start = null;
+      var mode = 'rot', station = 0, start = null, previous = null;
       function frame(ts){
+        var delta = previous === null ? 0 : ts - previous;
+        previous = ts;
+        if(motionPaused || document.hidden){ if(start !== null) start += delta; requestAnimationFrame(frame); return; }
         if(start === null) start = ts;
         var el = ts - start;
         var phase = ts * 0.006;
