@@ -193,7 +193,6 @@
   .signup-toast .toast-detail{font-size:13px;margin-top:14px;color:#55485f;}
   .render-note{font-size:11px;color:var(--text-on-dark);margin:0;}
   .carousel-controls{display:flex;align-items:center;gap:12px;}
-  .motion-toggle{font:11px var(--sans);color:var(--paper);border:1px solid rgba(244,242,234,.35);border-radius:5px;background:transparent;padding:5px 8px;cursor:pointer;}
   button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:4px;}
   .cdot{width:24px;height:24px;position:relative;border:0;background:transparent;}
   .cdot::after{content:"";position:absolute;width:8px;height:8px;inset:8px;border:1px solid var(--paper);border-radius:50%;}
@@ -355,7 +354,7 @@
           <button class="cdot" type="button" aria-label="Spaces to connect" aria-pressed="false"></button>
           <button class="cdot" type="button" aria-label="Music and sound" aria-pressed="false"></button>
           <button class="cdot" type="button" aria-label="Kitchen and garden" aria-pressed="false"></button>
-        </div><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Pause motion</button>
+        </div>
         </div>
         <p class="render-note">Concept renders of the proposed spaces.</p>
       </aside>
@@ -432,17 +431,6 @@
     build();
     var t; window.addEventListener('resize', function(){ clearTimeout(t); t=setTimeout(build, 150); });
 
-    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    var motionPaused = motionQuery.matches;
-    var motionButton = document.getElementById('motion-toggle');
-    function updateMotion(){
-      motionButton.textContent = motionPaused ? 'Play motion' : 'Pause motion';
-      motionButton.setAttribute('aria-pressed', String(motionPaused));
-      document.dispatchEvent(new Event('hubmotionchange'));
-    }
-    motionButton.addEventListener('click', function(){motionPaused = !motionPaused; updateMotion();});
-    motionQuery.addEventListener('change', function(e){motionPaused = e.matches; updateMotion();});
-    updateMotion();
 
     // ---- big square carousel: crossfade through the learning spaces ----
     (function(){
@@ -455,13 +443,13 @@
         slides.forEach(function(s,k){ s.classList.toggle('on', k===i); s.setAttribute('aria-hidden',String(k!==i)); });
         dots.forEach(function(d,k){ d.classList.toggle('on', k===i); d.setAttribute('aria-pressed',String(k===i)); });
       }
-      function play(){ stop(); if(motionPaused || document.hidden) return; timer = setInterval(function(){ show(i+1); }, 5400); }
+      function play(){ stop(); if(document.hidden) return; timer = setInterval(function(){ show(i+1); }, 5400); }
       function stop(){ if(timer){ clearInterval(timer); timer = null; } }
       dots.forEach(function(d,k){ d.addEventListener('click', function(){ show(k); play(); }); });
       var car = document.getElementById('carousel');
       car.addEventListener('mouseenter', stop);
       car.addEventListener('mouseleave', play);
-      document.addEventListener('hubmotionchange',play);
+
       document.addEventListener('visibilitychange',play);
       show(0);
       play();
@@ -514,7 +502,7 @@
       function frame(ts){
         var delta = previous === null ? 0 : ts - previous;
         previous = ts;
-        if(motionPaused || document.hidden){ if(start !== null) start += delta; requestAnimationFrame(frame); return; }
+        if(document.hidden){ if(start !== null) start += delta; requestAnimationFrame(frame); return; }
         if(start === null) start = ts;
         var el = ts - start;
         var phase = ts * 0.006;
